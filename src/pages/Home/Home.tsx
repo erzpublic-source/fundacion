@@ -118,32 +118,34 @@ export default function Home() {
 
       <main>
         <section className="hero" id="inicio">
-          <div className="hero__media">
-            <img src={heroImage} alt="Mujer sonriendo en un ambiente cálido, acompañada en una conversación" />
-          </div>
-          <div className="hero__content">
-            <h1 className="hero__title">
-              Un espacio seguro para <strong>volver a brillar</strong>
-            </h1>
-
-            <div className="hero__ctas">
-              <a href="#nosotros" className="btn btn--primary">
-                Nuestra esencia
-              </a>
-              <a href="#impacto" className="btn btn--secondary">
-                Nuestro impacto
-              </a>
+          <div className="hero__inner">
+            <div className="hero__media">
+              <img src={heroImage} alt="Mujer sonriendo en un ambiente cálido, acompañada en una conversación" />
             </div>
+            <div className="hero__content">
+              <h1 className="hero__title">
+                Un espacio seguro para <strong>volver a brillar</strong>
+              </h1>
 
-            <div className="hero__card">
-              <span className="hero__card-tag">
-                <span className="hero__card-dot" aria-hidden="true" />
-                Salud Mental con Propósito
-              </span>
-              <p>
-                Transformamos el silencio en música, el dolor en propósito y la soledad en una comunidad que
-                sostiene.
-              </p>
+              <div className="hero__ctas">
+                <a href="#nosotros" className="btn btn--primary">
+                  Nuestra esencia
+                </a>
+                <a href="#impacto" className="btn btn--secondary">
+                  Nuestro impacto
+                </a>
+              </div>
+
+              <div className="hero__card">
+                <span className="hero__card-tag">
+                  <span className="hero__card-dot" aria-hidden="true" />
+                  Salud Mental con Propósito
+                </span>
+                <p>
+                  Transformamos el silencio en música, el dolor en propósito y la soledad en una comunidad que
+                  sostiene.
+                </p>
+              </div>
             </div>
           </div>
         </section>

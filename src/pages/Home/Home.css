@@ -105,9 +105,12 @@
 
 /* ---------- Hero ---------- */
 .hero {
+  background: #fafaf8;
+}
+
+.hero__inner {
   display: flex;
   flex-direction: column;
-  background: #fafaf8;
 }
 
 .hero__media {
@@ -383,6 +386,10 @@
 /* ==================== Desktop ==================== */
 @media (min-width: 900px) {
   .hero {
+    position: relative;
+  }
+
+  .hero__inner {
     flex-direction: row;
     align-items: stretch;
     height: 720px;
