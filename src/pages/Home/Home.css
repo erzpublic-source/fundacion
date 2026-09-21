@@ -1,0 +1,532 @@
+/* Placeholder media (real photography pending export from Figma) */
+.hero__media,
+.impacto__media,
+.donaciones__media {
+  background: linear-gradient(135deg, #ede8f4 0%, #f5e3ec 100%);
+  background-size: cover;
+  background-position: center;
+}
+
+/* ---------- Shared ---------- */
+.section-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.section-heading--left {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.eyebrow--violeta {
+  color: var(--color-lavanda-comunidad);
+}
+
+.eyebrow--violeta-dark {
+  color: #6a5390;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-weight: var(--font-weight-light);
+  font-size: 32px;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  color: #1a1a1a;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 32px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  font-size: 15px;
+  border: none;
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: 0 8px 12px rgba(201, 111, 168, 0.25);
+}
+
+.btn--primary:hover {
+  background: var(--gradient-primary-hover);
+}
+
+.btn--secondary {
+  background: #fafaf8;
+  color: var(--color-violeta-esperanza);
+  border: 1px solid var(--color-border-input);
+}
+
+.btn--secondary:hover {
+  background: var(--color-bg-hover-secondary);
+}
+
+.btn--support {
+  background: var(--color-amarillo-impulso);
+  color: #6a5390;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.btn--outline {
+  background: #fff;
+  color: var(--color-azul-confianza);
+  border: 1.5px solid var(--color-azul-confianza);
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  background: #fafaf8;
+}
+
+.hero__media {
+  height: 240px;
+}
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 16px 32px;
+}
+
+.hero__title {
+  margin: 0;
+  font-weight: var(--font-weight-light);
+  font-size: 36px;
+  line-height: 1.17;
+  letter-spacing: -1px;
+  color: #6a5390;
+}
+
+.hero__title strong {
+  font-weight: var(--font-weight-bold);
+}
+
+.hero__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero__ctas .btn {
+  width: 100%;
+}
+
+.hero__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.hero__card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: #6b7280;
+}
+
+.hero__card-tag {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(101, 152, 209, 0.07);
+  color: var(--color-azul-confianza);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.hero__card-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-azul-confianza);
+}
+
+/* ---------- Esencia ---------- */
+.esencia {
+  padding: 40px 16px;
+  background: #fff;
+}
+
+.esencia__cards {
+  display: flex;
+  flex-direction: column;
+}
+
+.esencia__divider {
+  border: none;
+  border-top: 1px solid #ece7ef;
+  margin: 0;
+}
+
+.esencia__row {
+  display: flex;
+  gap: 16px;
+  padding: 20px 0;
+}
+
+.esencia__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+}
+
+.esencia__row h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color: #1a1a1a;
+}
+
+.esencia__row p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6b7280;
+}
+
+.esencia__row p strong {
+  color: #1a1a1a;
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ---------- Impacto ---------- */
+.impacto {
+  padding: 40px 16px;
+  background: #fafaf8;
+}
+
+.impacto__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.impacto__card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--shadow-01);
+}
+
+.impacto__media {
+  height: 180px;
+}
+
+.impacto__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.impacto__tag {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.impacto__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color: #111827;
+}
+
+.impacto__text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: #6b7280;
+}
+
+.impacto__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-azul-confianza);
+  font-weight: var(--font-weight-bold);
+  font-size: 14px;
+}
+
+/* ---------- Donaciones ---------- */
+.donaciones {
+  padding: 40px 16px;
+  background: var(--color-bg-hover-secondary);
+}
+
+.donaciones__card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+}
+
+.donaciones__media {
+  height: 200px;
+}
+
+.donaciones__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+
+.donaciones__body h2 {
+  margin: 0;
+  font-weight: var(--font-weight-light);
+  font-size: 28px;
+  line-height: 1.2;
+  color: #1a1a1a;
+}
+
+.donaciones__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6b7280;
+}
+
+.donaciones__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.donaciones__ctas .btn {
+  width: 100%;
+}
+
+/* ---------- Sponsors ---------- */
+.sponsors {
+  padding: 32px 16px;
+  background: #fff;
+  text-align: center;
+}
+
+.sponsors__heading {
+  margin: 0 0 20px;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #6a5390;
+}
+
+.sponsors__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sponsors__logo {
+  font-weight: var(--font-weight-bold);
+  font-size: 16px;
+  color: #c4c9d4;
+}
+
+/* ==================== Desktop ==================== */
+@media (min-width: 900px) {
+  .hero {
+    flex-direction: row;
+    align-items: stretch;
+    height: 720px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero__content {
+    order: -1;
+    justify-content: center;
+    width: 580px;
+    padding: 0 40px 0 72px;
+    gap: 32px;
+  }
+
+  .hero__title {
+    font-size: 72px;
+    line-height: 1.06;
+    letter-spacing: -2.5px;
+  }
+
+  .hero__ctas {
+    flex-direction: row;
+  }
+
+  .hero__ctas .btn {
+    width: auto;
+  }
+
+  .hero__media {
+    flex: 1;
+    height: auto;
+    border-radius: 0 0 0 32px;
+  }
+
+  .hero__card {
+    position: absolute;
+    left: 424px;
+    bottom: 87px;
+    width: 488px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .section-heading {
+    max-width: var(--grid-max-width);
+    margin: 0 auto 24px;
+  }
+
+  .section-heading h2 {
+    font-size: 48px;
+    letter-spacing: -1.5px;
+  }
+
+  .esencia {
+    padding: 42px 72px;
+  }
+
+  .esencia__cards {
+    max-width: var(--grid-max-width);
+    margin: 0 auto;
+  }
+
+  .esencia__row {
+    padding: 40px 0;
+    gap: 32px;
+  }
+
+  .esencia__row h3 {
+    font-size: 22px;
+  }
+
+  .esencia__row p {
+    font-size: 16px;
+    line-height: 27px;
+  }
+
+  .impacto {
+    padding: 42px 72px;
+  }
+
+  .impacto__grid,
+  .section-heading--left {
+    max-width: var(--grid-max-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-heading--left h2 {
+    font-size: 56px;
+    letter-spacing: -2px;
+  }
+
+  .impacto__grid {
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  .impacto__card {
+    flex: 1;
+    position: relative;
+  }
+
+  .impacto__media {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+
+  .impacto__body {
+    position: relative;
+    margin-top: 328px;
+    background: #fff;
+    padding: 28px;
+  }
+
+  .donaciones {
+    padding: 42px 72px;
+  }
+
+  .donaciones__card {
+    flex-direction: row;
+    max-width: var(--grid-max-width);
+    margin: 0 auto;
+    height: 340px;
+  }
+
+  .donaciones__media {
+    width: 480px;
+    height: auto;
+  }
+
+  .donaciones__body {
+    justify-content: center;
+    padding: 64px;
+  }
+
+  .donaciones__body h2 {
+    font-size: 44px;
+  }
+
+  .donaciones__ctas {
+    flex-direction: row;
+  }
+
+  .donaciones__ctas .btn {
+    width: auto;
+  }
+
+  .sponsors {
+    padding: 64px 72px;
+  }
+
+  .sponsors__row {
+    gap: 56px;
+  }
+}

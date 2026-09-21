@@ -1,0 +1,56 @@
+:root {
+  /* Paleta de color */
+  --color-violeta-esperanza: #67518d;
+  --color-lavanda-comunidad: #9981c1;
+  --color-rosa-empatia: #d4679a;
+  --color-amarillo-impulso: #f3d372;
+  --color-azul-confianza: #296197;
+  --color-tinta-humana: #221920;
+
+  --color-white: #ffffff;
+  --color-bg-disabled: #ece7ef;
+  --color-text-disabled: #6b7280;
+  --color-border-input: #cbc4d0;
+  --color-bg-hover-secondary: #f5eff7;
+  --color-bg-success: #25d366;
+
+  /* Gradiente principal */
+  --gradient-primary: linear-gradient(90deg, #6a5390 0%, #d4679a 100%);
+  --gradient-primary-hover: linear-gradient(90deg, #7a5aa8 0%, #e6a8c6 100%);
+  --gradient-primary-pressed: linear-gradient(90deg, #5a3e7a 0%, #c44d8a 100%);
+
+  /* Tipografía */
+  --font-family: 'Quicksand', sans-serif;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Espaciado */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 72px;
+
+  /* Radios */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --radius-xl: 40px;
+  --radius-full: 9999px;
+
+  /* Elevaciones */
+  --shadow-01: 0 4px 12px rgba(34, 25, 32, 0.04);
+  --shadow-02: 0 12px 30px rgba(34, 25, 32, 0.08);
+  --shadow-03: 0 20px 48px rgba(34, 25, 32, 0.12);
+
+  /* Grid */
+  --grid-max-width: 1280px;
+  --grid-margin: 72px;
+  --grid-gutter: 24px;
+}
