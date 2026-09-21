@@ -5,6 +5,7 @@ import heroImage from '../../assets/images/hero.jpg'
 import impactoHistorias from '../../assets/images/impacto-historias.jpg'
 import impactoEventos from '../../assets/images/impacto-eventos.jpg'
 import impactoVoluntariado from '../../assets/images/impacto-voluntariado.jpg'
+import donacionesImage from '../../assets/images/donaciones.jpg'
 import './Home.css'
 
 const ESENCIA = [
@@ -247,7 +248,12 @@ export default function Home() {
 
         <section className="donaciones" id="donar">
           <div className="donaciones__card">
-            <div className="donaciones__media" role="img" aria-label="Manos unidas en comunidad" />
+            <div
+              className="donaciones__media"
+              role="img"
+              aria-label="Manos unidas en comunidad"
+              style={{ backgroundImage: `url(${donacionesImage})` }}
+            />
             <div className="donaciones__body">
               <p className="eyebrow eyebrow--violeta-dark">Apóyanos</p>
               <h2>Tu donación salva mañanas</h2>
@@ -260,7 +266,7 @@ export default function Home() {
                   Quiero donar
                   <ArrowRight />
                 </a>
-                <a href="#voluntariado" className="btn btn--outline" id="voluntariado">
+                <a href="#voluntariado" className="btn btn--secondary" id="voluntariado">
                   Quiero ser voluntario
                 </a>
               </div>

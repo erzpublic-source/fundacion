@@ -1,10 +1,4 @@
-/* Placeholder media (real photography pending for Donaciones) */
-.donaciones__media {
-  background: linear-gradient(135deg, #ede8f4 0%, #f5e3ec 100%);
-  background-size: cover;
-  background-position: center;
-}
-
+.donaciones__media,
 .impacto__media {
   background-size: cover;
   background-position: center;
@@ -62,46 +56,109 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 50px;
+  height: 51px;
   padding: 0 32px;
   border-radius: var(--radius-full);
   font-family: var(--font-family);
   font-weight: var(--font-weight-bold);
   font-size: 15px;
-  border: none;
+  border: 2px solid transparent;
   white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-lavanda-comunidad);
+}
+
+/* 1. Primary — gradient */
 .btn--primary {
   background: var(--gradient-primary);
   color: #fff;
-  box-shadow: 0 8px 12px rgba(201, 111, 168, 0.25);
+  box-shadow: 0 12px 30px rgba(34, 25, 32, 0.08);
 }
 
 .btn--primary:hover {
   background: var(--gradient-primary-hover);
+  box-shadow: 0 8px 20px rgba(34, 25, 32, 0.04);
 }
 
+.btn--primary:active {
+  background: var(--gradient-primary-pressed);
+  box-shadow: 0 6px 16px rgba(34, 25, 32, 0.03);
+}
+
+.btn--primary:focus-visible {
+  background: var(--gradient-primary);
+  box-shadow: 0 12px 30px rgba(34, 25, 32, 0.08), 0 0 0 3px var(--color-lavanda-comunidad);
+}
+
+/* 1b. Primary — solid */
+.btn--primary-solid {
+  background: #6a5390;
+  color: #fafaf8;
+}
+
+.btn--primary-solid:hover {
+  background: #7a5aa8;
+}
+
+.btn--primary-solid:active {
+  background: #5a3e7a;
+}
+
+/* 3. Secondary — outline */
 .btn--secondary {
-  background: #fafaf8;
+  background: #fff;
   color: var(--color-violeta-esperanza);
-  border: 1px solid var(--color-border-input);
+  border-color: var(--color-violeta-esperanza);
 }
 
 .btn--secondary:hover {
   background: var(--color-bg-hover-secondary);
 }
 
-.btn--support {
-  background: var(--color-amarillo-impulso);
-  color: #6a5390;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+.btn--secondary:active {
+  background: #fff7f9;
 }
 
-.btn--outline {
+.btn--secondary:focus-visible {
   background: #fff;
-  color: var(--color-azul-confianza);
-  border: 1.5px solid var(--color-azul-confianza);
+  border-color: var(--color-violeta-esperanza);
+  box-shadow: 0 0 0 3px var(--color-lavanda-comunidad);
+}
+
+/* 4. Support */
+.btn--support {
+  background: var(--color-amarillo-impulso);
+  color: var(--color-violeta-esperanza);
+}
+
+.btn--support:hover {
+  background: #f7e28a;
+}
+
+.btn--support:active {
+  background: #d8b600;
+}
+
+.btn--support:focus-visible {
+  background: var(--color-amarillo-impulso);
+  box-shadow: 0 0 0 3px var(--color-lavanda-comunidad);
+}
+
+/* 5. Disabled */
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  background: var(--color-bg-disabled);
+  border-color: #d1c7e0;
+  color: var(--color-text-disabled);
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
 }
 
 /* ---------- Hero ---------- */
