@@ -70,8 +70,6 @@
 @media (min-width: 900px) {
   .navbar__top {
     justify-content: space-between;
-    max-width: var(--grid-max-width);
-    margin: 0 auto;
     padding: 18px 40px;
   }
 
@@ -81,8 +79,6 @@
 
   .navbar__nav {
     display: flex;
-    max-width: var(--grid-max-width);
-    margin: 0 auto;
     padding: 0 40px 16px;
   }
 }
