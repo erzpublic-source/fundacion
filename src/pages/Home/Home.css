@@ -248,10 +248,18 @@
 }
 
 .impacto__card {
+  display: block;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: #fff;
   box-shadow: var(--shadow-01);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.impacto__card:hover,
+.impacto__card:focus-visible {
+  box-shadow: var(--shadow-02);
+  transform: translateY(-2px);
 }
 
 .impacto__media {
@@ -491,6 +499,7 @@
 
   .impacto__grid {
     flex-direction: row;
+    align-items: flex-start;
     gap: 24px;
   }
 

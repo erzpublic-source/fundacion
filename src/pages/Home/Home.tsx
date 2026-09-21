@@ -219,7 +219,7 @@ export default function Home() {
 
           <div className="impacto__grid">
             {IMPACTO.map((item) => (
-              <article className="impacto__card" key={item.title}>
+              <a className="impacto__card" key={item.title} href={item.href}>
                 <div
                   className="impacto__media"
                   role="img"
@@ -235,12 +235,12 @@ export default function Home() {
                   </span>
                   <p className="impacto__title">{item.title}</p>
                   <p className="impacto__text">{item.text}</p>
-                  <a className="impacto__link" href={item.href}>
+                  <span className="impacto__link">
                     {item.link}
                     <ChevronRight />
-                  </a>
+                  </span>
                 </div>
-              </article>
+              </a>
             ))}
           </div>
         </section>
