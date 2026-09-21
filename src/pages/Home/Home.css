@@ -387,11 +387,11 @@
   }
 
   .hero__inner {
+    --hero-gutter: calc(72px + max(0px, (100vw - 1424px) / 2));
     flex-direction: row;
     align-items: stretch;
     height: 720px;
-    max-width: var(--grid-max-width);
-    margin: 0 auto;
+    padding-left: var(--hero-gutter);
     position: relative;
     overflow: hidden;
   }
@@ -399,8 +399,8 @@
   .hero__content {
     order: -1;
     justify-content: center;
-    width: 660px;
-    padding: 0 40px 0 72px;
+    width: 588px;
+    padding: 0 40px 0 0;
     gap: 32px;
   }
 
@@ -433,7 +433,7 @@
 
   .hero__card {
     position: absolute;
-    left: 484px;
+    left: calc(var(--hero-gutter) + 412px);
     bottom: 87px;
     width: 488px;
     padding: 20px 24px;
