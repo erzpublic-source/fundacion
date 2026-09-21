@@ -40,11 +40,16 @@
   font-size: 14px;
   font-weight: var(--font-weight-medium);
   color: var(--color-violeta-esperanza);
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
 
 .navbar__pill:hover {
   background: var(--color-bg-hover-secondary);
+  transform: translateY(-1px);
+}
+
+.navbar__pill:active {
+  transform: translateY(0) scale(0.96);
 }
 
 .navbar__pill--active {
@@ -75,6 +80,16 @@
   letter-spacing: 0.28px;
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.12);
   flex-shrink: 0;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
+}
+
+.navbar__sos:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 16px rgba(0, 0, 0, 0.15);
+}
+
+.navbar__sos:active {
+  transform: translateY(0) scale(0.96);
 }
 
 /* Scrolled: full-width frosted-glass bar, content re-centers to the grid */
