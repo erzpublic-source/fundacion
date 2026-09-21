@@ -19,10 +19,6 @@
   display: inline-flex;
 }
 
-.logo__text {
-  color: var(--color-tinta-humana);
-}
-
 .navbar__divider {
   display: none;
 }
