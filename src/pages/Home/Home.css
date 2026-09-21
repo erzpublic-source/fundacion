@@ -386,6 +386,8 @@
     flex-direction: row;
     align-items: stretch;
     height: 720px;
+    max-width: var(--grid-max-width);
+    margin: 0 auto;
     position: relative;
     overflow: hidden;
   }
