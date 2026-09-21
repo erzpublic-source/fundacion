@@ -1,5 +1,6 @@
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
+import heroImage from '../../assets/images/hero.jpg'
 import './Home.css'
 
 const ESENCIA = [
@@ -117,7 +118,9 @@ export default function Home() {
 
       <main>
         <section className="hero" id="inicio">
-          <div className="hero__media" role="img" aria-label="Mujer sonriendo en un ambiente cálido" />
+          <div className="hero__media">
+            <img src={heroImage} alt="Mujer sonriendo en un ambiente cálido, acompañada en una conversación" />
+          </div>
           <div className="hero__content">
             <h1 className="hero__title">
               Un espacio seguro para <strong>volver a brillar</strong>
