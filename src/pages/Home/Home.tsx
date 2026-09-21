@@ -160,7 +160,7 @@ export default function Home() {
             />
             <div className="hero__content">
               <h1 className="hero__title">
-                Un espacio seguro para
+                Un espacio seguro{' '}para
                 <br />
                 <strong>volver a brillar</strong>
               </h1>
