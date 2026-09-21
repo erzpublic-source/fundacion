@@ -528,7 +528,26 @@
     padding: 20px 24px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 8px 16px rgba(0, 0, 0, 0.1);
   }
+}
 
+/* From the design's native 1280px canvas up, use the full 72px headline */
+@media (min-width: 1280px) {
+  .hero__content {
+    width: 760px;
+  }
+
+  .hero__title {
+    font-size: 72px;
+    line-height: 1.06;
+    letter-spacing: -2.5px;
+  }
+
+  .hero__card {
+    left: calc(var(--hero-gutter) + 584px);
+  }
+}
+
+@media (min-width: 900px) {
   .section-heading {
     max-width: var(--grid-max-width);
     margin: 0 auto 24px;
