@@ -1,6 +1,10 @@
+import { useEffect, useRef } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import heroImage from '../../assets/images/hero.jpg'
+import impactoHistorias from '../../assets/images/impacto-historias.jpg'
+import impactoEventos from '../../assets/images/impacto-eventos.jpg'
+import impactoVoluntariado from '../../assets/images/impacto-voluntariado.jpg'
 import './Home.css'
 
 const ESENCIA = [
@@ -73,6 +77,7 @@ const IMPACTO = [
     text: 'Conoce testimonios reales de resiliencia y esperanza.',
     link: 'Ver historias',
     href: '#historias',
+    image: impactoHistorias,
   },
   {
     tag: 'Eventos',
@@ -81,6 +86,7 @@ const IMPACTO = [
     text: 'Participa en nuestros encuentros y actividades comunitarias.',
     link: 'Ver eventos',
     href: '#eventos',
+    image: impactoEventos,
   },
   {
     tag: 'Voluntariado',
@@ -90,6 +96,7 @@ const IMPACTO = [
     text: 'Únete a nuestro equipo y sé parte del cambio.',
     link: 'Ver voluntariado',
     href: '#voluntariado',
+    image: impactoVoluntariado,
   },
 ]
 
@@ -112,6 +119,30 @@ function ChevronRight() {
 }
 
 export default function Home() {
+  const heroParallaxRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 900px)')
+    if (!mediaQuery.matches) return
+
+    let ticking = false
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const el = heroParallaxRef.current
+        if (el) {
+          const offset = Math.min(window.scrollY * 0.15, 120)
+          el.style.backgroundPosition = `5% calc(22% + ${offset}px)`
+        }
+        ticking = false
+      })
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
     <>
       <Navbar />
@@ -119,12 +150,18 @@ export default function Home() {
       <main>
         <section className="hero" id="inicio">
           <div className="hero__inner">
-            <div className="hero__media">
-              <img src={heroImage} alt="Mujer sonriendo en un ambiente cálido, acompañada en una conversación" />
-            </div>
+            <div
+              className="hero__media"
+              role="img"
+              aria-label="Mujer sonriendo en un ambiente cálido, acompañada en una conversación"
+              ref={heroParallaxRef}
+              style={{ backgroundImage: `url(${heroImage})` }}
+            />
             <div className="hero__content">
               <h1 className="hero__title">
-                Un espacio seguro para <strong>volver a brillar</strong>
+                Un espacio seguro para
+                <br />
+                <strong>volver a brillar</strong>
               </h1>
 
               <div className="hero__ctas">
@@ -187,6 +224,7 @@ export default function Home() {
                   className="impacto__media"
                   role="img"
                   aria-label={item.title}
+                  style={{ backgroundImage: `url(${item.image})` }}
                 />
                 <div className="impacto__body">
                   <span

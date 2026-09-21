@@ -1,20 +1,21 @@
-/* Placeholder media (real photography pending export from Figma) */
-.impacto__media,
+/* Placeholder media (real photography pending for Donaciones) */
 .donaciones__media {
   background: linear-gradient(135deg, #ede8f4 0%, #f5e3ec 100%);
   background-size: cover;
   background-position: center;
 }
 
-.hero__media {
-  overflow: hidden;
+.impacto__media {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.hero__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 25%;
+.hero__media {
+  height: 240px;
+  background-size: cover;
+  background-position: center 25%;
+  background-repeat: no-repeat;
 }
 
 /* ---------- Shared ---------- */
@@ -111,10 +112,6 @@
 .hero__inner {
   display: flex;
   flex-direction: column;
-}
-
-.hero__media {
-  height: 240px;
 }
 
 .hero__content {
@@ -402,15 +399,16 @@
   .hero__content {
     order: -1;
     justify-content: center;
-    width: 580px;
+    width: 660px;
     padding: 0 40px 0 72px;
     gap: 32px;
   }
 
   .hero__title {
-    font-size: 72px;
-    line-height: 1.06;
-    letter-spacing: -2.5px;
+    font-size: 50px;
+    line-height: 1.2;
+    letter-spacing: -1.2px;
+    white-space: nowrap;
     background: var(--gradient-primary);
     background-clip: text;
     -webkit-background-clip: text;
@@ -430,11 +428,12 @@
     flex: 1;
     height: auto;
     border-radius: 0 0 0 32px;
+    background-position: 5% 22%;
   }
 
   .hero__card {
     position: absolute;
-    left: 424px;
+    left: 484px;
     bottom: 87px;
     width: 488px;
     padding: 20px 24px;

@@ -6,10 +6,30 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
+}
+
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+@media (min-width: 900px) {
+  section[id] {
+    scroll-margin-top: 96px;
+  }
 }
 
 body {

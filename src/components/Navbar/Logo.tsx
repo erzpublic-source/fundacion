@@ -19,11 +19,11 @@ export default function Logo({ className }: LogoProps) {
         />
       </svg>
       <span
+        className="logo__text"
         style={{
           fontFamily: 'var(--font-family)',
           fontWeight: 700,
           fontSize: 16,
-          color: 'var(--color-tinta-humana)',
           whiteSpace: 'nowrap',
         }}
       >
