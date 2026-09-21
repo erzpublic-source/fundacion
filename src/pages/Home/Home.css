@@ -402,6 +402,11 @@
     font-size: 72px;
     line-height: 1.06;
     letter-spacing: -2.5px;
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
   }
 
   .hero__ctas {
