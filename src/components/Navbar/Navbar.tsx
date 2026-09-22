@@ -34,6 +34,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeHref, setActiveHref] = useState('#inicio')
   const bottombarRef = useRef<HTMLDivElement>(null)
+  const menuPanelRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 40)
@@ -73,19 +74,25 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!menuOpen) return
-    const bar = bottombarRef.current
-    if (!bar) return
+    const elements = [bottombarRef.current, menuPanelRef.current].filter(
+      (el): el is HTMLElement => el !== null,
+    )
+    if (elements.length === 0) return
     // Scrolling/swiping/wheeling over the menu itself must not bubble into
     // a page scroll (which would otherwise trigger closeOnScroll above).
     const stop = (event: Event) => {
       event.preventDefault()
       event.stopPropagation()
     }
-    bar.addEventListener('wheel', stop, { passive: false })
-    bar.addEventListener('touchmove', stop, { passive: false })
+    elements.forEach((el) => {
+      el.addEventListener('wheel', stop, { passive: false })
+      el.addEventListener('touchmove', stop, { passive: false })
+    })
     return () => {
-      bar.removeEventListener('wheel', stop)
-      bar.removeEventListener('touchmove', stop)
+      elements.forEach((el) => {
+        el.removeEventListener('wheel', stop)
+        el.removeEventListener('touchmove', stop)
+      })
     }
   }, [menuOpen])
 
@@ -133,21 +140,25 @@ export default function Navbar() {
         aria-hidden="true"
       />
 
-      <div ref={bottombarRef} className={`mobile-bottombar${menuOpen ? ' mobile-bottombar--open' : ''}`}>
-        <nav className="mobile-menu-panel" aria-label="Navegación principal">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              onClick={closeMenu}
-              className={`mobile-menu-panel__pill${link.href === activeHref ? ' mobile-menu-panel__pill--active' : ''}`}
-            >
-              {link.href === activeHref && <span className="navbar__dot" aria-hidden="true" />}
-              {link.label}
-            </a>
-          ))}
-        </nav>
+      <nav
+        ref={menuPanelRef}
+        className={`mobile-menu-panel${menuOpen ? ' mobile-menu-panel--open' : ''}`}
+        aria-label="Navegación principal"
+      >
+        {NAV_LINKS.map((link) => (
+          <a
+            key={link.label}
+            href={link.href}
+            onClick={closeMenu}
+            className={`mobile-menu-panel__pill${link.href === activeHref ? ' mobile-menu-panel__pill--active' : ''}`}
+          >
+            {link.href === activeHref && <span className="navbar__dot" aria-hidden="true" />}
+            {link.label}
+          </a>
+        ))}
+      </nav>
 
+      <div ref={bottombarRef} className="mobile-bottombar">
         <div className="mobile-bottombar__row">
           <button
             type="button"
