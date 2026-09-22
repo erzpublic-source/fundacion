@@ -153,12 +153,12 @@
   position: fixed;
   inset: 0;
   z-index: 55;
-  background: color-mix(in oklab, var(--color-white) 55%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: color-mix(in oklab, var(--color-tinta-humana) 12%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.35s ease;
 }
 
 .mobile-menu-backdrop--visible {
@@ -168,32 +168,37 @@
 
 .mobile-bottombar {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: max(14px, env(safe-area-inset-bottom, 0px) + 10px);
+  left: 14px;
+  right: 14px;
   z-index: 60;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 62px;
-  background: #fff;
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
-  box-shadow: 0 -4px 20px rgba(34, 25, 32, 0.08);
+  height: 58px;
+  background: color-mix(in oklab, var(--color-white) 65%, transparent);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-radius: 29px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 32px rgba(34, 25, 32, 0.16), 0 2px 8px rgba(34, 25, 32, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
   overflow: hidden;
-  transition: height 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: height 0.4s cubic-bezier(0.32, 0.72, 0, 1), border-radius 0.4s ease,
+    background 0.4s ease;
 }
 
 .mobile-bottombar--open {
-  height: 360px;
+  height: 300px;
+  border-radius: 28px;
+  background: color-mix(in oklab, var(--color-white) 80%, transparent);
 }
 
 .mobile-menu-panel {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 20px 24px;
+  gap: 4px;
+  padding: 12px 16px;
   overflow-y: auto;
   opacity: 0;
   transform: translateY(8px);
@@ -210,15 +215,15 @@
   align-self: flex-start;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 9px 16px;
   border-radius: var(--radius-full);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: var(--font-weight-medium);
   color: var(--color-violeta-esperanza);
 }
 
 .mobile-menu-panel__pill--active {
-  background: var(--color-bg-hover-secondary);
+  background: color-mix(in oklab, var(--color-white) 50%, var(--color-bg-hover-secondary));
   font-weight: var(--font-weight-semibold);
   color: var(--color-tinta-humana);
 }
@@ -228,8 +233,8 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
-  height: 62px;
-  padding: 0 20px;
+  height: 58px;
+  padding: 0 10px 0 20px;
 }
 
 .mobile-bottombar--open .mobile-bottombar__row {
@@ -239,6 +244,7 @@
 .mobile-bottombar__row .navbar__sos {
   display: inline-flex;
   margin-left: 0;
+  height: 38px;
 }
 
 .mobile-menu-toggle {

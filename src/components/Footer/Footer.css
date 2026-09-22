@@ -3,6 +3,12 @@
   padding: 48px 16px 32px;
 }
 
+@media (max-width: 899px) {
+  .footer {
+    padding-bottom: calc(32px + 58px + max(14px, env(safe-area-inset-bottom, 0px) + 10px) + 16px);
+  }
+}
+
 .footer__content {
   display: flex;
   flex-direction: column;
