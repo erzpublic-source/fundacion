@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Logo from './Logo'
 import './Navbar.css'
 
@@ -33,6 +33,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeHref, setActiveHref] = useState('#inicio')
+  const bottombarRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 40)
@@ -68,6 +69,24 @@ export default function Navbar() {
     const closeOnScroll = () => setMenuOpen(false)
     window.addEventListener('scroll', closeOnScroll, { passive: true })
     return () => window.removeEventListener('scroll', closeOnScroll)
+  }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const bar = bottombarRef.current
+    if (!bar) return
+    // Scrolling/swiping/wheeling over the menu itself must not bubble into
+    // a page scroll (which would otherwise trigger closeOnScroll above).
+    const stop = (event: Event) => {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+    bar.addEventListener('wheel', stop, { passive: false })
+    bar.addEventListener('touchmove', stop, { passive: false })
+    return () => {
+      bar.removeEventListener('wheel', stop)
+      bar.removeEventListener('touchmove', stop)
+    }
   }, [menuOpen])
 
   const closeMenu = () => setMenuOpen(false)
@@ -114,7 +133,7 @@ export default function Navbar() {
         aria-hidden="true"
       />
 
-      <div className={`mobile-bottombar${menuOpen ? ' mobile-bottombar--open' : ''}`}>
+      <div ref={bottombarRef} className={`mobile-bottombar${menuOpen ? ' mobile-bottombar--open' : ''}`}>
         <nav className="mobile-menu-panel" aria-label="Navegación principal">
           {NAV_LINKS.map((link) => (
             <a
