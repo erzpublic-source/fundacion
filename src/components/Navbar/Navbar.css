@@ -168,28 +168,27 @@
 
 .mobile-bottombar {
   position: fixed;
-  bottom: max(14px, env(safe-area-inset-bottom, 0px) + 10px);
-  left: 14px;
-  right: 14px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 60;
   display: flex;
   flex-direction: column;
-  height: 58px;
+  width: 100%;
+  height: calc(62px + env(safe-area-inset-bottom, 0px));
   background: color-mix(in oklab, var(--color-white) 65%, transparent);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border-radius: 29px;
+  border-radius: 16px 16px 0 0;
   border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 12px 32px rgba(34, 25, 32, 0.16), 0 2px 8px rgba(34, 25, 32, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  border-bottom: none;
+  box-shadow: 0 -4px 24px rgba(34, 25, 32, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7);
   overflow: hidden;
-  transition: height 0.4s cubic-bezier(0.32, 0.72, 0, 1), border-radius 0.4s ease,
-    background 0.4s ease;
+  transition: height 0.4s cubic-bezier(0.32, 0.72, 0, 1), background 0.4s ease;
 }
 
 .mobile-bottombar--open {
-  height: 300px;
-  border-radius: 28px;
+  height: calc(300px + env(safe-area-inset-bottom, 0px));
   background: color-mix(in oklab, var(--color-white) 80%, transparent);
 }
 
@@ -233,7 +232,7 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
-  height: 58px;
+  height: 62px;
   padding: 0 10px 0 20px;
 }
 
