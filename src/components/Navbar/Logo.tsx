@@ -5,5 +5,5 @@ interface LogoProps {
 }
 
 export default function Logo({ className }: LogoProps) {
-  return <img src={logo} alt="Fundación Un Día Más" className={className} style={{ height: 28, width: 'auto' }} />
+  return <img src={logo} alt="Fundación Un Día Más" className={`logo-img${className ? ` ${className}` : ''}`} />
 }

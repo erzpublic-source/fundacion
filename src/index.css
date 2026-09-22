@@ -52,6 +52,19 @@ img {
   max-width: 100%;
 }
 
+.logo-img {
+  height: 28px;
+  width: auto;
+}
+
+@media (max-width: 899px) {
+  main {
+    display: block;
+    padding-top: 55px;
+    padding-bottom: 62px;
+  }
+}
+
 button {
   font-family: inherit;
   cursor: pointer;
