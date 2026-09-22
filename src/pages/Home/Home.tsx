@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
+import HeroParticles from './HeroParticles'
 import heroImage from '../../assets/images/hero.jpg'
 import impactoHistorias from '../../assets/images/impacto-historias.jpg'
 import impactoEventos from '../../assets/images/impacto-eventos.jpg'
@@ -159,6 +160,7 @@ export default function Home() {
       <main>
         <section className="hero" id="inicio">
           <div className="hero__inner">
+            <HeroParticles />
             <div
               className="hero__media"
               role="img"
