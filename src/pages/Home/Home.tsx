@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import HeroParticles from './HeroParticles'
@@ -78,7 +79,7 @@ const IMPACTO = [
     title: 'Historias que merecen ser escuchadas',
     text: 'Conoce testimonios reales de resiliencia y esperanza.',
     link: 'Ver historias',
-    href: '#historias',
+    href: '/historias',
     image: impactoHistorias,
   },
   {
@@ -231,30 +232,42 @@ export default function Home() {
           </div>
 
           <div className="impacto__grid">
-            {IMPACTO.map((item) => (
-              <a className="impacto__card" key={item.title} href={item.href}>
-                <div
-                  className="impacto__media"
-                  role="img"
-                  aria-label={item.title}
-                  style={{ backgroundImage: `url(${item.image})` }}
-                />
-                <div className="impacto__body">
-                  <span
-                    className="impacto__tag"
-                    style={{ background: item.tagColor, color: item.tagText ?? '#fff' }}
-                  >
-                    {item.tag}
-                  </span>
-                  <p className="impacto__title">{item.title}</p>
-                  <p className="impacto__text">{item.text}</p>
-                  <span className="impacto__link">
-                    {item.link}
-                    <ChevronRight />
-                  </span>
-                </div>
-              </a>
-            ))}
+            {IMPACTO.map((item) => {
+              const cardBody = (
+                <>
+                  <div
+                    className="impacto__media"
+                    role="img"
+                    aria-label={item.title}
+                    style={{ backgroundImage: `url(${item.image})` }}
+                  />
+                  <div className="impacto__body">
+                    <span
+                      className="impacto__tag"
+                      style={{ background: item.tagColor, color: item.tagText ?? '#fff' }}
+                    >
+                      {item.tag}
+                    </span>
+                    <p className="impacto__title">{item.title}</p>
+                    <p className="impacto__text">{item.text}</p>
+                    <span className="impacto__link">
+                      {item.link}
+                      <ChevronRight />
+                    </span>
+                  </div>
+                </>
+              )
+
+              return item.href.startsWith('#') ? (
+                <a className="impacto__card" key={item.title} href={item.href}>
+                  {cardBody}
+                </a>
+              ) : (
+                <Link className="impacto__card" key={item.title} to={item.href}>
+                  {cardBody}
+                </Link>
+              )
+            })}
           </div>
         </section>
 
