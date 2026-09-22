@@ -1,6 +1,8 @@
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import heroImage from '../../assets/images/donar-hero.jpg'
+import donarAhoraImage from '../../assets/images/donar-personas-ahora.jpg'
+import donarEspecieImage from '../../assets/images/donar-personas-especie.jpg'
 import './Donar.css'
 
 function ArrowRight() {
@@ -24,6 +26,7 @@ interface DonationCard {
   text: string
   action: string
   photoLabel: string
+  image?: string
 }
 
 const PERSONAS_CARDS: DonationCard[] = [
@@ -32,12 +35,14 @@ const PERSONAS_CARDS: DonationCard[] = [
     text: 'Realiza un aporte económico directo, único o mensual, y sé parte de la solución sosteniendo nuestros programas de salud mental y acogida.',
     action: 'Hacer donación monetaria',
     photoLabel: 'Foto — Donar ahora',
+    image: donarAhoraImage,
   },
   {
     title: 'Donar en especie',
     text: 'Apóyanos donando materiales educativos, herramientas de arte, o insumos que optimizan el desarrollo de nuestros talleres de bienestar.',
     action: 'Ver lista de necesidades',
     photoLabel: 'Foto — Donar en especie',
+    image: donarEspecieImage,
   },
 ]
 
@@ -75,8 +80,13 @@ function DonationGrid({ background, heading, lead, cards }: DonationGridProps) {
       <div className="donar-grid-section__grid">
         {cards.map((card) => (
           <article className="donar-card" key={card.title}>
-            <div className="donar-card__media" role="img" aria-label={card.photoLabel}>
-              <span>{card.photoLabel}</span>
+            <div
+              className="donar-card__media"
+              role="img"
+              aria-label={card.photoLabel}
+              style={card.image ? { backgroundImage: `url(${card.image})` } : undefined}
+            >
+              {!card.image && <span>{card.photoLabel}</span>}
             </div>
             <div className="donar-card__body">
               <h3>{card.title}</h3>

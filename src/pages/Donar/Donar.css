@@ -161,7 +161,11 @@
   align-items: center;
   justify-content: center;
   height: 180px;
-  background: linear-gradient(135deg, rgba(106, 83, 144, 0.14), rgba(243, 211, 114, 0.18));
+  background-color: #f0e9f2;
+  background-image: linear-gradient(135deg, rgba(106, 83, 144, 0.14), rgba(243, 211, 114, 0.18));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: #6a5390;
   font-size: 12px;
   font-weight: var(--font-weight-bold);
