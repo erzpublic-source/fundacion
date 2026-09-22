@@ -4,7 +4,7 @@ import Historias from './pages/Historias/Historias'
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/historias" element={<Historias />} />
