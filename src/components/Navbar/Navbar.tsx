@@ -1,15 +1,47 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import type { ReactNode } from 'react'
 import Logo from './Logo'
 import './Navbar.css'
 
 const NAV_LINKS = [
-  { label: 'Inicio', href: '#inicio' },
-  { label: 'Historias', href: '#historias' },
-  { label: 'Eventos', href: '#eventos' },
-  { label: 'Donar', href: '#donar' },
-  { label: 'Voluntariado', href: '#voluntariado' },
-  { label: 'Contacto', href: '#contacto' },
+  { label: 'Inicio', href: '/' },
+  { label: 'Historias', href: '/historias' },
+  { label: 'Eventos', href: '/#eventos' },
+  { label: 'Donar', href: '/#donar' },
+  { label: 'Voluntariado', href: '/#voluntariado' },
+  { label: 'Contacto', href: '/#contacto' },
 ]
+
+function getAnchorId(href: string): string | null {
+  const hashIndex = href.indexOf('#')
+  return hashIndex === -1 ? null : href.slice(hashIndex + 1)
+}
+
+interface NavAnchorProps {
+  href: string
+  className: string
+  onClick?: () => void
+  children: ReactNode
+}
+
+// Plain page routes (no `#`) navigate client-side via React Router; hash
+// links stay as real anchors so the browser's native hash-scroll works even
+// when the target lives on a different page (e.g. from Historias to "/#donar").
+function NavAnchor({ href, className, onClick, children }: NavAnchorProps) {
+  if (href.includes('#')) {
+    return (
+      <a href={href} className={className} onClick={onClick}>
+        {children}
+      </a>
+    )
+  }
+  return (
+    <Link to={href} className={className} onClick={onClick}>
+      {children}
+    </Link>
+  )
+}
 
 function SosIcon() {
   return (
@@ -30,9 +62,11 @@ function MenuIcon() {
 }
 
 export default function Navbar() {
+  const location = useLocation()
+  const isHome = location.pathname === '/'
   const [isScrolled, setIsScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [activeHref, setActiveHref] = useState('#inicio')
+  const [scrollSpyId, setScrollSpyId] = useState('inicio')
   const bottombarRef = useRef<HTMLDivElement>(null)
   const menuPanelRef = useRef<HTMLElement>(null)
 
@@ -44,9 +78,12 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    const targets = NAV_LINKS.map((link) => document.querySelector(link.href)).filter(
-      (el): el is Element => el !== null,
-    )
+    if (!isHome) return
+
+    const targets = NAV_LINKS.map((link) => getAnchorId(link.href))
+      .filter((id): id is string => id !== null)
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null)
     if (targets.length === 0) return
 
     const observer = new IntersectionObserver(
@@ -55,7 +92,7 @@ export default function Navbar() {
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
         if (visible) {
-          setActiveHref(`#${visible.target.id}`)
+          setScrollSpyId(visible.target.id)
         }
       },
       { rootMargin: '-30% 0px -60% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] },
@@ -63,7 +100,11 @@ export default function Navbar() {
 
     targets.forEach((target) => observer.observe(target))
     return () => observer.disconnect()
-  }, [])
+  }, [isHome])
+
+  const activeHref = isHome
+    ? (NAV_LINKS.find((link) => getAnchorId(link.href) === scrollSpyId)?.href ?? '/')
+    : location.pathname
 
   useEffect(() => {
     if (!menuOpen) return
@@ -102,22 +143,22 @@ export default function Navbar() {
     <>
       <header className={`navbar${isScrolled ? ' navbar--scrolled' : ''}`}>
         <div className="navbar__bar">
-          <a href="#inicio" className="navbar__logo" aria-label="Fundación Un Día Más — Inicio">
+          <Link to="/" className="navbar__logo" aria-label="Fundación Un Día Más — Inicio">
             <Logo />
-          </a>
+          </Link>
 
           <span className="navbar__divider" aria-hidden="true" />
 
           <nav className="navbar__nav" aria-label="Navegación principal">
             {NAV_LINKS.map((link) => (
-              <a
+              <NavAnchor
                 key={link.label}
                 href={link.href}
                 className={`navbar__pill${link.href === activeHref ? ' navbar__pill--active' : ''}`}
               >
                 {link.href === activeHref && <span className="navbar__dot" aria-hidden="true" />}
                 {link.label}
-              </a>
+              </NavAnchor>
             ))}
           </nav>
 
@@ -129,9 +170,9 @@ export default function Navbar() {
       </header>
 
       <header className="mobile-topbar">
-        <a href="#inicio" className="mobile-topbar__logo" aria-label="Fundación Un Día Más — Inicio">
+        <Link to="/" className="mobile-topbar__logo" aria-label="Fundación Un Día Más — Inicio">
           <Logo />
-        </a>
+        </Link>
       </header>
 
       <div
@@ -146,7 +187,7 @@ export default function Navbar() {
         aria-label="Navegación principal"
       >
         {NAV_LINKS.map((link) => (
-          <a
+          <NavAnchor
             key={link.label}
             href={link.href}
             onClick={closeMenu}
@@ -154,7 +195,7 @@ export default function Navbar() {
           >
             {link.href === activeHref && <span className="navbar__dot" aria-hidden="true" />}
             {link.label}
-          </a>
+          </NavAnchor>
         ))}
       </nav>
 

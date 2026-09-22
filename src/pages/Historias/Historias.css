@@ -1,0 +1,632 @@
+/* ---------- Shared photo placeholder (temporary until real photos are provided) ---------- */
+.photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #efdee8 0%, #dcd3ec 100%);
+  color: #6a5390;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  padding: 8px;
+}
+
+/* ---------- Hero ---------- */
+.historias-hero {
+  position: relative;
+  overflow: hidden;
+  background: #fff7f9;
+}
+
+.historias-hero__blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(16px);
+  pointer-events: none;
+}
+
+.historias-hero__blob--a {
+  top: -80px;
+  right: -80px;
+  width: 200px;
+  height: 200px;
+  background: rgba(128, 105, 167, 0.13);
+}
+
+.historias-hero__blob--b {
+  top: 180px;
+  left: -50px;
+  width: 150px;
+  height: 150px;
+  background: rgba(143, 194, 253, 0.13);
+}
+
+.historias-hero__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.historias-hero__avatars {
+  display: flex;
+  justify-content: center;
+}
+
+.photo-placeholder--avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #fff7f9;
+  font-size: 9px;
+}
+
+.historias-hero__avatars .photo-placeholder--avatar:first-child {
+  margin-right: -16px;
+}
+
+.historias-hero__title {
+  margin: 0;
+  font-weight: var(--font-weight-light);
+  font-size: 32px;
+  line-height: 1.19;
+  letter-spacing: -1.5px;
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.historias-hero__title strong {
+  font-weight: var(--font-weight-bold);
+}
+
+.historias-hero__lead {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.historias-hero__note {
+  margin: 0;
+  color: var(--color-violeta-esperanza);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 18px;
+}
+
+.historias-hero__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.historias-hero__ctas .btn {
+  width: 100%;
+}
+
+/* ---------- Entrevistas ---------- */
+.historias-entrevistas {
+  background: #f5eff7;
+  padding: 40px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.historias-entrevistas__lead {
+  margin: 0;
+  color: #4a454f;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.historias-entrevistas__featured {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid rgba(203, 196, 208, 0.1);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 12px 24px -8px rgba(34, 25, 32, 0.05);
+}
+
+.historias-entrevistas__featured-media {
+  height: 180px;
+}
+
+.historias-entrevistas__featured-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+}
+
+.historias-entrevistas__featured-body h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: var(--font-weight-bold);
+  color: #221920;
+}
+
+.historias-entrevistas__featured-body p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: #4a454f;
+}
+
+.historias-entrevistas__tag {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-amarillo-impulso);
+  color: #201a1e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.historias-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-full);
+  background: #ffeff8;
+  color: var(--color-violeta-esperanza);
+  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.historias-pill-btn:hover {
+  background: #ffe0f0;
+  transform: translateY(-1px);
+}
+
+.historias-entrevistas__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.historias-card {
+  background: #fff;
+  border: 1px solid rgba(203, 196, 208, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(34, 25, 32, 0.03);
+}
+
+.historias-card__media-wrap {
+  position: relative;
+  height: 140px;
+}
+
+.historias-card__media {
+  height: 100%;
+}
+
+.historias-card__play {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-violeta-esperanza);
+}
+
+.historias-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+}
+
+.historias-card__body h4 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: var(--font-weight-bold);
+  color: #221920;
+}
+
+.historias-card__body p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: #4a454f;
+}
+
+.historias-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-azul-confianza);
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+}
+
+/* ---------- Donación ---------- */
+.historias-donacion {
+  background: #fafaf8;
+  padding: 40px 16px;
+}
+
+.historias-donacion__card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.historias-donacion__media {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.historias-donacion__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+}
+
+.historias-donacion__body h2 {
+  margin: 0;
+  font-weight: var(--font-weight-light);
+  font-size: 26px;
+  line-height: 32px;
+  color: #1a1a1a;
+}
+
+.historias-donacion__text {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.historias-donacion__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.historias-donacion__ctas .btn {
+  width: 100%;
+}
+
+/* ---------- Acústicos ---------- */
+.historias-acusticos {
+  background: #fff7f9;
+  padding: 40px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.historias-acusticos .section-heading h2 {
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.historias-acusticos__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.historias-acustico {
+  background: #fff;
+  border: 1px solid rgba(203, 196, 208, 0.1);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(34, 25, 32, 0.04);
+}
+
+.historias-acustico__media {
+  height: 130px;
+}
+
+.historias-acustico__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+}
+
+.historias-acustico__body h4 {
+  margin: 0;
+  font-size: 14px;
+  line-height: normal;
+  font-weight: var(--font-weight-bold);
+  color: #221920;
+}
+
+.historias-acustico__body p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: #4a454f;
+}
+
+.historias-acustico__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(103, 81, 141, 0.05);
+  color: var(--color-violeta-esperanza);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+}
+
+.historias-youtube {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 24px;
+  border: 1px solid rgba(203, 196, 208, 0.1);
+  border-radius: 32px;
+  background: #ffeff8;
+  box-shadow: 0 10px 30px -10px rgba(34, 25, 32, 0.08);
+  text-align: center;
+}
+
+.historias-youtube__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(186, 26, 26, 0.1);
+  color: #ba1a1a;
+}
+
+.historias-youtube h3 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 800;
+  color: var(--color-violeta-esperanza);
+}
+
+.historias-youtube p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: #4a454f;
+}
+
+.historias-youtube__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+  padding: 14px 24px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: var(--font-weight-bold);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.historias-youtube__btn:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* ==================== Desktop ==================== */
+@media (min-width: 900px) {
+  .historias-hero__inner {
+    max-width: 1202px;
+    margin: 0 auto;
+    padding: 88px 40px 141px;
+  }
+
+  .historias-hero__avatars {
+    display: none;
+  }
+
+  .historias-hero__title {
+    font-size: 72px;
+    line-height: 76px;
+    letter-spacing: -2.5px;
+  }
+
+  .historias-hero__lead {
+    font-size: 22px;
+    line-height: 24px;
+  }
+
+  .historias-hero__note {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .historias-hero__ctas {
+    flex-direction: row;
+    justify-content: center;
+    width: auto;
+    margin-top: 12px;
+  }
+
+  .historias-hero__ctas .btn {
+    width: auto;
+  }
+
+  .historias-entrevistas {
+    padding: 42px 72px;
+    gap: 25px;
+  }
+
+  .historias-entrevistas__lead {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  .historias-entrevistas__featured {
+    flex-direction: row;
+    border-radius: 48px;
+  }
+
+  .historias-entrevistas__featured-media {
+    flex: 1;
+  }
+
+  .historias-entrevistas__featured-body {
+    flex: 1;
+    padding: 48px;
+    gap: 16px;
+  }
+
+  .historias-entrevistas__featured-body h3 {
+    font-size: 30px;
+    line-height: 36px;
+  }
+
+  .historias-entrevistas__featured-body p {
+    font-size: 16px;
+    line-height: 26px;
+  }
+
+  .historias-entrevistas__grid {
+    flex-direction: row;
+  }
+
+  .historias-card {
+    flex: 1;
+    border-radius: 48px;
+  }
+
+  .historias-card__media-wrap {
+    height: 256px;
+  }
+
+  .historias-card__body {
+    padding: 24px;
+  }
+
+  .historias-donacion {
+    padding: 42px 72px;
+  }
+
+  .historias-donacion__card {
+    display: flex;
+    flex-direction: row;
+    height: 340px;
+    border-radius: 28px;
+  }
+
+  .historias-donacion__media {
+    width: 480px;
+    height: 100%;
+    flex-shrink: 0;
+  }
+
+  .historias-donacion__body {
+    justify-content: center;
+    padding: 64px;
+    gap: 24px;
+  }
+
+  .historias-donacion__body h2 {
+    font-size: 44px;
+    line-height: 52px;
+  }
+
+  .historias-donacion__text {
+    font-size: 16px;
+    line-height: 27px;
+    max-width: 480px;
+  }
+
+  .historias-donacion__ctas {
+    flex-direction: row;
+    width: auto;
+  }
+
+  .historias-donacion__ctas .btn {
+    width: auto;
+  }
+
+  .historias-acusticos {
+    padding: 40px 48px 96px;
+  }
+
+  .historias-acusticos .section-heading h2 {
+    font-size: 48px;
+    line-height: 56px;
+  }
+
+  .historias-acusticos__grid {
+    flex-direction: row;
+    max-width: 1184px;
+    margin: 0 auto;
+  }
+
+  .historias-acustico {
+    flex: 1;
+    border-radius: 48px;
+  }
+
+  .historias-acustico__media {
+    height: 224px;
+  }
+
+  .historias-acustico__body {
+    padding: 24px;
+  }
+
+  .historias-acustico__body h4 {
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  .historias-acustico__body p {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .historias-youtube {
+    max-width: 1184px;
+    margin: 0 auto;
+    padding: 49px 33px;
+  }
+
+  .historias-youtube h3 {
+    font-size: 24px;
+  }
+
+  .historias-youtube__btn {
+    width: 304px;
+  }
+}
