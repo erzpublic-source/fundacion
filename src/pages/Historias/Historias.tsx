@@ -8,6 +8,8 @@ import historiasAvatar1 from '../../assets/images/historias-avatar-1.jpg'
 import historiasAvatar2 from '../../assets/images/historias-avatar-2.jpg'
 import historiasCard1Image from '../../assets/images/historias-card1.jpg'
 import historiasCard2Image from '../../assets/images/historias-card2.jpg'
+import historiasAcusticoGuitarra from '../../assets/images/historias-acustico-guitarra.jpg'
+import historiasAcusticoPiano from '../../assets/images/historias-acustico-piano.jpg'
 import { homeAnchor } from '../../utils/links'
 import './Historias.css'
 
@@ -53,16 +55,14 @@ function VideoIcon() {
   )
 }
 
-interface PhotoPlaceholderProps {
-  label: string
-  className?: string
-}
-
-function PhotoPlaceholder({ label, className }: PhotoPlaceholderProps) {
+function HeadphonesIcon() {
   return (
-    <div className={`photo-placeholder${className ? ` ${className}` : ''}`} role="img" aria-label={label}>
-      <span>{label}</span>
-    </div>
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path
+        d="M4.5 13.5H1.5C1.0875 13.5 0.734375 13.3531 0.440625 13.0594C0.146875 12.7656 0 12.4125 0 12V6.75C0 5.8125 0.178125 4.93437 0.534375 4.11562C0.890625 3.29688 1.37188 2.58437 1.97812 1.97812C2.58437 1.37188 3.29688 0.890625 4.11562 0.534375C4.93437 0.178125 5.8125 0 6.75 0C7.6875 0 8.56562 0.178125 9.38437 0.534375C10.2031 0.890625 10.9156 1.37188 11.5219 1.97812C12.1281 2.58437 12.6094 3.29688 12.9656 4.11562C13.3219 4.93437 13.5 5.8125 13.5 6.75V12C13.5 12.4125 13.3531 12.7656 13.0594 13.0594C12.7656 13.3531 12.4125 13.5 12 13.5H9V7.5H12V6.75C12 5.2875 11.4906 4.04688 10.4719 3.02813C9.45312 2.00938 8.2125 1.5 6.75 1.5C5.2875 1.5 4.04688 2.00938 3.02813 3.02813C2.00938 4.04688 1.5 5.2875 1.5 6.75V7.5H4.5V13.5Z"
+        fill="currentColor"
+      />
+    </svg>
   )
 }
 
@@ -85,17 +85,17 @@ const ACUSTICOS_CARDS = [
   {
     title: 'JAIME VALENCIA - UN DÍA MÁS',
     text: 'Una interpretación íntima de su canción resiliente, llena de historia y esperanza.',
-    photoLabel: 'Foto — Jaime Valencia Acústico',
+    image: historiasAcusticoGuitarra,
   },
   {
     title: 'VOCES DE ESPERANZA - SESIÓN EN VIVO',
     text: 'Un ensamble local que une voces para sanar a través de melodías compartidas.',
-    photoLabel: 'Foto — Voces de Esperanza',
+    image: historiasAcusticoGuitarra,
   },
   {
     title: 'MELODÍAS QUE SANAN - PIANO SOLO',
     text: 'Una pieza instrumental diseñada para acompañar momentos de reflexión y calma.',
-    photoLabel: 'Foto — Piano Solo',
+    image: historiasAcusticoPiano,
   },
 ]
 
@@ -243,14 +243,23 @@ export default function Historias() {
           <div className="historias-acusticos__grid">
             {ACUSTICOS_CARDS.map((card) => (
               <article className="historias-acustico" key={card.title}>
-                <PhotoPlaceholder label={card.photoLabel} className="historias-acustico__media" />
-                <div className="historias-acustico__body">
-                  <h4>{card.title}</h4>
-                  <p>{card.text}</p>
-                  <a href="#canal" className="historias-acustico__link">
-                    <PlayIcon />
-                    Disfrutar el acústico en el canal
-                  </a>
+                <div className="historias-acustico__media-wrap">
+                  <img src={card.image} alt={card.title} className="historias-acustico__media" />
+                </div>
+                <div className="historias-acustico__frame">
+                  <div className="historias-acustico__body">
+                    <h4>{card.title}</h4>
+                    <p>{card.text}</p>
+                    <a
+                      href={CHANNEL_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="historias-acustico__link"
+                    >
+                      <HeadphonesIcon />
+                      Disfrutar el acústico en el canal
+                    </a>
+                  </div>
                 </div>
               </article>
             ))}
