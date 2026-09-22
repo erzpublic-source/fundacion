@@ -265,7 +265,7 @@
 
 /* ---------- Donación ---------- */
 .historias-donacion {
-  padding: 40px 16px;
+  padding: 40px 16px 64px;
   background: var(--color-bg-hover-secondary);
 }
 
@@ -320,7 +320,7 @@
 /* ---------- Acústicos ---------- */
 .historias-acusticos {
   background: #fff7f9;
-  padding: 40px 16px;
+  padding: 64px 16px 40px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -563,7 +563,7 @@
   }
 
   .historias-donacion {
-    padding: 42px 72px;
+    padding: 42px 72px 88px;
   }
 
   .historias-donacion__card {
@@ -596,7 +596,7 @@
   }
 
   .historias-acusticos {
-    padding: 40px 48px 96px;
+    padding: 88px 48px 96px;
   }
 
   .historias-acusticos .section-heading h2 {
