@@ -139,6 +139,9 @@
 
 .historias-entrevistas__featured-media {
   height: 180px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .historias-entrevistas__featured-body {

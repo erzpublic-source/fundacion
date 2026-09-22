@@ -1,6 +1,7 @@
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import donacionesImage from '../../assets/images/donaciones.jpg'
+import historiasFeaturedImage from '../../assets/images/historias-featured.jpg'
 import { homeAnchor } from '../../utils/links'
 import './Historias.css'
 
@@ -136,7 +137,12 @@ export default function Historias() {
           </div>
 
           <article className="historias-entrevistas__featured">
-            <PhotoPlaceholder label="Foto destacada — Jaime Valencia" className="historias-entrevistas__featured-media" />
+            <div
+              className="historias-entrevistas__featured-media"
+              role="img"
+              aria-label="Jaime Valencia tocando guitarra en su sala"
+              style={{ backgroundImage: `url(${historiasFeaturedImage})` }}
+            />
             <div className="historias-entrevistas__featured-body">
               <span className="historias-entrevistas__tag">Destacado</span>
               <h3>Un Día Más con JAIME VALENCIA</h3>
