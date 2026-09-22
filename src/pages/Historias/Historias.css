@@ -139,7 +139,8 @@
 
 .historias-entrevistas__featured-media {
   height: 180px;
-  background-size: cover;
+  background-color: #f5eff7;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }
