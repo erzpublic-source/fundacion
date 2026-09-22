@@ -1,5 +1,6 @@
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
+import heroImage from '../../assets/images/donar-hero.jpg'
 import './Donar.css'
 
 function ArrowRight() {
@@ -122,9 +123,12 @@ export default function Donar() {
             </div>
 
             <div className="donar-hero__media-wrap">
-              <div className="donar-hero__media" role="img" aria-label="Foto — Mano recibiendo luz cálida">
-                <span>Foto — Hero solidaridad</span>
-              </div>
+              <div
+                className="donar-hero__media"
+                role="img"
+                aria-label="Foto — Mano recibiendo luz cálida"
+                style={{ backgroundImage: `url(${heroImage})` }}
+              />
 
               <div className="donar-hero__card">
                 <span className="donar-hero__card-tag">
