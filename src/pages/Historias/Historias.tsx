@@ -137,12 +137,9 @@ export default function Historias() {
           </div>
 
           <article className="historias-entrevistas__featured">
-            <div
-              className="historias-entrevistas__featured-media"
-              role="img"
-              aria-label="Jaime Valencia tocando guitarra en su sala"
-              style={{ backgroundImage: `url(${historiasFeaturedImage})` }}
-            />
+            <div className="historias-entrevistas__featured-media">
+              <img src={historiasFeaturedImage} alt="Jaime Valencia tocando guitarra en su sala" />
+            </div>
             <div className="historias-entrevistas__featured-body">
               <span className="historias-entrevistas__tag">Destacado</span>
               <h3>Un Día Más con JAIME VALENCIA</h3>

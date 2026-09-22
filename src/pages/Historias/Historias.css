@@ -47,7 +47,7 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  padding: 200px 16px 32px;
+  padding: 90px 16px 32px;
   text-align: center;
 }
 
@@ -137,12 +137,10 @@
   box-shadow: 0 12px 24px -8px rgba(34, 25, 32, 0.05);
 }
 
-.historias-entrevistas__featured-media {
-  height: 180px;
-  background-color: #f5eff7;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+.historias-entrevistas__featured-media img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .historias-entrevistas__featured-body {
@@ -499,6 +497,7 @@
 
   .historias-entrevistas__featured {
     flex-direction: row;
+    align-items: center;
     border-radius: 48px;
   }
 
