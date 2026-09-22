@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
+import VideoModal from '../../components/VideoModal/VideoModal'
 import donacionesImage from '../../assets/images/donaciones.jpg'
 import historiasFeaturedImage from '../../assets/images/historias-featured.jpg'
 import historiasAvatar1 from '../../assets/images/historias-avatar-1.jpg'
@@ -92,6 +94,8 @@ const ACUSTICOS_CARDS = [
 ]
 
 export default function Historias() {
+  const [isVideoOpen, setIsVideoOpen] = useState(false)
+
   return (
     <>
       <Navbar />
@@ -150,10 +154,10 @@ export default function Historias() {
                 protesta el cual hoy en día sigue siendo reconocido y activo en los escenarios. Hablaremos de su
                 vida personal y la salud mental.
               </p>
-              <a href="#canal" className="historias-pill-btn">
+              <button type="button" className="historias-pill-btn" onClick={() => setIsVideoOpen(true)}>
                 <PlayIcon />
-                Ver entrevista en el canal
-              </a>
+                Ver entrevista
+              </button>
             </div>
           </article>
 
@@ -244,6 +248,15 @@ export default function Historias() {
       </main>
 
       <Footer />
+
+      <VideoModal
+        open={isVideoOpen}
+        onClose={() => setIsVideoOpen(false)}
+        title="Un Día Más con JAIME VALENCIA"
+        videoId="C5xYXV6LsWc"
+        startSeconds={2}
+        channelUrl="https://www.youtube.com/watch?v=C5xYXV6LsWc"
+      />
     </>
   )
 }

@@ -183,11 +183,14 @@
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
+  border: none;
   border-radius: var(--radius-full);
   background: #ffeff8;
   color: var(--color-violeta-esperanza);
+  font-family: inherit;
   font-size: 12px;
   font-weight: var(--font-weight-bold);
+  cursor: pointer;
   transition: background 0.15s ease, transform 0.15s ease;
 }
 
