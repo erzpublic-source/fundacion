@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import Logo from './Logo'
+import { homeAnchor } from '../../utils/links'
 import './Navbar.css'
 
 const NAV_LINKS = [
   { label: 'Inicio', href: '/' },
   { label: 'Historias', href: '/historias' },
-  { label: 'Eventos', href: '/#eventos' },
-  { label: 'Donar', href: '/#donar' },
-  { label: 'Voluntariado', href: '/#voluntariado' },
-  { label: 'Contacto', href: '/#contacto' },
+  { label: 'Eventos', href: homeAnchor('eventos') },
+  { label: 'Donar', href: homeAnchor('donar') },
+  { label: 'Voluntariado', href: homeAnchor('voluntariado') },
+  { label: 'Contacto', href: homeAnchor('contacto') },
 ]
 
 function getAnchorId(href: string): string | null {

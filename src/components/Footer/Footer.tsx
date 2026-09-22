@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom'
 import Logo from '../Navbar/Logo'
+import { homeAnchor } from '../../utils/links'
 import './Footer.css'
 
 export default function Footer() {
@@ -14,13 +16,13 @@ export default function Footer() {
           <p className="footer__heading">Enlaces</p>
           <ul>
             <li>
-              <a href="#nosotros">Nosotros</a>
+              <a href={homeAnchor('nosotros')}>Nosotros</a>
             </li>
             <li>
-              <a href="#historias">Historias</a>
+              <Link to="/historias">Historias</Link>
             </li>
             <li>
-              <a href="#voluntariado">Voluntariado</a>
+              <a href={homeAnchor('voluntariado')}>Voluntariado</a>
             </li>
             <li>
               <a href="#privacidad">Privacidad</a>

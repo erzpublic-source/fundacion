@@ -1,6 +1,7 @@
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import donacionesImage from '../../assets/images/donaciones.jpg'
+import { homeAnchor } from '../../utils/links'
 import './Historias.css'
 
 function PlayIcon() {
@@ -189,11 +190,11 @@ export default function Historias() {
                 de nuestras líneas de escucha activa.
               </p>
               <div className="historias-donacion__ctas">
-                <a href="/#donar" className="btn btn--support">
+                <a href={homeAnchor('donar')} className="btn btn--support">
                   Quiero donar
                   <ArrowRight />
                 </a>
-                <a href="/#voluntariado" className="btn btn--secondary">
+                <a href={homeAnchor('voluntariado')} className="btn btn--secondary">
                   Quiero ser voluntario
                   <VolunteerIcon />
                 </a>
