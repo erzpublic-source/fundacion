@@ -79,7 +79,7 @@ function DonationGrid({ background, heading, lead, cards }: DonationGridProps) {
 
       <div className="donar-grid-section__grid">
         {cards.map((card) => (
-          <article className="donar-card" key={card.title}>
+          <button type="button" className="donar-card" key={card.title}>
             <div
               className="donar-card__media"
               role="img"
@@ -91,12 +91,12 @@ function DonationGrid({ background, heading, lead, cards }: DonationGridProps) {
             <div className="donar-card__body">
               <h3>{card.title}</h3>
               <p>{card.text}</p>
-              <button type="button" className="donar-card__link">
+              <span className="donar-card__link">
                 <HeartIcon />
                 {card.action}
-              </button>
+              </span>
             </div>
-          </article>
+          </button>
         ))}
       </div>
     </section>
