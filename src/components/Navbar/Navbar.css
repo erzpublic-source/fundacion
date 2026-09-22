@@ -153,12 +153,12 @@
   position: fixed;
   inset: 0;
   z-index: 55;
-  background: color-mix(in oklab, var(--color-tinta-humana) 12%, transparent);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
 }
 
 .mobile-menu-backdrop--visible {
@@ -175,37 +175,38 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(62px + env(safe-area-inset-bottom, 0px));
-  background: color-mix(in oklab, var(--color-white) 65%, transparent);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  height: 62px;
+  background: #ffffff;
   border-radius: 16px 16px 0 0;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-bottom: none;
-  box-shadow: 0 -4px 24px rgba(34, 25, 32, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: 0 -4px 24px rgba(34, 25, 32, 0.12);
   overflow: hidden;
-  transition: height 0.4s cubic-bezier(0.32, 0.72, 0, 1), background 0.4s ease;
+  transition: height 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .mobile-bottombar--open {
-  height: calc(300px + env(safe-area-inset-bottom, 0px));
-  background: color-mix(in oklab, var(--color-white) 80%, transparent);
+  height: 420px;
 }
 
 .mobile-menu-panel {
-  flex: 1;
+  flex: 0 0 auto;
+  max-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 12px 16px;
-  overflow-y: auto;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 20px;
   opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
   transform: translateY(8px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.35s cubic-bezier(0.32, 0.72, 0, 1), padding 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .mobile-bottombar--open .mobile-menu-panel {
+  max-height: 358px;
+  padding: 16px 20px;
   opacity: 1;
+  pointer-events: auto;
   transform: translateY(0);
 }
 

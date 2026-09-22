@@ -64,10 +64,10 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-    return () => {
-      document.body.style.overflow = ''
-    }
+    if (!menuOpen) return
+    const closeOnScroll = () => setMenuOpen(false)
+    window.addEventListener('scroll', closeOnScroll, { passive: true })
+    return () => window.removeEventListener('scroll', closeOnScroll)
   }, [menuOpen])
 
   const closeMenu = () => setMenuOpen(false)
