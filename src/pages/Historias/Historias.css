@@ -124,10 +124,19 @@
   box-shadow: 0 12px 24px -8px rgba(34, 25, 32, 0.05);
 }
 
+.historias-entrevistas__featured-media {
+  overflow: hidden;
+  border-radius: 24px 24px 0 0;
+}
+
 .historias-entrevistas__featured-media img {
   display: block;
   width: 100%;
   height: auto;
+  /* Scaled past its own box so this wrapper's clip hides it entirely,
+     instead of leaving a hairline of the card background showing through
+     at the rounded corners. */
+  transform: scale(1.03);
 }
 
 .historias-entrevistas__featured-body {
@@ -204,7 +213,11 @@
   position: relative;
   display: block;
   width: 100%;
-  height: 140px;
+  /* Overflows the card by a few px on the top/left/right (clipped by
+     .historias-card's own rounded corners) so no hairline of the card
+     background shows through at the top corners. */
+  height: calc(140px + 6px);
+  margin: -6px -6px 0;
   padding: 0;
   border: none;
   cursor: pointer;
@@ -540,6 +553,14 @@
 
   .historias-entrevistas__featured-media {
     flex: 1;
+    align-self: stretch;
+    border-radius: 48px 0 0 48px;
+  }
+
+  .historias-entrevistas__featured-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .historias-entrevistas__featured-body {
@@ -568,7 +589,7 @@
   }
 
   .historias-card__media-wrap {
-    height: 256px;
+    height: calc(256px + 6px);
   }
 
   .historias-card__body {

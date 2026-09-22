@@ -177,7 +177,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 180px;
+  flex-shrink: 0;
+  /* Overflows the card by a few px on the top/left/right (clipped by
+     .donar-card's own rounded corners) so no hairline of the card
+     background shows through at the top corners. */
+  height: calc(180px + 6px);
+  margin: -6px -6px 0;
   background-color: #f0e9f2;
   background-image: linear-gradient(135deg, rgba(106, 83, 144, 0.14), rgba(243, 211, 114, 0.18));
   background-size: cover;
@@ -309,6 +314,6 @@
   }
 
   .donar-card__media {
-    height: 220px;
+    height: calc(220px + 6px);
   }
 }
