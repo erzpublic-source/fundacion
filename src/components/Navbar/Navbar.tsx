@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { label: 'Inicio', href: '/' },
   { label: 'Historias', href: '/historias' },
   { label: 'Eventos', href: homeAnchor('eventos') },
-  { label: 'Donar', href: homeAnchor('donar') },
+  { label: 'Donar', href: '/donar' },
   { label: 'Voluntariado', href: homeAnchor('voluntariado') },
   { label: 'Contacto', href: homeAnchor('contacto') },
 ]
