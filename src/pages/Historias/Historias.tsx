@@ -242,7 +242,13 @@ export default function Historias() {
 
           <div className="historias-acusticos__grid">
             {ACUSTICOS_CARDS.map((card) => (
-              <article className="historias-acustico" key={card.title}>
+              <a
+                href={CHANNEL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="historias-acustico"
+                key={card.title}
+              >
                 <div className="historias-acustico__media-wrap">
                   <img src={card.image} alt={card.title} className="historias-acustico__media" />
                 </div>
@@ -250,18 +256,13 @@ export default function Historias() {
                   <div className="historias-acustico__body">
                     <h4>{card.title}</h4>
                     <p>{card.text}</p>
-                    <a
-                      href={CHANNEL_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="historias-acustico__link"
-                    >
+                    <span className="historias-acustico__link">
                       <HeadphonesIcon />
                       Disfrutar el acústico en el canal
-                    </a>
+                    </span>
                   </div>
                 </div>
-              </article>
+              </a>
             ))}
           </div>
 

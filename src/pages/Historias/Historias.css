@@ -343,6 +343,17 @@
   background: #efdee8;
   border-radius: 24px;
   overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.historias-acustico:hover,
+.historias-acustico:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(34, 25, 32, 0.18);
+}
+
+.historias-acustico:hover .historias-acustico__link {
+  background: rgba(103, 81, 141, 0.12);
 }
 
 .historias-acustico__media-wrap {
@@ -390,7 +401,9 @@
 
 .historias-acustico__link {
   display: inline-flex;
+  align-self: center;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 8px 12px;
   border-radius: var(--radius-full);
@@ -398,7 +411,7 @@
   color: var(--color-violeta-esperanza);
   font-size: 11px;
   font-weight: var(--font-weight-bold);
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
 
 .historias-acustico__link:hover {
@@ -472,12 +485,12 @@
   }
 
   .historias-hero__avatar {
-    width: 80px;
-    height: 80px;
+    width: 124px;
+    height: 124px;
   }
 
   .historias-hero__avatars .historias-hero__avatar:first-child {
-    margin-right: -20px;
+    margin-right: -28px;
   }
 
   .historias-hero__title {
