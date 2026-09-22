@@ -56,15 +56,15 @@
   justify-content: center;
 }
 
-.photo-placeholder--avatar {
+.historias-hero__avatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
   border: 2px solid #fff7f9;
-  font-size: 9px;
+  object-fit: cover;
 }
 
-.historias-hero__avatars .photo-placeholder--avatar:first-child {
+.historias-hero__avatars .historias-hero__avatar:first-child {
   margin-right: -16px;
 }
 
@@ -452,8 +452,13 @@
     padding: 180px 40px 141px;
   }
 
-  .historias-hero__avatars {
-    display: none;
+  .historias-hero__avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .historias-hero__avatars .historias-hero__avatar:first-child {
+    margin-right: -20px;
   }
 
   .historias-hero__title {

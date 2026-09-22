@@ -2,6 +2,8 @@ import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import donacionesImage from '../../assets/images/donaciones.jpg'
 import historiasFeaturedImage from '../../assets/images/historias-featured.jpg'
+import historiasAvatar1 from '../../assets/images/historias-avatar-1.jpg'
+import historiasAvatar2 from '../../assets/images/historias-avatar-2.jpg'
 import { homeAnchor } from '../../utils/links'
 import './Historias.css'
 
@@ -100,8 +102,8 @@ export default function Historias() {
           <span className="historias-hero__blob historias-hero__blob--b" aria-hidden="true" />
           <div className="historias-hero__inner">
             <div className="historias-hero__avatars" aria-hidden="true">
-              <PhotoPlaceholder label="Avatar 1" className="photo-placeholder--avatar" />
-              <PhotoPlaceholder label="Avatar 2" className="photo-placeholder--avatar" />
+              <img src={historiasAvatar1} alt="" className="historias-hero__avatar" />
+              <img src={historiasAvatar2} alt="" className="historias-hero__avatar" />
             </div>
 
             <h1 className="historias-hero__title">
