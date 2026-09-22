@@ -111,7 +111,7 @@
 
 /* ---------- Esencia ---------- */
 .esencia {
-  padding: 40px 16px;
+  padding: 64px 16px;
   background: #fff;
 }
 
@@ -163,7 +163,7 @@
 
 /* ---------- Impacto ---------- */
 .impacto {
-  padding: 40px 16px;
+  padding: 64px 16px;
   background: #fafaf8;
 }
 
@@ -235,7 +235,7 @@
 
 /* ---------- Donaciones ---------- */
 .donaciones {
-  padding: 40px 16px;
+  padding: 64px 16px;
   background: var(--color-bg-hover-secondary);
 }
 
@@ -286,7 +286,7 @@
 
 /* ---------- Sponsors ---------- */
 .sponsors {
-  padding: 32px 16px;
+  padding: 64px 16px;
   background: #fff;
   text-align: center;
 }
@@ -414,7 +414,7 @@
   }
 
   .esencia {
-    padding: 42px 72px;
+    padding: 88px 72px;
   }
 
   .esencia__cards {
@@ -437,7 +437,7 @@
   }
 
   .impacto {
-    padding: 42px 72px;
+    padding: 88px 72px;
   }
 
   .impacto__grid,
@@ -477,7 +477,7 @@
   }
 
   .donaciones {
-    padding: 42px 72px;
+    padding: 88px 72px;
   }
 
   .donaciones__card {
@@ -510,7 +510,7 @@
   }
 
   .sponsors {
-    padding: 64px 72px;
+    padding: 88px 72px;
   }
 
   .sponsors__row {

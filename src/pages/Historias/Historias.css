@@ -101,7 +101,7 @@
 /* ---------- Entrevistas ---------- */
 .historias-entrevistas {
   background: #f5eff7;
-  padding: 40px 16px;
+  padding: 64px 16px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -265,7 +265,7 @@
 
 /* ---------- Donación ---------- */
 .historias-donacion {
-  padding: 40px 16px 64px;
+  padding: 64px 16px;
   background: var(--color-bg-hover-secondary);
 }
 
@@ -320,7 +320,7 @@
 /* ---------- Acústicos ---------- */
 .historias-acusticos {
   background: #fff7f9;
-  padding: 64px 16px 40px;
+  padding: 64px 16px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -508,7 +508,7 @@
   }
 
   .historias-entrevistas {
-    padding: 42px 72px;
+    padding: 88px 72px;
     gap: 25px;
   }
 
@@ -563,7 +563,7 @@
   }
 
   .historias-donacion {
-    padding: 42px 72px 88px;
+    padding: 88px 72px;
   }
 
   .historias-donacion__card {
