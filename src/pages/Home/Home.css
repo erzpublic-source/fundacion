@@ -5,13 +5,6 @@
   background-repeat: no-repeat;
 }
 
-.hero__media {
-  height: 240px;
-  background-size: cover;
-  background-position: center 25%;
-  background-repeat: no-repeat;
-}
-
 /* ---------- Shared ---------- */
 .section-heading {
   display: flex;
@@ -192,26 +185,31 @@
 
 .hero__inner {
   position: relative;
+  overflow: hidden;
+  min-height: 560px;
   display: flex;
   flex-direction: column;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
 }
 
 .hero__particles {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
+  z-index: 1;
   pointer-events: none;
 }
 
-.hero__media,
 .hero__content {
   position: relative;
-  z-index: 1;
-}
-
-.hero__content {
+  z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -533,15 +531,12 @@
   }
 
   .hero__media {
-    flex: 1;
-    height: auto;
-    border-radius: 0 0 0 32px;
-    background-position: 5% 22%;
+    background-position: center;
   }
 
   .hero__card {
     position: absolute;
-    left: calc(var(--hero-gutter) + 412px);
+    left: 412px;
     bottom: 87px;
     width: 488px;
     padding: 20px 24px;
@@ -562,7 +557,7 @@
   }
 
   .hero__card {
-    left: calc(var(--hero-gutter) + 584px);
+    left: 584px;
   }
 }
 

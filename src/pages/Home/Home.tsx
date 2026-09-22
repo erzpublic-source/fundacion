@@ -143,7 +143,7 @@ export default function Home() {
         const el = heroParallaxRef.current
         if (el) {
           const offset = Math.min(window.scrollY * 0.15, 120)
-          el.style.backgroundPosition = `5% calc(22% + ${offset}px)`
+          el.style.backgroundPosition = `center calc(50% + ${offset}px)`
         }
         ticking = false
       })
@@ -164,7 +164,7 @@ export default function Home() {
             <div
               className="hero__media"
               role="img"
-              aria-label="Mujer sonriendo en un ambiente cálido, acompañada en una conversación"
+              aria-label="Dos mujeres conversando en un ambiente cálido y acogedor"
               ref={heroParallaxRef}
               style={{ backgroundImage: `url(${heroImage})` }}
             />
