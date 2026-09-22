@@ -6,8 +6,12 @@ import donacionesImage from '../../assets/images/donaciones.jpg'
 import historiasFeaturedImage from '../../assets/images/historias-featured.jpg'
 import historiasAvatar1 from '../../assets/images/historias-avatar-1.jpg'
 import historiasAvatar2 from '../../assets/images/historias-avatar-2.jpg'
+import historiasCard1Image from '../../assets/images/historias-card1.jpg'
+import historiasCard2Image from '../../assets/images/historias-card2.jpg'
 import { homeAnchor } from '../../utils/links'
 import './Historias.css'
+
+const CHANNEL_URL = 'https://www.youtube.com/@fundacionUnD%C3%ADaM%C3%A1s'
 
 function PlayIcon() {
   return (
@@ -66,12 +70,14 @@ const ENTREVISTAS_CARDS = [
   {
     title: 'Conversaciones sobre el miedo',
     text: 'Una charla íntima sobre cómo afrontar la ansiedad en el día a día y encontrar herramientas de apoyo.',
-    photoLabel: 'Foto — Conversaciones sobre el miedo',
+    image: historiasCard1Image,
+    videoId: '1v4xV_w_y0s',
   },
   {
     title: 'Resiliencia comunitaria',
     text: 'Líderes locales comparten sus historias de recuperación colectiva y la importancia del tejido social.',
-    photoLabel: 'Foto — Resiliencia comunitaria',
+    image: historiasCard2Image,
+    videoId: 'C5xYXV6LsWc',
   },
 ]
 
@@ -93,8 +99,14 @@ const ACUSTICOS_CARDS = [
   },
 ]
 
+interface ActiveVideo {
+  title: string
+  videoId: string
+  startSeconds?: number
+}
+
 export default function Historias() {
-  const [isVideoOpen, setIsVideoOpen] = useState(false)
+  const [activeVideo, setActiveVideo] = useState<ActiveVideo | null>(null)
 
   return (
     <>
@@ -154,7 +166,13 @@ export default function Historias() {
                 protesta el cual hoy en día sigue siendo reconocido y activo en los escenarios. Hablaremos de su
                 vida personal y la salud mental.
               </p>
-              <button type="button" className="historias-pill-btn" onClick={() => setIsVideoOpen(true)}>
+              <button
+                type="button"
+                className="historias-pill-btn"
+                onClick={() =>
+                  setActiveVideo({ title: 'Un Día Más con JAIME VALENCIA', videoId: 'C5xYXV6LsWc', startSeconds: 2 })
+                }
+              >
                 <PlayIcon />
                 Ver entrevista
               </button>
@@ -164,16 +182,21 @@ export default function Historias() {
           <div className="historias-entrevistas__grid">
             {ENTREVISTAS_CARDS.map((card) => (
               <article className="historias-card" key={card.title}>
-                <div className="historias-card__media-wrap">
-                  <PhotoPlaceholder label={card.photoLabel} className="historias-card__media" />
+                <button
+                  type="button"
+                  className="historias-card__media-wrap"
+                  onClick={() => setActiveVideo({ title: card.title, videoId: card.videoId })}
+                  aria-label={`Reproducir: ${card.title}`}
+                >
+                  <img src={card.image} alt={card.title} className="historias-card__media" />
                   <span className="historias-card__play" aria-hidden="true">
                     <PlayIcon />
                   </span>
-                </div>
+                </button>
                 <div className="historias-card__body">
                   <h4>{card.title}</h4>
                   <p>{card.text}</p>
-                  <a href="#canal" className="historias-card__link">
+                  <a href={CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="historias-card__link">
                     Ver en canal
                     <ArrowRightSmall />
                   </a>
@@ -239,7 +262,7 @@ export default function Historias() {
             </span>
             <h3>Nuestra comunidad en YouTube</h3>
             <p>Suscríbete para ver entrevistas, acústicos y momentos que sanan.</p>
-            <a href="#canal" className="historias-youtube__btn">
+            <a href={CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="historias-youtube__btn">
               <VideoIcon />
               Ir al canal de YouTube
             </a>
@@ -249,14 +272,16 @@ export default function Historias() {
 
       <Footer />
 
-      <VideoModal
-        open={isVideoOpen}
-        onClose={() => setIsVideoOpen(false)}
-        title="Un Día Más con JAIME VALENCIA"
-        videoId="C5xYXV6LsWc"
-        startSeconds={2}
-        channelUrl="https://www.youtube.com/watch?v=C5xYXV6LsWc"
-      />
+      {activeVideo && (
+        <VideoModal
+          open
+          onClose={() => setActiveVideo(null)}
+          title={activeVideo.title}
+          videoId={activeVideo.videoId}
+          startSeconds={activeVideo.startSeconds}
+          channelUrl={`https://www.youtube.com/watch?v=${activeVideo.videoId}`}
+        />
+      )}
     </>
   )
 }

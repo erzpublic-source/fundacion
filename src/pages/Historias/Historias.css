@@ -215,11 +215,19 @@
 
 .historias-card__media-wrap {
   position: relative;
+  display: block;
+  width: 100%;
   height: 140px;
+  padding: 0;
+  border: none;
+  cursor: pointer;
 }
 
 .historias-card__media {
+  display: block;
+  width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .historias-card__play {
