@@ -160,14 +160,16 @@ export default function Home() {
       <main>
         <section className="hero" id="inicio">
           <div className="hero__inner">
-            <HeroParticles />
-            <div
-              className="hero__media"
-              role="img"
-              aria-label="Dos mujeres conversando en un ambiente cálido y acogedor"
-              ref={heroParallaxRef}
-              style={{ backgroundImage: `url(${heroImage})` }}
-            />
+            <div className="hero__visual">
+              <div
+                className="hero__media"
+                role="img"
+                aria-label="Dos mujeres conversando en un ambiente cálido y acogedor"
+                ref={heroParallaxRef}
+                style={{ backgroundImage: `url(${heroImage})` }}
+              />
+              <HeroParticles />
+            </div>
             <div className="hero__content">
               <h1 className="hero__title">
                 Un espacio seguro{' '}para
