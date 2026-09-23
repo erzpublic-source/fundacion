@@ -62,16 +62,16 @@ const EMPRESAS_CARDS: DonationCard[] = [
 ]
 
 interface DonationGridProps {
-  eyebrowless?: boolean
+  id?: string
   background: string
   heading: string
   lead: string
   cards: DonationCard[]
 }
 
-function DonationGrid({ background, heading, lead, cards }: DonationGridProps) {
+function DonationGrid({ id, background, heading, lead, cards }: DonationGridProps) {
   return (
-    <section className="donar-grid-section" style={{ background }}>
+    <section id={id} className="donar-grid-section" style={{ background }}>
       <div className="section-heading">
         <h2>{heading}</h2>
         <p className="donar-grid-section__lead">{lead}</p>
@@ -122,10 +122,10 @@ export default function Donar() {
               </h1>
 
               <div className="donar-hero__ctas">
-                <button type="button" className="btn btn--support">
+                <a href="#donacion-personas" className="btn btn--support">
                   Quiero donar
                   <ArrowRight />
-                </button>
+                </a>
                 <button type="button" className="btn btn--secondary">
                   Quiero ayudar
                 </button>
@@ -155,6 +155,7 @@ export default function Donar() {
         </section>
 
         <DonationGrid
+          id="donacion-personas"
           background="#f5eff7"
           heading="Donación Personas"
           lead="Tu generosidad personal es el motor que nos permite transformar vidas. Elige cómo quieres sumar hoy:"
