@@ -58,7 +58,7 @@ export default function HeroPreloader({ imageSrc }: HeroPreloaderProps) {
   return (
     <div className={`hero-preloader${revealing ? ' hero-preloader--reveal' : ''}`} aria-hidden="true">
       {Array.from({ length: BAR_COUNT }, (_, i) => (
-        <span key={i} className="hero-preloader__bar" style={{ backgroundPosition: `${(i * 100) / (BAR_COUNT - 1)}% 0` }} />
+        <span key={i} className="hero-preloader__bar" />
       ))}
     </div>
   )
