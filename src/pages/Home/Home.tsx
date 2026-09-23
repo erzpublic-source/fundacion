@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import HeroParticles from './HeroParticles'
+import HeroPreloader from './HeroPreloader'
 import heroImage from '../../assets/images/hero.jpg'
 import impactoHistorias from '../../assets/images/impacto-historias.jpg'
 import impactoEventos from '../../assets/images/impacto-eventos.jpg'
@@ -170,6 +171,7 @@ export default function Home() {
                 style={{ backgroundImage: `url(${heroImage})` }}
               />
               <HeroParticles />
+              <HeroPreloader imageSrc={heroImage} />
             </div>
             <div className="hero__content">
               <h1 className="hero__title">
