@@ -8,7 +8,7 @@ import './Navbar.css'
 const NAV_LINKS = [
   { label: 'Inicio', href: '/' },
   { label: 'Historias', href: '/historias' },
-  { label: 'Eventos', href: homeAnchor('eventos') },
+  { label: 'Eventos', href: '/eventos' },
   { label: 'Donar', href: '/donar' },
   { label: 'Voluntariado', href: '/voluntariado' },
   { label: 'Contacto', href: homeAnchor('contacto') },
