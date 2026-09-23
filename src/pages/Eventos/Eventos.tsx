@@ -1,5 +1,8 @@
+import { useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
+import ReservationDrawer from '../../components/ReservationDrawer/ReservationDrawer'
+import type { ReservationDrawerEvent } from '../../components/ReservationDrawer/ReservationDrawer'
 import featuredImage from '../../assets/images/eventos-featured.jpg'
 import escuchaActivaImage from '../../assets/images/eventos-escucha-activa.jpg'
 import aireLibreImage from '../../assets/images/eventos-aire-libre.jpg'
@@ -63,6 +66,8 @@ interface UpcomingEvent {
   photoLabel: string
   image: string
   availability: Availability
+  price: number
+  capacityNote: string
 }
 
 const UPCOMING_EVENTS: UpcomingEvent[] = [
@@ -79,6 +84,8 @@ const UPCOMING_EVENTS: UpcomingEvent[] = [
     photoLabel: 'Foto — Talleres de Escucha Activa',
     image: escuchaActivaImage,
     availability: 'disponible',
+    price: 0,
+    capacityNote: 'Cupos limitados por orden de inscripción.',
   },
   {
     weekday: 'DOM',
@@ -93,6 +100,8 @@ const UPCOMING_EVENTS: UpcomingEvent[] = [
     photoLabel: 'Foto — Jornadas al Aire Libre',
     image: aireLibreImage,
     availability: 'ultimas',
+    price: 0,
+    capacityNote: 'Cupos limitados por orden de inscripción.',
   },
   {
     weekday: 'LUN',
@@ -107,10 +116,41 @@ const UPCOMING_EVENTS: UpcomingEvent[] = [
     photoLabel: 'Foto — Círculos de Apoyo',
     image: circulosApoyoImage,
     availability: 'agotado',
+    price: 0,
+    capacityNote: 'Grupo pequeño, cupos limitados.',
   },
 ]
 
+const FEATURED_EVENT: ReservationDrawerEvent = {
+  images: [featuredImage],
+  title: 'Lanzamiento Fundación Un Día Más',
+  statusLabel: 'Cupos disponibles',
+  statusTone: 'success',
+  dateTime: 'Sábado 1 de Febrero — 7:00 am',
+  place: 'Sede Central',
+  capacityNote: 'Ubicación por orden de llegada (aforo máximo 100 personas).',
+  price: 25000,
+  description:
+    'Acompáñanos en este gran hito de la Fundación Un Día Más. Compartiremos el propósito detrás de nuestros programas de acompañamiento emocional, presentaremos a nuestro equipo y celebraremos juntos el inicio de esta comunidad que sostiene.',
+}
+
+function toDrawerEvent(event: UpcomingEvent): ReservationDrawerEvent {
+  return {
+    images: [event.image],
+    title: event.title,
+    statusLabel: AVAILABILITY_META[event.availability].label === 'Últimas entradas' ? 'Últimos cupos' : 'Cupos disponibles',
+    statusTone: event.availability === 'ultimas' ? 'warning' : 'success',
+    dateTime: `${event.fecha} — ${event.horaConfirmed ? event.hora : 'Por confirmar'}`,
+    place: `${event.sede}, ${event.address}`,
+    capacityNote: event.capacityNote,
+    price: event.price,
+    description: event.text,
+  }
+}
+
 export default function Eventos() {
+  const [drawerEvent, setDrawerEvent] = useState<ReservationDrawerEvent | null>(null)
+
   return (
     <>
       <Navbar />
@@ -153,7 +193,7 @@ export default function Eventos() {
                 </li>
               </ul>
 
-              <button type="button" className="btn btn--primary-solid">
+              <button type="button" className="btn btn--primary-solid" onClick={() => setDrawerEvent(FEATURED_EVENT)}>
                 Quiero saber más
               </button>
             </div>
@@ -210,6 +250,7 @@ export default function Eventos() {
                       type="button"
                       className="btn btn--primary-solid evento-actual__cta"
                       disabled={availability.ctaDisabled}
+                      onClick={() => setDrawerEvent(toDrawerEvent(event))}
                     >
                       {availability.ctaDisabled ? 'No disponible' : 'Reservar entrada'}
                     </button>
@@ -274,6 +315,10 @@ export default function Eventos() {
       </main>
 
       <Footer />
+
+      {drawerEvent && (
+        <ReservationDrawer key={drawerEvent.title} event={drawerEvent} onClose={() => setDrawerEvent(null)} />
+      )}
     </>
   )
 }
