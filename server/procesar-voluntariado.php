@@ -69,8 +69,7 @@ function fail(int $status, string $message): never
 // ---------------------------------------------------------------------------
 
 $requiredFields = [
-    'nombre' => 'Nombre del Profesional',
-    'fecha_disponibilidad' => 'Fecha de Disponibilidad',
+    'nombre' => 'Nombre y Apellido del Profesional',
     'especialidad' => 'Especialidad Clínica',
     'ciudad' => 'Ciudad de Residencia',
     'celular' => 'Número de celular',
@@ -87,9 +86,9 @@ foreach ($requiredFields as $key => $label) {
     $data[$key] = preg_replace('/[\r\n\x00-\x08\x0B\x0C\x0E-\x1F]/', '', $value);
 }
 
-// Basic shape checks — reject obvious garbage without being overly strict
-// about international phone/city formats.
-if (!preg_match('/^[+\d][\d\s()+-]{6,20}$/', $data['celular'])) {
+// The frontend only ever sends 10 raw digits (Colombian mobile numbers);
+// re-validate that shape here rather than trusting the client.
+if (!preg_match('/^\d{10}$/', $data['celular'])) {
     fail(422, 'invalid-phone');
 }
 
@@ -161,8 +160,7 @@ try {
 
     $mail->Subject = 'Nueva solicitud de voluntariado profesional';
     $mail->Body =
-        "Nombre del profesional: {$data['nombre']}\n" .
-        "Fecha de disponibilidad: {$data['fecha_disponibilidad']}\n" .
+        "Nombre y apellido del profesional: {$data['nombre']}\n" .
         "Especialidad clínica: {$data['especialidad']}\n" .
         "Ciudad de residencia: {$data['ciudad']}\n" .
         "Número de celular: {$data['celular']}\n";
