@@ -237,10 +237,10 @@
 }
 
 .evento-item__thumb--mobile {
-  order: 3;
-  margin-left: auto;
-  width: 72px;
-  height: 56px;
+  order: 0;
+  flex-basis: 100%;
+  width: 100%;
+  aspect-ratio: 16 / 10;
 }
 
 .evento-item__thumb--desktop {
