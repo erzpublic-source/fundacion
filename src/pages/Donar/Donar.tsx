@@ -3,6 +3,8 @@ import Footer from '../../components/Footer/Footer'
 import heroImage from '../../assets/images/donar-hero.jpg'
 import donarAhoraImage from '../../assets/images/donar-personas-ahora.jpg'
 import donarEspecieImage from '../../assets/images/donar-personas-especie.jpg'
+import donarCorporativasImage from '../../assets/images/donar-empresas-corporativas.jpg'
+import donarAlianzasImage from '../../assets/images/donar-empresas-alianzas.jpg'
 import './Donar.css'
 
 function ArrowRight() {
@@ -52,12 +54,14 @@ const EMPRESAS_CARDS: DonationCard[] = [
     text: 'Financia de manera directa proyectos específicos de educación emocional en escuelas o impulsa la sostenibilidad de nuestras líneas de emergencia.',
     action: 'Donar como empresa',
     photoLabel: 'Foto — Donaciones Corporativas',
+    image: donarCorporativasImage,
   },
   {
     title: 'Alianzas y Especie',
     text: 'Aporta recursos técnicos, espacios de capacitación o productos propios que beneficien directamente el ecosistema de apoyo de la fundación.',
     action: 'Proponer una alianza',
     photoLabel: 'Foto — Alianzas y Especie',
+    image: donarAlianzasImage,
   },
 ]
 
