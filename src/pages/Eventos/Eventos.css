@@ -41,10 +41,14 @@
 .eventos-hero__title {
   margin: 0;
   font-weight: var(--font-weight-light);
-  font-size: 44px;
-  line-height: 1.1;
+  font-size: 32px;
+  line-height: 1.19;
   letter-spacing: -1.5px;
-  color: var(--color-lavanda-comunidad);
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 .eventos-hero__lead {
@@ -287,7 +291,9 @@
   }
 
   .eventos-hero__title {
-    font-size: 64px;
+    font-size: 72px;
+    line-height: 76px;
+    letter-spacing: -2.5px;
   }
 
   .eventos-hero__lead {
