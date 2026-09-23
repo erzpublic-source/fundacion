@@ -295,9 +295,11 @@ export default function Voluntariado() {
                 suicidio y promover el bienestar emocional en quienes más lo necesitan.
               </p>
 
-              <a href="#formulario-voluntariado" className="btn btn--primary">
-                Quiero apoyar
-              </a>
+              <div className="voluntariado-hero__ctas">
+                <a href="#formulario-voluntariado" className="btn btn--primary">
+                  Quiero apoyar
+                </a>
+              </div>
             </div>
           </div>
         </section>
