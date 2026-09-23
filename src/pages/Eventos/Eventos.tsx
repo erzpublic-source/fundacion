@@ -147,6 +147,36 @@ export default function Eventos() {
           </article>
         </section>
 
+        <section className="eventos-actuales">
+          <div className="section-heading">
+            <h2>Eventos Actuales</h2>
+            <p className="eventos-actuales__lead">
+              Explora las actividades que ya están en marcha y únete a las que siguen abiertas.
+            </p>
+          </div>
+
+          <div className="eventos-actuales__list">
+            {UPCOMING_EVENTS.map((event) => (
+              <article className="evento-actual" key={event.title}>
+                <div
+                  className="evento-actual__media"
+                  role="img"
+                  aria-label={event.photoLabel}
+                  style={{ backgroundImage: `url(${event.image})` }}
+                />
+                <div className="evento-actual__body">
+                  <span className="evento-actual__tag">Activo</span>
+                  <h3>{event.title}</h3>
+                  <p>{event.text}</p>
+                  <button type="button" className="btn btn--secondary evento-actual__cta">
+                    Ampliar información
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <section className="eventos-upcoming">
           <div className="section-heading">
             <h2>Próximos Eventos</h2>

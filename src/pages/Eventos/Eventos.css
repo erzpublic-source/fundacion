@@ -142,6 +142,89 @@
   background-repeat: no-repeat;
 }
 
+/* ---------- Eventos actuales ---------- */
+.eventos-actuales {
+  padding: 64px 16px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.eventos-actuales__lead {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.eventos-actuales__list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: var(--grid-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.evento-actual {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-02);
+}
+
+.evento-actual__media {
+  height: 180px;
+  background-color: #f0e9f2;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.evento-actual__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 20px;
+}
+
+.evento-actual__tag {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-amarillo-impulso);
+  color: #201a1e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.evento-actual__body h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-violeta-esperanza);
+}
+
+.evento-actual__body p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6b7280;
+}
+
+.evento-actual__cta {
+  margin-top: 4px;
+  height: 42px;
+  padding: 0 20px;
+  font-size: 13px;
+}
+
 /* ---------- Upcoming events ---------- */
 .eventos-upcoming {
   padding: 64px 16px;
@@ -324,6 +407,37 @@
   .eventos-featured__media {
     flex: 1;
     height: auto;
+  }
+
+  .eventos-actuales {
+    padding: 88px 72px;
+  }
+
+  .eventos-actuales .section-heading,
+  .eventos-actuales__lead {
+    max-width: var(--grid-max-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .eventos-actuales__lead {
+    text-align: center;
+  }
+
+  .evento-actual {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .evento-actual__media {
+    flex: 0 0 260px;
+    height: auto;
+  }
+
+  .evento-actual__body {
+    flex: 1;
+    justify-content: center;
+    padding: 28px 32px;
   }
 
   .eventos-upcoming {
