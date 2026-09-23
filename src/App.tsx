@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Historias from './pages/Historias/Historias'
 import Donar from './pages/Donar/Donar'
+import Voluntariado from './pages/Voluntariado/Voluntariado'
 
 // Client-side route changes don't reset scroll position by default, and on a
 // full page load the browser tries to scroll to the URL's #hash before React
@@ -31,6 +32,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/historias" element={<Historias />} />
         <Route path="/donar" element={<Donar />} />
+        <Route path="/voluntariado" element={<Voluntariado />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>
