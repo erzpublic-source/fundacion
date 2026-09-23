@@ -99,7 +99,7 @@ const UPCOMING_EVENTS: UpcomingEvent[] = [
     day: '3',
     fecha: 'Lunes 3 de Febrero',
     hora: '6:00 pm - 7:30 pm',
-    horaConfirmed: false,
+    horaConfirmed: true,
     title: 'Círculos de Apoyo',
     sede: 'Centro Comunitario',
     address: 'Av. de la Esperanza 45, Ibagué',
