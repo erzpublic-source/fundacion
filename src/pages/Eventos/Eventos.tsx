@@ -1,5 +1,9 @@
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
+import featuredImage from '../../assets/images/eventos-featured.jpg'
+import escuchaActivaImage from '../../assets/images/eventos-escucha-activa.jpg'
+import aireLibreImage from '../../assets/images/eventos-aire-libre.jpg'
+import circulosApoyoImage from '../../assets/images/eventos-circulos-apoyo.jpg'
 import './Eventos.css'
 
 function CalendarIcon() {
@@ -47,6 +51,7 @@ interface UpcomingEvent {
   address: string
   text: string
   photoLabel: string
+  image: string
 }
 
 const UPCOMING_EVENTS: UpcomingEvent[] = [
@@ -59,6 +64,7 @@ const UPCOMING_EVENTS: UpcomingEvent[] = [
     address: 'Calle de la Calma 123, Bogotá',
     text: 'Un espacio seguro para aprender técnicas de comunicación empática y fortalecer los vínculos comunitarios a través del diálogo consciente.',
     photoLabel: 'Foto — Talleres de Escucha Activa',
+    image: escuchaActivaImage,
   },
   {
     weekday: 'DOM',
@@ -69,6 +75,7 @@ const UPCOMING_EVENTS: UpcomingEvent[] = [
     address: 'Paseo de Fernán Núñez, Ibagué',
     text: 'Conectamos con la naturaleza y la comunidad en una mañana de actividades recreativas diseñadas para reducir el estrés y la ansiedad.',
     photoLabel: 'Foto — Jornadas al Aire Libre',
+    image: aireLibreImage,
   },
   {
     weekday: 'LUN',
@@ -79,6 +86,7 @@ const UPCOMING_EVENTS: UpcomingEvent[] = [
     address: 'Av. de la Esperanza 45, Ibagué',
     text: 'Un encuentro íntimo para compartir experiencias y encontrar consuelo en la compañía de otros que transitan caminos similares.',
     photoLabel: 'Foto — Círculos de Apoyo',
+    image: circulosApoyoImage,
   },
 ]
 
@@ -134,9 +142,8 @@ export default function Eventos() {
               className="eventos-featured__media"
               role="img"
               aria-label="Foto — Lanzamiento Fundación Un Día Más"
-            >
-              <span>Foto — Lanzamiento Fundación Un Día Más</span>
-            </div>
+              style={{ backgroundImage: `url(${featuredImage})` }}
+            />
           </article>
         </section>
 
@@ -163,9 +170,8 @@ export default function Eventos() {
                   className="evento-item__thumb evento-item__thumb--mobile"
                   role="img"
                   aria-label={event.photoLabel}
-                >
-                  <span>{event.photoLabel}</span>
-                </div>
+                  style={{ backgroundImage: `url(${event.image})` }}
+                />
 
                 <div className="evento-item__body">
                   <p className="evento-item__time evento-item__time--desktop">
@@ -183,9 +189,8 @@ export default function Eventos() {
                   className="evento-item__thumb evento-item__thumb--desktop"
                   role="img"
                   aria-label={event.photoLabel}
-                >
-                  <span>{event.photoLabel}</span>
-                </div>
+                  style={{ backgroundImage: `url(${event.image})` }}
+                />
               </article>
             ))}
           </div>
