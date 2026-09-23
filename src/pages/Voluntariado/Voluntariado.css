@@ -233,11 +233,6 @@
   color: #221920;
 }
 
-.voluntariado-field__control input[type='file'] {
-  font-size: 13px;
-  color: #6b7280;
-}
-
 .voluntariado-field__control input::placeholder {
   color: #9b93a3;
 }
@@ -252,6 +247,103 @@
   margin: 0;
   font-size: 12px;
   font-weight: var(--font-weight-semibold);
+  color: #e0455a;
+}
+
+/* ---------- Ciudad combobox ---------- */
+.voluntariado-field--combobox {
+  position: relative;
+}
+
+.voluntariado-field__dropdown {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-02);
+}
+
+.voluntariado-field__dropdown li + li {
+  margin-top: 2px;
+}
+
+.voluntariado-field__dropdown button {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+  color: #221920;
+  cursor: pointer;
+}
+
+.voluntariado-field__dropdown button:hover,
+.voluntariado-field__dropdown button[aria-selected='true'] {
+  background: #f5eff7;
+  color: var(--color-violeta-esperanza);
+}
+
+/* ---------- Hoja de vida upload ---------- */
+.voluntariado-field__control--file {
+  position: relative;
+}
+
+.voluntariado-field__file-input {
+  display: none;
+}
+
+.voluntariado-field__file-trigger {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+  color: #9b93a3;
+  cursor: pointer;
+}
+
+.voluntariado-field__filename {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  color: #221920;
+}
+
+.voluntariado-field__file-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: #f5eff7;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.voluntariado-field__file-remove:hover {
+  background: #ffe0e6;
   color: #e0455a;
 }
 

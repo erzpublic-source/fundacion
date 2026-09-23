@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import LegalModal from '../../components/LegalModal/LegalModal'
 import heroImage from '../../assets/images/voluntariado-hero.jpg'
+import { COLOMBIA_CITIES } from '../../data/colombiaCities'
 import './Voluntariado.css'
 
 // Set this to your PHP endpoint once it's deployed on a server that can run
@@ -61,15 +62,6 @@ function UserIcon() {
   )
 }
 
-function CalendarIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <rect x="2" y="3" width="12" height="11" rx="2" />
-      <path d="M2 6.5h12M5 1.5v2M11 1.5v2" strokeLinecap="round" />
-    </svg>
-  )
-}
-
 function StethoscopeIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -105,6 +97,23 @@ function DocumentIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <path d="M4 1.5h5.5L12.5 4.5V14.5H4Z" strokeLinejoin="round" />
       <path d="M9.5 1.5v3h3M6 8.5h4M6 11h4" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function CheckCircleSmallIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#25b46a" strokeWidth="1.6" aria-hidden="true">
+      <circle cx="8" cy="8" r="7" />
+      <path d="M5 8.3l2 2L11.2 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function RemoveIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M2 2l8 8M10 2l-8 8" strokeLinecap="round" />
     </svg>
   )
 }
@@ -153,7 +162,6 @@ const ROLES = [
 
 interface FormFields {
   nombre: string
-  fecha: string
   especialidad: string
   ciudad: string
   celular: string
@@ -161,11 +169,12 @@ interface FormFields {
 
 const INITIAL_FIELDS: FormFields = {
   nombre: '',
-  fecha: '',
   especialidad: '',
   ciudad: '',
   celular: '',
 }
+
+const CELULAR_LENGTH = 10
 
 type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
 
@@ -178,24 +187,61 @@ export default function Voluntariado() {
   const [privacyOpen, setPrivacyOpen] = useState(false)
   const [termsOpen, setTermsOpen] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
+  const [ciudadOpen, setCiudadOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const ciudadBlurTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const isCiudadValid = useMemo(
+    () => COLOMBIA_CITIES.some((city) => city.toLowerCase() === fields.ciudad.trim().toLowerCase()),
+    [fields.ciudad],
+  )
+
+  const filteredCities = useMemo(() => {
+    const query = fields.ciudad.trim().toLowerCase()
+    if (query === '') return COLOMBIA_CITIES
+    return COLOMBIA_CITIES.filter((city) => city.toLowerCase().includes(query))
+  }, [fields.ciudad])
 
   const isFormValid = useMemo(() => {
     return (
       fields.nombre.trim() !== '' &&
-      fields.fecha.trim() !== '' &&
       fields.especialidad.trim() !== '' &&
-      fields.ciudad.trim() !== '' &&
-      fields.celular.trim() !== '' &&
+      isCiudadValid &&
+      fields.celular.trim().length === CELULAR_LENGTH &&
       file !== null &&
       fileError === null &&
       aceptaPrivacidad &&
       aceptaTerminos
     )
-  }, [fields, file, fileError, aceptaPrivacidad, aceptaTerminos])
+  }, [fields, isCiudadValid, file, fileError, aceptaPrivacidad, aceptaTerminos])
 
   function updateField(key: keyof FormFields, value: string) {
     setFields((prev) => ({ ...prev, [key]: value }))
+  }
+
+  function handleCelularChange(event: ChangeEvent<HTMLInputElement>) {
+    const digitsOnly = event.target.value.replace(/\D/g, '').slice(0, CELULAR_LENGTH)
+    updateField('celular', digitsOnly)
+  }
+
+  function selectCiudad(city: string) {
+    updateField('ciudad', city)
+    setCiudadOpen(false)
+  }
+
+  function handleCiudadBlur() {
+    // Delay so a click on a dropdown option registers before the list unmounts.
+    ciudadBlurTimeout.current = setTimeout(() => setCiudadOpen(false), 150)
+  }
+
+  function handleCiudadOptionMouseDown() {
+    if (ciudadBlurTimeout.current) clearTimeout(ciudadBlurTimeout.current)
+  }
+
+  function handleRemoveFile() {
+    setFile(null)
+    setFileError(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
@@ -238,7 +284,6 @@ export default function Voluntariado() {
 
       const formData = new FormData()
       formData.append('nombre', fields.nombre)
-      formData.append('fecha_disponibilidad', fields.fecha)
       formData.append('especialidad', fields.especialidad)
       formData.append('ciudad', fields.ciudad)
       formData.append('celular', fields.celular)
@@ -338,29 +383,15 @@ export default function Voluntariado() {
             <h3 className="voluntariado-form__title">Información del Aspirante</h3>
 
             <div className="voluntariado-field">
-              <label htmlFor="nombre">Nombre del Profesional</label>
+              <label htmlFor="nombre">Nombre y Apellido del Profesional</label>
               <div className="voluntariado-field__control">
                 <UserIcon />
                 <input
                   id="nombre"
                   type="text"
-                  placeholder="Nombre completo"
+                  placeholder="Nombre y apellido completo"
                   value={fields.nombre}
                   onChange={(e) => updateField('nombre', e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="voluntariado-field">
-              <label htmlFor="fecha">Fecha de Disponibilidad</label>
-              <div className="voluntariado-field__control">
-                <CalendarIcon />
-                <input
-                  id="fecha"
-                  type="date"
-                  value={fields.fecha}
-                  onChange={(e) => updateField('fecha', e.target.value)}
                   required
                 />
               </div>
@@ -381,19 +412,49 @@ export default function Voluntariado() {
               </div>
             </div>
 
-            <div className="voluntariado-field">
+            <div className="voluntariado-field voluntariado-field--combobox">
               <label htmlFor="ciudad">Ciudad de Residencia</label>
               <div className="voluntariado-field__control">
                 <LocationIcon />
                 <input
                   id="ciudad"
                   type="text"
-                  placeholder="Ciudad, País"
+                  role="combobox"
+                  aria-expanded={ciudadOpen}
+                  aria-autocomplete="list"
+                  aria-controls="ciudad-listbox"
+                  autoComplete="off"
+                  placeholder="Escribe para buscar tu ciudad"
                   value={fields.ciudad}
-                  onChange={(e) => updateField('ciudad', e.target.value)}
+                  onChange={(e) => {
+                    updateField('ciudad', e.target.value)
+                    setCiudadOpen(true)
+                  }}
+                  onFocus={() => setCiudadOpen(true)}
+                  onBlur={handleCiudadBlur}
                   required
                 />
               </div>
+              {ciudadOpen && filteredCities.length > 0 && (
+                <ul className="voluntariado-field__dropdown" id="ciudad-listbox" role="listbox">
+                  {filteredCities.map((city) => (
+                    <li key={city}>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={city.toLowerCase() === fields.ciudad.trim().toLowerCase()}
+                        onMouseDown={handleCiudadOptionMouseDown}
+                        onClick={() => selectCiudad(city)}
+                      >
+                        {city}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {ciudadOpen && filteredCities.length === 0 && (
+                <p className="voluntariado-field__hint">No encontramos esa ciudad en el listado.</p>
+              )}
             </div>
 
             <div className="voluntariado-field">
@@ -403,9 +464,10 @@ export default function Voluntariado() {
                 <input
                   id="celular"
                   type="tel"
-                  placeholder="Ingresa número de celular"
+                  inputMode="numeric"
+                  placeholder="Ingresa número de celular (10 dígitos)"
                   value={fields.celular}
-                  onChange={(e) => updateField('celular', e.target.value)}
+                  onChange={handleCelularChange}
                   required
                 />
               </div>
@@ -413,18 +475,40 @@ export default function Voluntariado() {
 
             <div className="voluntariado-field">
               <label htmlFor="hoja-de-vida">Hoja de Vida / Credenciales (máximo 7 MB, solo PDF)</label>
-              <div className={`voluntariado-field__control${fileError ? ' voluntariado-field__control--error' : ''}`}>
+              <div className={`voluntariado-field__control voluntariado-field__control--file${fileError ? ' voluntariado-field__control--error' : ''}`}>
                 <DocumentIcon />
+                {file ? (
+                  <>
+                    <span className="voluntariado-field__filename">{file.name}</span>
+                    <CheckCircleSmallIcon />
+                    <button
+                      type="button"
+                      className="voluntariado-field__file-remove"
+                      onClick={handleRemoveFile}
+                      aria-label="Quitar archivo adjunto"
+                    >
+                      <RemoveIcon />
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="voluntariado-field__file-trigger"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    Seleccionar archivo PDF
+                  </button>
+                )}
                 <input
                   id="hoja-de-vida"
                   ref={fileInputRef}
                   type="file"
                   accept="application/pdf,.pdf"
                   onChange={handleFileChange}
-                  required
+                  className="voluntariado-field__file-input"
+                  tabIndex={-1}
                 />
               </div>
-              {file && !fileError && <p className="voluntariado-field__hint">{file.name}</p>}
               {fileError && <p className="voluntariado-field__error">{fileError}</p>}
             </div>
 
