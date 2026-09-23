@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import LegalModal from '../../components/LegalModal/LegalModal'
+import heroImage from '../../assets/images/voluntariado-hero.jpg'
 import './Voluntariado.css'
 
 // Set this to your PHP endpoint once it's deployed on a server that can run
@@ -276,11 +277,14 @@ export default function Voluntariado() {
           <span className="voluntariado-hero__blob voluntariado-hero__blob--a" aria-hidden="true" />
           <span className="voluntariado-hero__blob voluntariado-hero__blob--b" aria-hidden="true" />
 
-          <div className="voluntariado-hero__inner">
-            <div className="voluntariado-hero__media" role="img" aria-label="Foto — Equipo de profesionales de la salud">
-              <span>Foto — Equipo de profesionales</span>
-            </div>
+          <div
+            className="voluntariado-hero__media"
+            role="img"
+            aria-label="Foto — Equipo de profesionales de la salud"
+            style={{ backgroundImage: `url(${heroImage})` }}
+          />
 
+          <div className="voluntariado-hero__inner">
             <h1 className="voluntariado-hero__title">Tu conocimiento puede salvar vidas</h1>
             <p className="voluntariado-hero__lead">
               Transforma el dolor en esperanza a través de tu profesión. En la Fundación Un Día Más, creemos que
