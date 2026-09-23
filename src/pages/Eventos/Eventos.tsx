@@ -42,51 +42,71 @@ function ClockIcon() {
   )
 }
 
+type Availability = 'disponible' | 'ultimas' | 'agotado'
+
+const AVAILABILITY_META: Record<Availability, { label: string; className: string; ctaDisabled: boolean }> = {
+  disponible: { label: 'Entradas disponibles', className: 'evento-actual__tag--disponible', ctaDisabled: false },
+  ultimas: { label: 'Últimas entradas', className: 'evento-actual__tag--ultimas', ctaDisabled: false },
+  agotado: { label: 'Entradas agotadas', className: 'evento-actual__tag--agotado', ctaDisabled: true },
+}
+
 interface UpcomingEvent {
   weekday: string
   day: string
-  time: string
+  fecha: string
+  hora: string
+  horaConfirmed: boolean
   title: string
   sede: string
   address: string
   text: string
   photoLabel: string
   image: string
+  availability: Availability
 }
 
 const UPCOMING_EVENTS: UpcomingEvent[] = [
   {
     weekday: 'SÁB',
     day: '1',
-    time: '1 de Febrero 7:00 am - 10:00 am',
+    fecha: 'Sábado 1 de Febrero',
+    hora: '7:00 am - 10:00 am',
+    horaConfirmed: true,
     title: 'Talleres de Escucha Activa',
     sede: 'Sede Central',
     address: 'Calle de la Calma 123, Bogotá',
     text: 'Un espacio seguro para aprender técnicas de comunicación empática y fortalecer los vínculos comunitarios a través del diálogo consciente.',
     photoLabel: 'Foto — Talleres de Escucha Activa',
     image: escuchaActivaImage,
+    availability: 'disponible',
   },
   {
     weekday: 'DOM',
     day: '2',
-    time: '2 de Febrero 10:00 am - 12:30 pm',
+    fecha: 'Domingo 2 de Febrero',
+    hora: '10:00 am - 12:30 pm',
+    horaConfirmed: true,
     title: 'Jornadas al Aire Libre',
     sede: 'Parque del Retiro',
     address: 'Paseo de Fernán Núñez, Ibagué',
     text: 'Conectamos con la naturaleza y la comunidad en una mañana de actividades recreativas diseñadas para reducir el estrés y la ansiedad.',
     photoLabel: 'Foto — Jornadas al Aire Libre',
     image: aireLibreImage,
+    availability: 'ultimas',
   },
   {
     weekday: 'LUN',
     day: '3',
-    time: '3 de Febrero 6:00 pm - 7:30 pm',
+    fecha: 'Lunes 3 de Febrero',
+    hora: '6:00 pm - 7:30 pm',
+    horaConfirmed: false,
     title: 'Círculos de Apoyo',
     sede: 'Centro Comunitario',
     address: 'Av. de la Esperanza 45, Ibagué',
     text: 'Un encuentro íntimo para compartir experiencias y encontrar consuelo en la compañía de otros que transitan caminos similares.',
     photoLabel: 'Foto — Círculos de Apoyo',
     image: circulosApoyoImage,
+    availability: 'agotado',
   },
 ]
 
@@ -121,7 +141,7 @@ export default function Eventos() {
               <ul className="eventos-featured__meta">
                 <li>
                   <CalendarIcon />
-                  Próximamente
+                  Sábado 1 de Febrero | 7:00 am - 10:00 am
                 </li>
                 <li>
                   <DeviceIcon />
@@ -129,7 +149,7 @@ export default function Eventos() {
                 </li>
                 <li>
                   <LocationIcon />
-                  Por confirmar
+                  Sede Central
                 </li>
               </ul>
 
@@ -149,80 +169,106 @@ export default function Eventos() {
 
         <section className="eventos-actuales">
           <div className="section-heading">
-            <h2>Eventos Actuales</h2>
+            <h2>Eventos programados</h2>
             <p className="eventos-actuales__lead">
               Explora las actividades que ya están en marcha y únete a las que siguen abiertas.
             </p>
           </div>
 
           <div className="eventos-actuales__list">
-            {UPCOMING_EVENTS.map((event) => (
-              <article className="evento-actual" key={event.title}>
-                <div
-                  className="evento-actual__media"
-                  role="img"
-                  aria-label={event.photoLabel}
-                  style={{ backgroundImage: `url(${event.image})` }}
-                />
-                <div className="evento-actual__body">
-                  <span className="evento-actual__tag">Activo</span>
-                  <h3>{event.title}</h3>
-                  <p>{event.text}</p>
-                  <button type="button" className="btn btn--secondary evento-actual__cta">
-                    Ampliar información
-                  </button>
-                </div>
-              </article>
-            ))}
+            {UPCOMING_EVENTS.map((event) => {
+              const availability = AVAILABILITY_META[event.availability]
+              return (
+                <article className="evento-actual" key={event.title}>
+                  <div
+                    className="evento-actual__media"
+                    role="img"
+                    aria-label={event.photoLabel}
+                    style={{ backgroundImage: `url(${event.image})` }}
+                  />
+                  <div className="evento-actual__body">
+                    <span className={`evento-actual__tag ${availability.className}`}>{availability.label}</span>
+                    <h3>{event.title}</h3>
+                    <p>{event.text}</p>
+
+                    <dl className="evento-actual__meta">
+                      <div>
+                        <dt>Lugar</dt>
+                        <dd>{event.sede}</dd>
+                      </div>
+                      <div>
+                        <dt>Fecha</dt>
+                        <dd>{event.fecha}</dd>
+                      </div>
+                      <div>
+                        <dt>Hora</dt>
+                        <dd>{event.horaConfirmed ? event.hora : 'Por confirmar...'}</dd>
+                      </div>
+                    </dl>
+
+                    <button
+                      type="button"
+                      className="btn btn--primary-solid evento-actual__cta"
+                      disabled={availability.ctaDisabled}
+                    >
+                      {availability.ctaDisabled ? 'No disponible' : 'Reservar entrada'}
+                    </button>
+                  </div>
+                </article>
+              )
+            })}
           </div>
         </section>
 
         <section className="eventos-upcoming">
           <div className="section-heading">
-            <h2>Próximos Eventos</h2>
+            <h2>Próximamente</h2>
             <p className="eventos-upcoming__lead">Encuentra un espacio para ti en nuestras próximas actividades.</p>
           </div>
 
           <div className="eventos-upcoming__list">
-            {UPCOMING_EVENTS.map((event) => (
-              <article className="evento-item" key={event.title}>
-                <div className="evento-item__date">
-                  <span className="evento-item__weekday">{event.weekday}</span>
-                  <span className="evento-item__day">{event.day}</span>
-                </div>
+            {UPCOMING_EVENTS.map((event) => {
+              const displayTime = event.horaConfirmed ? `${event.fecha} | ${event.hora}` : 'Por confirmar...'
+              return (
+                <article className="evento-item" key={event.title}>
+                  <div className="evento-item__date">
+                    <span className="evento-item__weekday">{event.weekday}</span>
+                    <span className="evento-item__day">{event.day}</span>
+                  </div>
 
-                <p className="evento-item__time evento-item__time--mobile">
-                  <ClockIcon />
-                  {event.time}
-                </p>
-
-                <div
-                  className="evento-item__thumb evento-item__thumb--mobile"
-                  role="img"
-                  aria-label={event.photoLabel}
-                  style={{ backgroundImage: `url(${event.image})` }}
-                />
-
-                <div className="evento-item__body">
-                  <p className="evento-item__time evento-item__time--desktop">
+                  <p className="evento-item__time evento-item__time--mobile">
                     <ClockIcon />
-                    {event.time}
+                    {displayTime}
                   </p>
-                  <h3>{event.title}</h3>
-                  <p className="evento-item__place">
-                    <strong>{event.sede}</strong> {event.address}
-                  </p>
-                  <p className="evento-item__text">{event.text}</p>
-                </div>
 
-                <div
-                  className="evento-item__thumb evento-item__thumb--desktop"
-                  role="img"
-                  aria-label={event.photoLabel}
-                  style={{ backgroundImage: `url(${event.image})` }}
-                />
-              </article>
-            ))}
+                  <div
+                    className="evento-item__thumb evento-item__thumb--mobile"
+                    role="img"
+                    aria-label={event.photoLabel}
+                    style={{ backgroundImage: `url(${event.image})` }}
+                  />
+
+                  <div className="evento-item__body">
+                    <p className="evento-item__time evento-item__time--desktop">
+                      <ClockIcon />
+                      {displayTime}
+                    </p>
+                    <h3>{event.title}</h3>
+                    <p className="evento-item__place">
+                      <strong>{event.sede}</strong> {event.address}
+                    </p>
+                    <p className="evento-item__text">{event.text}</p>
+                  </div>
+
+                  <div
+                    className="evento-item__thumb evento-item__thumb--desktop"
+                    role="img"
+                    aria-label={event.photoLabel}
+                    style={{ backgroundImage: `url(${event.image})` }}
+                  />
+                </article>
+              )
+            })}
           </div>
         </section>
       </main>
