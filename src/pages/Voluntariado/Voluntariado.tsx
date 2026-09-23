@@ -277,24 +277,28 @@ export default function Voluntariado() {
           <span className="voluntariado-hero__blob voluntariado-hero__blob--a" aria-hidden="true" />
           <span className="voluntariado-hero__blob voluntariado-hero__blob--b" aria-hidden="true" />
 
-          <div
-            className="voluntariado-hero__media"
-            role="img"
-            aria-label="Foto — Equipo de profesionales de la salud"
-            style={{ backgroundImage: `url(${heroImage})` }}
-          />
-
           <div className="voluntariado-hero__inner">
-            <h1 className="voluntariado-hero__title">Tu conocimiento puede salvar vidas</h1>
-            <p className="voluntariado-hero__lead">
-              Transforma el dolor en esperanza a través de tu profesión. En la Fundación Un Día Más, creemos que
-              cada vida cuenta y que tu experiencia clínica es la herramienta más poderosa para prevenir el
-              suicidio y promover el bienestar emocional en quienes más lo necesitan.
-            </p>
+            <div className="voluntariado-hero__visual">
+              <div
+                className="voluntariado-hero__media"
+                role="img"
+                aria-label="Foto — Equipo de profesionales de la salud"
+                style={{ backgroundImage: `url(${heroImage})` }}
+              />
+            </div>
 
-            <a href="#formulario-voluntariado" className="btn btn--primary">
-              Quiero apoyar
-            </a>
+            <div className="voluntariado-hero__content">
+              <h1 className="voluntariado-hero__title">Tu conocimiento puede salvar vidas</h1>
+              <p className="voluntariado-hero__lead">
+                Transforma el dolor en esperanza a través de tu profesión. En la Fundación Un Día Más, creemos que
+                cada vida cuenta y que tu experiencia clínica es la herramienta más poderosa para prevenir el
+                suicidio y promover el bienestar emocional en quienes más lo necesitan.
+              </p>
+
+              <a href="#formulario-voluntariado" className="btn btn--primary">
+                Quiero apoyar
+              </a>
+            </div>
           </div>
         </section>
 

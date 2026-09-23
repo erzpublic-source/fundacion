@@ -32,28 +32,38 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  padding: 32px 16px 64px;
-  text-align: center;
+}
+
+/* Mobile: the photo forms its own full-width block, in normal flow above
+   the text — never overlaid with it, which would fight for legibility on a
+   narrow screen. */
+.voluntariado-hero__visual {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
 }
 
 .voluntariado-hero__media {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
+  position: absolute;
+  inset: 0;
   background-color: #f0e9f2;
   background-image: linear-gradient(135deg, rgba(106, 83, 144, 0.16), rgba(212, 103, 154, 0.16));
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.voluntariado-hero__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px 16px 64px;
 }
 
 .voluntariado-hero__title {
   margin: 0;
-  max-width: 640px;
   font-weight: var(--font-weight-light);
   font-size: 32px;
   line-height: 1.19;
@@ -347,16 +357,38 @@
 
 /* ==================== Desktop ==================== */
 @media (min-width: 900px) {
-  .voluntariado-hero__inner {
-    padding: 32px 72px 88px;
+  .voluntariado-hero {
+    position: relative;
   }
 
-  .voluntariado-hero__media {
-    aspect-ratio: 21 / 9;
+  .voluntariado-hero__inner {
+    --hero-gutter: calc(72px + max(0px, (100vw - 1424px) / 2));
+    position: relative;
+    height: 560px;
+    padding-left: var(--hero-gutter);
+  }
+
+  .voluntariado-hero__visual {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: auto;
+    aspect-ratio: auto;
+  }
+
+  .voluntariado-hero__content {
+    position: relative;
+    z-index: 1;
+    justify-content: center;
+    height: 100%;
+    width: 560px;
+    padding: 0 40px 0 0;
+    gap: 28px;
   }
 
   .voluntariado-hero__title {
-    font-size: 48px;
+    max-width: none;
+    font-size: 44px;
   }
 
   .voluntariado-hero__lead {
