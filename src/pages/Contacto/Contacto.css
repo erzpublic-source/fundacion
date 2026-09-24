@@ -430,12 +430,12 @@
   .contacto-hero__inner {
     flex-direction: row;
     align-items: flex-start;
+    justify-content: space-between;
     gap: 64px;
   }
 
   .contacto-hero__content {
-    flex: 1;
-    max-width: 460px;
+    flex: 0 0 420px;
     padding-top: 8px;
   }
 
@@ -445,7 +445,7 @@
 
   .contacto-form {
     flex: 1;
-    max-width: 460px;
+    max-width: 560px;
     padding: 40px;
   }
 
