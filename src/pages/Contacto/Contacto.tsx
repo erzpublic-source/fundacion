@@ -210,6 +210,10 @@ export default function Contacto() {
                 Por favor, complete el siguiente formulario para ponerse en contacto con nuestro equipo. Le
                 responderemos a la mayor brevedad posible.
               </p>
+
+              <a href="#ubicacion-direccion" className="btn btn--secondary contacto-hero__cta">
+                Nuestros datos
+              </a>
             </div>
 
             <form className="contacto-form" onSubmit={handleSubmit}>
@@ -294,7 +298,7 @@ export default function Contacto() {
           </div>
         </section>
 
-        <section className="contacto-ubicacion">
+        <section className="contacto-ubicacion" id="ubicacion-direccion">
           <div className="section-heading section-heading--left">
             <h2>Ubicación y Dirección</h2>
             <p className="contacto-ubicacion__lead">
