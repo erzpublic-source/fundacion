@@ -202,9 +202,23 @@
   flex-shrink: 0;
 }
 
+.mobile-bottombar__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  transition: background 0.15s ease;
+}
+
 .mobile-bottombar__item--active {
   color: var(--color-violeta-esperanza);
   font-weight: var(--font-weight-semibold);
+}
+
+.mobile-bottombar__item--active .mobile-bottombar__icon {
+  background: var(--color-bg-hover-secondary);
 }
 
 /* ==================== Mobile menu overlay ==================== */

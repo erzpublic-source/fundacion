@@ -286,7 +286,9 @@ export default function Navbar() {
             onClick={closeMenu}
             className={`mobile-bottombar__item${link.href === activeHref ? ' mobile-bottombar__item--active' : ''}`}
           >
-            {NAV_ICONS[link.href]}
+            <span className="mobile-bottombar__icon" aria-hidden="true">
+              {NAV_ICONS[link.href]}
+            </span>
             <span>{link.label}</span>
           </NavAnchor>
         ))}
@@ -298,7 +300,9 @@ export default function Navbar() {
           aria-expanded={menuOpen}
           aria-label="Abrir menú de navegación"
         >
-          <MenuIcon />
+          <span className="mobile-bottombar__icon" aria-hidden="true">
+            <MenuIcon />
+          </span>
           <span>Menú</span>
         </button>
       </nav>
