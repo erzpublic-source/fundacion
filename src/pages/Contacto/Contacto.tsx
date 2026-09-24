@@ -140,6 +140,10 @@ interface ContactFields {
 
 const INITIAL_FIELDS: ContactFields = { nombre: '', correo: '', asunto: '', mensaje: '' }
 
+const ASUNTO_MAX_LENGTH = 30
+const MENSAJE_MAX_LENGTH = 700
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
 
 export default function Contacto() {
@@ -147,16 +151,19 @@ export default function Contacto() {
   const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false)
   const [privacyOpen, setPrivacyOpen] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
+  const [correoTouched, setCorreoTouched] = useState(false)
+
+  const isCorreoValid = useMemo(() => EMAIL_PATTERN.test(fields.correo.trim()), [fields.correo])
 
   const isFormValid = useMemo(() => {
     return (
       fields.nombre.trim() !== '' &&
-      fields.correo.trim() !== '' &&
+      isCorreoValid &&
       fields.asunto.trim() !== '' &&
       fields.mensaje.trim() !== '' &&
       aceptaPrivacidad
     )
-  }, [fields, aceptaPrivacidad])
+  }, [fields, isCorreoValid, aceptaPrivacidad])
 
   function updateField(key: keyof ContactFields, value: string) {
     setFields((prev) => ({ ...prev, [key]: value }))
@@ -236,7 +243,7 @@ export default function Contacto() {
 
               <div className="contacto-field">
                 <label htmlFor="correo">Correo Electrónico</label>
-                <div className="contacto-field__control">
+                <div className={`contacto-field__control${correoTouched && !isCorreoValid ? ' contacto-field__control--error' : ''}`}>
                   <MailIcon />
                   <input
                     id="correo"
@@ -244,9 +251,13 @@ export default function Contacto() {
                     placeholder="Ej: correo@ejemplo.com"
                     value={fields.correo}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('correo', e.target.value)}
+                    onBlur={() => setCorreoTouched(true)}
                     required
                   />
                 </div>
+                {correoTouched && !isCorreoValid && (
+                  <p className="contacto-field__error">Ingresa un correo válido, ej: correo@ejemplo.com</p>
+                )}
               </div>
 
               <div className="contacto-field">
@@ -259,6 +270,7 @@ export default function Contacto() {
                     placeholder="Ej: Solicitud de información, donaciones, apoyo psicológico"
                     value={fields.asunto}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('asunto', e.target.value)}
+                    maxLength={ASUNTO_MAX_LENGTH}
                     required
                   />
                 </div>
@@ -271,8 +283,12 @@ export default function Contacto() {
                   placeholder="Escribe aquí tu mensaje en detalle..."
                   value={fields.mensaje}
                   onChange={(e) => updateField('mensaje', e.target.value)}
+                  maxLength={MENSAJE_MAX_LENGTH}
                   required
                 />
+                <span className="contacto-field__counter">
+                  {fields.mensaje.length}/{MENSAJE_MAX_LENGTH}
+                </span>
               </div>
 
               <div className="contacto-checkbox">
