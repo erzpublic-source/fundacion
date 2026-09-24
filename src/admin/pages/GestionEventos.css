@@ -1,0 +1,128 @@
+.gestion-eventos__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.gestion-eventos__intro h1 {
+  margin: 0 0 6px;
+  font-weight: var(--font-weight-light);
+  font-size: 26px;
+  color: #221920;
+}
+
+.gestion-eventos__intro p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.gestion-eventos__create {
+  width: 100%;
+}
+
+.gestion-eventos__toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.gestion-eventos__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gestion-eventos__filter {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid rgba(203, 196, 208, 0.5);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.gestion-eventos__filter--active {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: #fff;
+}
+
+.gestion-eventos__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: #9b93a3;
+}
+
+.gestion-eventos__search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: #221920;
+}
+
+.gestion-eventos__search input::placeholder {
+  color: #9b93a3;
+}
+
+.gestion-eventos__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 700px) {
+  .gestion-eventos__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .gestion-eventos__intro {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .gestion-eventos__intro h1 {
+    font-size: 32px;
+  }
+
+  .gestion-eventos__create {
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .gestion-eventos__toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .gestion-eventos__search {
+    width: 280px;
+    flex-shrink: 0;
+  }
+
+  .gestion-eventos__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
