@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import Logo from './Logo'
-import { homeAnchor } from '../../utils/links'
 import './Navbar.css'
 
 const NAV_LINKS = [
@@ -11,7 +10,7 @@ const NAV_LINKS = [
   { label: 'Eventos', href: '/eventos' },
   { label: 'Donar', href: '/donar' },
   { label: 'Voluntariado', href: '/voluntariado' },
-  { label: 'Contacto', href: homeAnchor('contacto') },
+  { label: 'Contacto', href: '/contacto' },
 ]
 
 function getAnchorId(href: string): string | null {
