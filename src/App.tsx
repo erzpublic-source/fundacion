@@ -1,12 +1,29 @@
 import { useEffect } from 'react'
 import type { ReactNode } from 'react'
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Historias from './pages/Historias/Historias'
 import Donar from './pages/Donar/Donar'
 import Voluntariado from './pages/Voluntariado/Voluntariado'
 import Eventos from './pages/Eventos/Eventos'
 import Contacto from './pages/Contacto/Contacto'
+import { AdminAuthProvider } from './admin/AdminAuthContext'
+import ProtectedRoute from './admin/ProtectedRoute'
+import AdminLogin from './admin/pages/Login'
+import AdminRecuperarContrasena from './admin/pages/RecuperarContrasena'
+import AdminEnlaceEnviado from './admin/pages/EnlaceEnviado'
+import AdminNuevaContrasena from './admin/pages/NuevaContrasena'
+import AdminEventosPlaceholder from './admin/pages/AdminEventosPlaceholder'
+
+// Scopes the mock session to everything under /admin without affecting the
+// public site's routing.
+function AdminRoot() {
+  return (
+    <AdminAuthProvider>
+      <Outlet />
+    </AdminAuthProvider>
+  )
+}
 
 // Client-side route changes don't reset scroll position by default, and on a
 // full page load the browser tries to scroll to the URL's #hash before React
@@ -50,6 +67,23 @@ function App() {
           <Route path="/voluntariado" element={<Voluntariado />} />
           <Route path="/eventos" element={<Eventos />} />
           <Route path="/contacto" element={<Contacto />} />
+
+          <Route path="/admin" element={<AdminRoot />}>
+            <Route index element={<Navigate to="login" replace />} />
+            <Route path="login" element={<AdminLogin />} />
+            <Route path="recuperar-contrasena" element={<AdminRecuperarContrasena />} />
+            <Route path="enlace-enviado" element={<AdminEnlaceEnviado />} />
+            <Route path="nueva-contrasena" element={<AdminNuevaContrasena />} />
+            <Route
+              path="eventos"
+              element={
+                <ProtectedRoute>
+                  <AdminEventosPlaceholder />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+
           <Route path="*" element={<Home />} />
         </Routes>
       </PageTransition>
