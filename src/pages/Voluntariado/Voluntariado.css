@@ -477,7 +477,7 @@
 
   .voluntariado-hero__visual {
     position: absolute;
-    inset: 0 0 0 calc(var(--hero-gutter) + 460px + 64px);
+    inset: 0 0 0 calc(var(--hero-gutter) + 560px + 24px);
     z-index: 0;
     width: auto;
     aspect-ratio: auto;
@@ -488,7 +488,7 @@
     z-index: 1;
     order: -1;
     justify-content: center;
-    width: 420px;
+    width: 520px;
     padding: 0 40px 0 0;
     gap: 32px;
   }
