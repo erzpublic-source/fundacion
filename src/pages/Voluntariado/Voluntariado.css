@@ -90,7 +90,7 @@
   max-width: 620px;
   color: #6b7280;
   font-size: 14px;
-  line-height: 22px;
+  line-height: 20px;
 }
 
 /* ---------- Roles ---------- */
@@ -510,8 +510,8 @@
   }
 
   .voluntariado-hero__lead {
-    font-size: 16px;
-    line-height: 26px;
+    font-size: 22px;
+    line-height: 24px;
   }
 
   .voluntariado-roles {
