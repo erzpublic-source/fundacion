@@ -45,8 +45,22 @@ function NavAnchor({ href, className, onClick, children }: NavAnchorProps) {
 
 function SosIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-      <path d="M0,20V2C0,1.45.2.98.59.59c.39-.39.86-.59,1.41-.59h16c.55,0,1.02.2,1.41.59.39.39.59.86.59,1.41v12c0,.55-.2,1.02-.59,1.41-.39.39-.86.59-1.41.59H4L0,20ZM4,12h8v-2H4v2ZM4,9h12v-2H4v2ZM4,6h12v-2H4v2Z" />
+    <svg width="20" height="20" viewBox="0 0 29 29" fill="none" aria-hidden="true">
+      <rect width="29" height="29" rx="14.5" fill="#43B581" />
+      <path
+        d="M7.81336 18.6318C7.87769 18.3395 7.85314 18.0346 7.74285 17.7564C6.97537 16.164 6.79497 14.3517 7.23348 12.6393C7.67199 10.9269 8.70124 9.42431 10.1396 8.39677C11.578 7.36922 13.3331 6.88272 15.0952 7.02308C16.8573 7.16345 18.5133 7.92167 19.7708 9.16396C21.0284 10.4063 21.8068 12.0528 21.9687 13.8131C22.1306 15.5733 21.6655 17.3342 20.6556 18.785C19.6457 20.2359 18.1559 21.2834 16.4489 21.7428C14.7419 22.2022 12.9275 22.0439 11.3259 21.2959C11.063 21.1961 10.7774 21.1722 10.5016 21.2269L7.94162 21.9755C7.81813 22.0083 7.68831 22.009 7.56449 21.9775C7.44066 21.946 7.32692 21.8834 7.23406 21.7957C7.1412 21.7079 7.07229 21.5979 7.03388 21.4761C6.99546 21.3542 6.9888 21.2246 7.01454 21.0994L7.81336 18.6318Z"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function ChevronIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M6 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -165,6 +179,7 @@ export default function Navbar() {
           <a href="#sos" className="navbar__sos">
             <SosIcon />
             SOS Te escucho
+            <ChevronIcon />
           </a>
         </div>
       </header>
@@ -173,6 +188,12 @@ export default function Navbar() {
         <Link to="/" className="mobile-topbar__logo" aria-label="Fundación Un Día Más — Inicio">
           <Logo />
         </Link>
+
+        <a href="#sos" className="navbar__sos">
+          <SosIcon />
+          SOS Te escucho
+          <ChevronIcon />
+        </a>
       </header>
 
       <div
@@ -211,11 +232,6 @@ export default function Navbar() {
             <MenuIcon />
             Menú
           </button>
-
-          <a href="#sos" className="navbar__sos">
-            <SosIcon />
-            SOS Te escucho
-          </a>
         </div>
       </div>
     </>
