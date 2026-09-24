@@ -140,7 +140,7 @@ interface ContactFields {
 
 const INITIAL_FIELDS: ContactFields = { nombre: '', correo: '', asunto: '', mensaje: '' }
 
-const NOMBRE_MAX_LENGTH = 30
+const NOMBRE_MAX_LENGTH = 40
 const ASUNTO_MAX_LENGTH = 30
 const MENSAJE_MAX_LENGTH = 700
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
