@@ -319,7 +319,6 @@ export default function Voluntariado() {
 
       <main>
         <section className="voluntariado-hero">
-          <span className="voluntariado-hero__blob voluntariado-hero__blob--a" aria-hidden="true" />
 
           <div className="voluntariado-hero__inner">
             <div className="voluntariado-hero__visual">

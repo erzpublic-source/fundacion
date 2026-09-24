@@ -5,21 +5,6 @@
   background: #fdf4f6;
 }
 
-.voluntariado-hero__blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(16px);
-  pointer-events: none;
-}
-
-.voluntariado-hero__blob--a {
-  top: -80px;
-  right: -80px;
-  width: 200px;
-  height: 200px;
-  background: rgba(212, 103, 154, 0.14);
-}
-
 .voluntariado-hero__inner {
   position: relative;
   display: flex;
@@ -468,7 +453,7 @@
 
   .voluntariado-hero__visual {
     position: absolute;
-    inset: 0 0 0 calc(var(--hero-gutter) + 560px);
+    inset: 0;
     z-index: 0;
     width: auto;
     aspect-ratio: auto;
@@ -482,6 +467,7 @@
     width: 520px;
     padding: 0 40px 0 0;
     gap: 32px;
+    margin-top: -40px;
   }
 
   .voluntariado-hero__ctas {
@@ -492,9 +478,6 @@
     width: auto;
   }
 
-  .voluntariado-hero__media {
-    background-position: 100% center;
-  }
 
   .voluntariado-hero__title {
     max-width: none;
