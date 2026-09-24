@@ -20,14 +20,6 @@
   background: rgba(212, 103, 154, 0.14);
 }
 
-.voluntariado-hero__blob--b {
-  top: 200px;
-  left: -60px;
-  width: 160px;
-  height: 160px;
-  background: rgba(106, 83, 144, 0.13);
-}
-
 .voluntariado-hero__inner {
   position: relative;
   display: flex;
@@ -477,7 +469,7 @@
 
   .voluntariado-hero__visual {
     position: absolute;
-    inset: 0 0 0 calc(var(--hero-gutter) + 560px + 24px);
+    inset: 0 0 0 calc(var(--hero-gutter) + 560px);
     z-index: 0;
     width: auto;
     aspect-ratio: auto;
