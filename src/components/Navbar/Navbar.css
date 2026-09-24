@@ -145,6 +145,7 @@
   width: 100%;
   padding: 0 16px;
   background: #fafaf8;
+  box-shadow: var(--shadow-02);
 }
 
 .mobile-topbar .navbar__sos {
