@@ -2,7 +2,7 @@
 .historias-hero {
   position: relative;
   overflow: hidden;
-  background: #fff7f9;
+  background: #fafaf8;
 }
 
 .historias-hero__blob {
@@ -47,7 +47,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  border: 2px solid #fff7f9;
+  border: 2px solid #fafaf8;
   object-fit: cover;
 }
 

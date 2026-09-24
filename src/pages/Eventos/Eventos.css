@@ -2,7 +2,7 @@
 .eventos-hero {
   position: relative;
   overflow: hidden;
-  background: #fdf4f6;
+  background: #fafaf8;
 }
 
 .eventos-hero__blob {
@@ -47,7 +47,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  border: 2px solid #fdf4f6;
+  border: 2px solid #fafaf8;
   object-fit: cover;
 }
 
