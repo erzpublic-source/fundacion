@@ -543,3 +543,82 @@
     padding: 40px;
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .voluntariado-hero__title {
+    font-size: 34px;
+  }
+
+  .voluntariado-hero__lead {
+    font-size: 16px;
+  }
+
+  .voluntariado-roles__lead {
+    font-size: 16px;
+  }
+
+  .voluntariado-role-card h3 {
+    font-size: 18px;
+  }
+
+  .voluntariado-role-card p {
+    font-size: 15px;
+  }
+
+  .voluntariado-form-section__lead {
+    font-size: 16px;
+  }
+
+  .voluntariado-form__title {
+    font-size: 20px;
+  }
+
+  .voluntariado-field label {
+    font-size: 15px;
+  }
+
+  .voluntariado-field__control input {
+    font-size: 16px;
+  }
+
+  .voluntariado-field__hint {
+    font-size: 14px;
+  }
+
+  .voluntariado-field__error {
+    font-size: 14px;
+  }
+
+  .voluntariado-field__dropdown button {
+    font-size: 16px;
+  }
+
+  .voluntariado-field__file-trigger {
+    font-size: 16px;
+  }
+
+  .voluntariado-field__filename {
+    font-size: 16px;
+  }
+
+  .voluntariado-checkbox label {
+    font-size: 14px;
+  }
+
+  .voluntariado-form__footnote {
+    font-size: 14px;
+  }
+
+  .form-alert__close {
+    font-size: 18px;
+  }
+
+  .form-alert h3 {
+    font-size: 22px;
+  }
+
+  .form-alert p {
+    font-size: 16px;
+  }
+}

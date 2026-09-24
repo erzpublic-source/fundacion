@@ -687,3 +687,86 @@
     width: 304px;
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .historias-hero__title {
+    font-size: 34px;
+  }
+
+  .historias-hero__lead {
+    font-size: 16px;
+  }
+
+  .historias-hero__note {
+    font-size: 14px;
+  }
+
+  .historias-entrevistas__lead {
+    font-size: 16px;
+  }
+
+  .historias-entrevistas__featured-body h3 {
+    font-size: 20px;
+  }
+
+  .historias-entrevistas__featured-body p {
+    font-size: 15px;
+  }
+
+  .historias-entrevistas__tag {
+    font-size: 11px;
+  }
+
+  .historias-pill-btn {
+    font-size: 14px;
+  }
+
+  .historias-card__body h4 {
+    font-size: 18px;
+  }
+
+  .historias-card__body p {
+    font-size: 15px;
+  }
+
+  .historias-card__link {
+    font-size: 15px;
+  }
+
+  .historias-donacion__body h2 {
+    font-size: 30px;
+  }
+
+  .historias-donacion__text {
+    font-size: 16px;
+  }
+
+  .historias-acusticos .section-heading h2 {
+    font-size: 26px;
+  }
+
+  .historias-acustico__body h4 {
+    font-size: 16px;
+  }
+
+  .historias-acustico__body p {
+    font-size: 14px;
+  }
+
+  .historias-acustico__link {
+    font-size: 13px;
+  }
+
+  .historias-youtube h3 {
+    font-size: 22px;
+  }
+
+  .historias-youtube p {
+    font-size: 15px;
+  }
+
+  .historias-youtube__btn {
+    font-size: 17px;
+  }
+}

@@ -153,3 +153,26 @@
     flex: none;
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .legal-modal__header h3 {
+    font-size: 24px;
+  }
+
+  .legal-modal__updated {
+    font-size: 13px;
+  }
+
+  .legal-modal__body h4 {
+    font-size: 18px;
+  }
+
+  .legal-modal__body p {
+    font-size: 16px;
+  }
+
+  .legal-modal__footer p {
+    font-size: 14px;
+  }
+}

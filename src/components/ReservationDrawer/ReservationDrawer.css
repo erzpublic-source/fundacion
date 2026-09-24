@@ -574,3 +574,118 @@
     max-width: 100%;
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .reservation-drawer__status {
+    font-size: 12px;
+  }
+
+  .reservation-drawer__title {
+    font-size: 24px;
+  }
+
+  .reservation-drawer__facts p {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__description {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__section-title {
+    font-size: 17px;
+  }
+
+  .reservation-drawer__field label {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__field input {
+    font-size: 16px;
+  }
+
+  .reservation-drawer__stepper button {
+    font-size: 18px;
+  }
+
+  .reservation-drawer__discount .btn {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__discount-ok {
+    font-size: 14px;
+  }
+
+  .reservation-drawer__discount-error {
+    font-size: 14px;
+  }
+
+  .reservation-drawer__price-breakdown {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__price-breakdown-total {
+    font-size: 18px;
+  }
+
+  .reservation-drawer__payment-tab {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__account-label {
+    font-size: 13px;
+  }
+
+  .reservation-drawer__account-value {
+    font-size: 18px;
+  }
+
+  .reservation-drawer__account-holder {
+    font-size: 14px;
+  }
+
+  .reservation-drawer__copy {
+    font-size: 14px;
+  }
+
+  .reservation-drawer__upload {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__receipt-name {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__note {
+    font-size: 14px;
+  }
+
+  .reservation-drawer__footer-summary {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__success h2 {
+    font-size: 24px;
+  }
+
+  .reservation-drawer__success-code {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__success-note {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__success-summary dt {
+    font-size: 14px;
+  }
+
+  .reservation-drawer__success-summary dd {
+    font-size: 15px;
+  }
+
+  .reservation-drawer__success-help {
+    font-size: 14px;
+  }
+}

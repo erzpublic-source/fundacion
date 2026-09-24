@@ -170,3 +170,18 @@
   box-shadow: none;
   pointer-events: none;
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .eyebrow {
+    font-size: 13px;
+  }
+
+  .section-heading h2 {
+    font-size: 34px;
+  }
+
+  .btn {
+    font-size: 17px;
+  }
+}

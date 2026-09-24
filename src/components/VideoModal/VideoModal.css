@@ -119,3 +119,10 @@
     width: 100%;
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .video-modal__header h3 {
+    font-size: 24px;
+  }
+}

@@ -508,3 +508,110 @@
     flex: 1;
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .contacto-hero__title {
+    font-size: 34px;
+  }
+
+  .contacto-hero__lead {
+    font-size: 16px;
+  }
+
+  .contacto-form__title {
+    font-size: 22px;
+  }
+
+  .contacto-field label {
+    font-size: 15px;
+  }
+
+  .contacto-field__error {
+    font-size: 14px;
+  }
+
+  .contacto-field__counter {
+    font-size: 14px;
+  }
+
+  .contacto-field__control input {
+    font-size: 16px;
+  }
+
+  .contacto-field textarea {
+    font-size: 16px;
+  }
+
+  .contacto-checkbox label {
+    font-size: 14px;
+  }
+
+  .contacto-link--doc {
+    font-size: 15px;
+  }
+
+  .contacto-ubicacion__lead {
+    font-size: 16px;
+  }
+
+  .contacto-address-card h3 {
+    font-size: 20px;
+  }
+
+  .contacto-address-card p {
+    font-size: 15px;
+  }
+
+  .contacto-map {
+    font-size: 14px;
+  }
+
+  .contacto-horario-card__label {
+    font-size: 12px;
+  }
+
+  .contacto-horario-card__hours {
+    font-size: 22px;
+  }
+
+  .contacto-horario-card__note {
+    font-size: 14px;
+  }
+
+  .contacto-canales__col h2 {
+    font-size: 28px;
+  }
+
+  .contacto-canales__lead {
+    font-size: 16px;
+  }
+
+  .contacto-canales__label {
+    font-size: 14px;
+  }
+
+  .contacto-canales__value {
+    font-size: 16px;
+  }
+
+  .contacto-staff__avatar {
+    font-size: 15px;
+  }
+
+  .contacto-staff__role {
+    font-size: 13px;
+  }
+
+  .contacto-staff__name {
+    font-size: 17px;
+  }
+
+  .contacto-staff__text {
+    font-size: 15px;
+  }
+
+  .contacto-canales__footnote {
+    font-size: 14px;
+  }
+}

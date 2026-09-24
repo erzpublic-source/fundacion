@@ -291,3 +291,34 @@
     height: calc(220px + 6px);
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .donar-hero__title {
+    font-size: 38px;
+  }
+
+  .donar-hero__lead {
+    font-size: 16px;
+  }
+
+  .donar-grid-section__lead {
+    font-size: 16px;
+  }
+
+  .donar-card__media {
+    font-size: 14px;
+  }
+
+  .donar-card__body h3 {
+    font-size: 22px;
+  }
+
+  .donar-card__body p {
+    font-size: 16px;
+  }
+
+  .donar-card__link {
+    font-size: 14px;
+  }
+}

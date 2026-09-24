@@ -544,3 +544,78 @@
     height: 130px;
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .eventos-hero__title {
+    font-size: 34px;
+  }
+
+  .eventos-hero__lead {
+    font-size: 16px;
+  }
+
+  .eventos-featured__tag {
+    font-size: 11px;
+  }
+
+  .eventos-featured__body h2 {
+    font-size: 28px;
+  }
+
+  .eventos-featured__text {
+    font-size: 16px;
+  }
+
+  .eventos-featured__meta li {
+    font-size: 15px;
+  }
+
+  .eventos-actuales__lead {
+    font-size: 16px;
+  }
+
+  .evento-actual__tag {
+    font-size: 11px;
+  }
+
+  .evento-actual__body h3 {
+    font-size: 20px;
+  }
+
+  .evento-actual__body p {
+    font-size: 16px;
+  }
+
+  .evento-actual__cta {
+    font-size: 15px;
+  }
+
+  .eventos-upcoming__lead {
+    font-size: 16px;
+  }
+
+  .evento-item__weekday {
+    font-size: 11px;
+  }
+
+  .evento-item__day {
+    font-size: 22px;
+  }
+
+  .evento-item__time {
+    font-size: 14px;
+  }
+
+  .evento-item__body h3 {
+    font-size: 20px;
+  }
+
+  .evento-item__place {
+    font-size: 15px;
+  }
+
+  .evento-item__text {
+    font-size: 16px;
+  }
+}

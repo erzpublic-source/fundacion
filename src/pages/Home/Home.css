@@ -564,3 +564,58 @@
     gap: 56px;
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .hero__title {
+    font-size: 38px;
+  }
+
+  .hero__card p {
+    font-size: 16px;
+  }
+
+  .hero__card-tag {
+    font-size: 13px;
+  }
+
+  .esencia__row h3 {
+    font-size: 20px;
+  }
+
+  .esencia__row p {
+    font-size: 16px;
+  }
+
+  .impacto__tag {
+    font-size: 12px;
+  }
+
+  .impacto__title {
+    font-size: 20px;
+  }
+
+  .impacto__text {
+    font-size: 15px;
+  }
+
+  .impacto__link {
+    font-size: 16px;
+  }
+
+  .donaciones__body h2 {
+    font-size: 30px;
+  }
+
+  .donaciones__text {
+    font-size: 16px;
+  }
+
+  .sponsors__heading {
+    font-size: 13px;
+  }
+
+  .sponsors__logo {
+    font-size: 18px;
+  }
+}

@@ -365,3 +365,34 @@
     padding: 14px 40px;
   }
 }
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .navbar__pill {
+    font-size: 16px;
+  }
+
+  .navbar__sos {
+    font-size: 16px;
+  }
+
+  .mobile-topbar .navbar__sos {
+    font-size: 15px;
+  }
+
+  .mobile-bottombar__item {
+    font-size: 12px;
+  }
+
+  .mobile-menu-overlay__label {
+    font-size: 13px;
+  }
+
+  .mobile-menu-overlay__item {
+    font-size: 18px;
+  }
+
+  .mobile-menu-overlay__quote {
+    font-size: 17px;
+  }
+}
