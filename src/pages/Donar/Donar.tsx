@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import heroImage from '../../assets/images/donar-hero.jpg'
+import heroCollageImage from '../../assets/images/donar-hero-collage.jpg'
 import donarAhoraImage from '../../assets/images/donar-personas-ahora.jpg'
 import donarEspecieImage from '../../assets/images/donar-personas-especie.jpg'
 import donarCorporativasImage from '../../assets/images/donar-empresas-corporativas.jpg'
@@ -107,7 +109,25 @@ function DonationGrid({ id, background, heading, lead, cards }: DonationGridProp
   )
 }
 
+const HERO_SLIDES = [
+  { image: heroImage, alt: 'Foto — Dos mujeres pintando juntas en un taller' },
+  { image: heroCollageImage, alt: 'Foto — Collage de voluntarios en distintas actividades de la fundación' },
+]
+
+const HERO_SLIDE_DURATION = 5000
+
 export default function Donar() {
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [cycle, setCycle] = useState(0)
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length)
+      setCycle((prev) => prev + 1)
+    }, HERO_SLIDE_DURATION)
+    return () => window.clearInterval(id)
+  }, [])
+
   return (
     <>
       <Navbar />
@@ -116,12 +136,19 @@ export default function Donar() {
         <section className="donar-hero">
           <div className="donar-hero__inner">
             <div className="donar-hero__visual">
-              <div
-                className="donar-hero__media"
-                role="img"
-                aria-label="Foto — Dos mujeres pintando juntas en un taller"
-                style={{ backgroundImage: `url(${heroImage})` }}
-              />
+              {HERO_SLIDES.map((slide, index) => {
+                const isActive = index === activeSlide
+                return (
+                  <div
+                    key={isActive ? `${index}-${cycle}` : index}
+                    className={`donar-hero__media${isActive ? ' donar-hero__media--active' : ''}`}
+                    role="img"
+                    aria-label={slide.alt}
+                    aria-hidden={!isActive}
+                    style={{ backgroundImage: `url(${slide.image})`, animationDuration: `${HERO_SLIDE_DURATION}ms` }}
+                  />
+                )
+              })}
             </div>
 
             <div className="donar-hero__content">
