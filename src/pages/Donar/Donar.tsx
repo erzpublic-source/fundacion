@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
+import type { CSSProperties } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import heroImage from '../../assets/images/donar-hero.jpg'
+import heroImageMobile from '../../assets/images/donar-hero-mobile.jpg'
 import heroCollageImage from '../../assets/images/donar-hero-collage.jpg'
+import heroCollageImageMobile from '../../assets/images/donar-hero-collage-mobile.jpg'
 import donarAhoraImage from '../../assets/images/donar-personas-ahora.jpg'
 import donarEspecieImage from '../../assets/images/donar-personas-especie.jpg'
 import donarCorporativasImage from '../../assets/images/donar-empresas-corporativas.jpg'
@@ -110,8 +113,12 @@ function DonationGrid({ id, background, heading, lead, cards }: DonationGridProp
 }
 
 const HERO_SLIDES = [
-  { image: heroImage, alt: 'Foto — Dos mujeres pintando juntas en un taller' },
-  { image: heroCollageImage, alt: 'Foto — Collage de voluntarios en distintas actividades de la fundación' },
+  { image: heroImage, imageMobile: heroImageMobile, alt: 'Foto — Dos mujeres pintando juntas en un taller' },
+  {
+    image: heroCollageImage,
+    imageMobile: heroCollageImageMobile,
+    alt: 'Foto — Collage de voluntarios en distintas actividades de la fundación',
+  },
 ]
 
 const HERO_SLIDE_DURATION = 5000
@@ -145,7 +152,13 @@ export default function Donar() {
                     role="img"
                     aria-label={slide.alt}
                     aria-hidden={!isActive}
-                    style={{ backgroundImage: `url(${slide.image})`, animationDuration: `${HERO_SLIDE_DURATION}ms` }}
+                    style={
+                      {
+                        backgroundImage: `url(${slide.image})`,
+                        '--donar-hero-media-mobile': `url(${slide.imageMobile})`,
+                        animationDuration: `${HERO_SLIDE_DURATION}ms`,
+                      } as CSSProperties
+                    }
                   />
                 )
               })}

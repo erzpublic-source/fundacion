@@ -33,6 +33,14 @@
   animation: donar-hero-zoom linear forwards;
 }
 
+/* Mobile gets a smaller, lighter export of each slide to keep the hero's
+   network cost down on cellular connections. */
+@media (max-width: 899px) {
+  .donar-hero__media {
+    background-image: var(--donar-hero-media-mobile) !important;
+  }
+}
+
 .donar-hero__media--active {
   opacity: 1;
   z-index: 1;
