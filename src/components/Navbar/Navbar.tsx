@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import Logo from './Logo'
@@ -68,11 +68,81 @@ function ChevronIcon() {
 function MenuIcon() {
   return (
     <svg width="22" height="14" viewBox="0 0 22 14" fill="none" aria-hidden="true">
-      <rect className="menu-icon__line menu-icon__line--top" x="7" y="1" width="14" height="2" rx="1" fill="currentColor" />
-      <rect className="menu-icon__line menu-icon__line--mid" x="4" y="6" width="14" height="2" rx="1" fill="currentColor" />
-      <rect className="menu-icon__line menu-icon__line--bottom" x="1" y="11" width="14" height="2" rx="1" fill="currentColor" />
+      <rect x="7" y="1" width="14" height="2" rx="1" fill="currentColor" />
+      <rect x="4" y="6" width="14" height="2" rx="1" fill="currentColor" />
+      <rect x="1" y="11" width="14" height="2" rx="1" fill="currentColor" />
     </svg>
   )
+}
+
+function CloseXIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <path d="M3 3l10 10M13 3L3 13" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function HomeIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M3 9.5 10 3l7 6.5V16a1 1 0 0 1-1 1h-3.5v-5h-5v5H4a1 1 0 0 1-1-1V9.5Z" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function BookIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M10 5.2c-1.1-.9-2.7-1.4-4.5-1.4-1 0-1.9.15-2.5.35v10.4c.6-.2 1.5-.35 2.5-.35 1.8 0 3.4.5 4.5 1.4M10 5.2c1.1-.9 2.7-1.4 4.5-1.4 1 0 1.9.15 2.5.35v10.4c-.6-.2-1.5-.35-2.5-.35-1.8 0-3.4.5-4.5 1.4M10 5.2v10.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function CalendarNavIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <rect x="2" y="3" width="12" height="11" rx="2" />
+      <path d="M2 6.5h12M5 1.5v2M11 1.5v2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function HeartNavIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M8 14s-5.5-3.36-5.5-7.2C2.5 4.62 4.12 3 6.1 3c1.14 0 2.22.56 2.9 1.44C9.68 3.56 10.76 3 11.9 3c1.98 0 3.6 1.62 3.6 3.8C15.5 10.64 8 14 8 14Z" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function PeopleIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <circle cx="7.5" cy="6.5" r="2.5" />
+      <circle cx="14" cy="7.5" r="2" />
+      <path d="M2.5 17c.5-3 2.5-4.8 5-4.8s4.5 1.8 5 4.8" strokeLinecap="round" />
+      <path d="M13 12.6c2 .1 3.5 1.7 4 4.4" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function MailNavIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <rect x="1.5" y="3" width="13" height="10" rx="1.5" />
+      <path d="M2 4l6 4.5L14 4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+const NAV_ICONS: Record<string, ReactNode> = {
+  '/': <HomeIcon />,
+  '/historias': <BookIcon />,
+  '/eventos': <CalendarNavIcon />,
+  '/donar': <HeartNavIcon />,
+  '/voluntariado': <PeopleIcon />,
+  '/contacto': <MailNavIcon />,
 }
 
 export default function Navbar() {
@@ -81,8 +151,6 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrollSpyId, setScrollSpyId] = useState('inicio')
-  const bottombarRef = useRef<HTMLDivElement>(null)
-  const menuPanelRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 40)
@@ -120,34 +188,14 @@ export default function Navbar() {
     ? (NAV_LINKS.find((link) => getAnchorId(link.href) === scrollSpyId)?.href ?? '/')
     : location.pathname
 
+  // The overlay is a full-screen opaque panel with its own internal scroll,
+  // so the page behind it must not scroll while it's open.
   useEffect(() => {
     if (!menuOpen) return
-    const closeOnScroll = () => setMenuOpen(false)
-    window.addEventListener('scroll', closeOnScroll, { passive: true })
-    return () => window.removeEventListener('scroll', closeOnScroll)
-  }, [menuOpen])
-
-  useEffect(() => {
-    if (!menuOpen) return
-    const elements = [bottombarRef.current, menuPanelRef.current].filter(
-      (el): el is HTMLElement => el !== null,
-    )
-    if (elements.length === 0) return
-    // Scrolling/swiping/wheeling over the menu itself must not bubble into
-    // a page scroll (which would otherwise trigger closeOnScroll above).
-    const stop = (event: Event) => {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-    elements.forEach((el) => {
-      el.addEventListener('wheel', stop, { passive: false })
-      el.addEventListener('touchmove', stop, { passive: false })
-    })
+    const { overflow } = document.body.style
+    document.body.style.overflow = 'hidden'
     return () => {
-      elements.forEach((el) => {
-        el.removeEventListener('wheel', stop)
-        el.removeEventListener('touchmove', stop)
-      })
+      document.body.style.overflow = overflow
     }
   }, [menuOpen])
 
@@ -196,44 +244,64 @@ export default function Navbar() {
         </a>
       </header>
 
-      <div
-        className={`mobile-menu-backdrop${menuOpen ? ' mobile-menu-backdrop--visible' : ''}`}
-        onClick={closeMenu}
-        aria-hidden="true"
-      />
+      <div className={`mobile-menu-overlay${menuOpen ? ' mobile-menu-overlay--open' : ''}`}>
+        <div className="mobile-menu-overlay__header">
+          <Link to="/" className="mobile-topbar__logo" aria-label="Fundación Un Día Más — Inicio" onClick={closeMenu}>
+            <Logo />
+          </Link>
 
-      <nav
-        ref={menuPanelRef}
-        className={`mobile-menu-panel${menuOpen ? ' mobile-menu-panel--open' : ''}`}
-        aria-label="Navegación principal"
-      >
-        {NAV_LINKS.map((link) => (
+          <button type="button" className="mobile-menu-overlay__close" onClick={closeMenu} aria-label="Cerrar menú">
+            <CloseXIcon />
+          </button>
+        </div>
+
+        <p className="mobile-menu-overlay__label">Navegación principal</p>
+
+        <nav className="mobile-menu-overlay__list" aria-label="Navegación principal">
+          {NAV_LINKS.map((link) => (
+            <NavAnchor
+              key={link.label}
+              href={link.href}
+              onClick={closeMenu}
+              className={`mobile-menu-overlay__item${link.href === activeHref ? ' mobile-menu-overlay__item--active' : ''}`}
+            >
+              {NAV_ICONS[link.href]}
+              <span className="mobile-menu-overlay__item-label">{link.label}</span>
+              {link.href === activeHref && <span className="navbar__dot" aria-hidden="true" />}
+            </NavAnchor>
+          ))}
+        </nav>
+
+        <blockquote className="mobile-menu-overlay__quote">
+          "Antes de decorar, el sistema debe orientar. Antes de impresionar, debe hacer sentir a cada persona vista,
+          segura y acompañada."
+        </blockquote>
+      </div>
+
+      <nav className="mobile-bottombar" aria-label="Navegación rápida">
+        {NAV_LINKS.slice(0, 3).map((link) => (
           <NavAnchor
             key={link.label}
             href={link.href}
             onClick={closeMenu}
-            className={`mobile-menu-panel__pill${link.href === activeHref ? ' mobile-menu-panel__pill--active' : ''}`}
+            className={`mobile-bottombar__item${link.href === activeHref ? ' mobile-bottombar__item--active' : ''}`}
           >
-            {link.href === activeHref && <span className="navbar__dot" aria-hidden="true" />}
-            {link.label}
+            {NAV_ICONS[link.href]}
+            <span>{link.label}</span>
           </NavAnchor>
         ))}
-      </nav>
 
-      <div ref={bottombarRef} className="mobile-bottombar">
-        <div className="mobile-bottombar__row">
-          <button
-            type="button"
-            className="mobile-menu-toggle"
-            onClick={() => setMenuOpen((open) => !open)}
-            aria-expanded={menuOpen}
-            aria-label="Abrir menú de navegación"
-          >
-            <MenuIcon />
-            Menú
-          </button>
-        </div>
-      </div>
+        <button
+          type="button"
+          className="mobile-bottombar__item"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-expanded={menuOpen}
+          aria-label="Abrir menú de navegación"
+        >
+          <MenuIcon />
+          <span>Menú</span>
+        </button>
+      </nav>
     </>
   )
 }

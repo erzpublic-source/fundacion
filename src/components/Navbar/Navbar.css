@@ -164,138 +164,150 @@
   width: 178px;
 }
 
-/* ==================== Mobile bottom menu ==================== */
-.mobile-menu-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 55;
-  background: color-mix(in oklab, var(--color-tinta-humana) 62%, transparent);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  box-shadow: var(--shadow-03);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
-}
-
-.mobile-menu-backdrop--visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
+/* ==================== Mobile bottom bar (floating) ==================== */
 .mobile-bottombar {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 60;
+  left: 16px;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 80;
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 62px;
+  align-items: stretch;
+  gap: 4px;
+  padding: 8px;
   background: #ffffff;
-  border-top: 1px solid #cbc4d0;
-  box-shadow: 0 -2px 12px rgba(34, 25, 32, 0.08);
-  overflow: hidden;
-  overscroll-behavior: contain;
-  touch-action: none;
+  border: 1px solid rgba(203, 196, 208, 0.35);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-02);
 }
 
-.mobile-bottombar a,
-.mobile-bottombar button {
-  touch-action: manipulation;
-}
-
-.mobile-menu-panel {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 62px;
-  z-index: 59;
-  max-height: 0;
+.mobile-bottombar__item {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 0 20px;
-  background: #ffffff;
-  border-top: 1px solid #cbc4d0;
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0 -2px 12px rgba(34, 25, 32, 0.08);
-  opacity: 0;
-  overflow: hidden;
-  overscroll-behavior: contain;
-  touch-action: none;
-  pointer-events: none;
-  transform: translateY(8px);
-  transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.35s cubic-bezier(0.32, 0.72, 0, 1), padding 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  gap: 4px;
+  padding: 6px 2px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-full);
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  font-family: inherit;
 }
 
-.mobile-menu-panel--open {
-  max-height: 358px;
-  padding: 16px 20px;
+.mobile-bottombar__item svg {
+  flex-shrink: 0;
+}
+
+.mobile-bottombar__item--active {
+  color: var(--color-violeta-esperanza);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ==================== Mobile menu overlay ==================== */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  background: #fff7f9;
+  padding: 20px 20px 110px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.mobile-menu-overlay--open {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
 }
 
-.mobile-menu-panel__pill {
-  display: inline-flex;
-  align-self: flex-start;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 16px;
-  border-radius: var(--radius-full);
-  font-size: 15px;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-violeta-esperanza);
-}
-
-.mobile-menu-panel__pill--active {
-  background: color-mix(in oklab, var(--color-white) 50%, var(--color-bg-hover-secondary));
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-tinta-humana);
-}
-
-.mobile-bottombar__row {
+.mobile-menu-overlay__header {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  justify-content: center;
-  height: 62px;
-  padding: 0 20px;
+  justify-content: space-between;
 }
 
-.mobile-menu-toggle {
+.mobile-menu-overlay__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-bg-hover-secondary);
+  color: var(--color-tinta-humana);
+}
+
+.mobile-menu-overlay__label {
+  margin: 28px 0 12px;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #9b93a3;
+}
+
+.mobile-menu-overlay__list {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-menu-overlay__item {
+  display: flex;
   align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  color: var(--color-violeta-esperanza);
-  font-size: 11px;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  color: #221920;
+  font-size: 16px;
   font-weight: var(--font-weight-medium);
-  padding: 4px;
+  box-shadow: var(--shadow-01);
 }
 
-.menu-icon__line {
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform 0.3s ease, opacity 0.2s ease;
+.mobile-menu-overlay__item svg {
+  flex-shrink: 0;
+  color: #6b7280;
 }
 
-.mobile-menu-toggle[aria-expanded='true'] .menu-icon__line--top {
-  transform: translate(-3px, 5px) rotate(45deg);
+.mobile-menu-overlay__item-label {
+  flex: 1;
 }
 
-.mobile-menu-toggle[aria-expanded='true'] .menu-icon__line--mid {
-  opacity: 0;
-  transform: scaleX(0);
+.mobile-menu-overlay__item--active {
+  border-color: var(--color-violeta-esperanza);
+  background: var(--color-bg-hover-secondary);
+  color: var(--color-violeta-esperanza);
+  font-weight: var(--font-weight-semibold);
 }
 
-.mobile-menu-toggle[aria-expanded='true'] .menu-icon__line--bottom {
-  transform: translate(3px, -5px) rotate(-45deg);
+.mobile-menu-overlay__item--active svg {
+  color: var(--color-violeta-esperanza);
+}
+
+.mobile-menu-overlay__quote {
+  margin: 24px 0 0;
+  padding: 20px;
+  background: #faf0f4;
+  border-radius: var(--radius-lg);
+  color: var(--color-violeta-esperanza);
+  font-size: 15px;
+  line-height: 24px;
+  font-style: normal;
 }
 
 @media (min-width: 900px) {
@@ -305,8 +317,7 @@
 
   .mobile-topbar,
   .mobile-bottombar,
-  .mobile-menu-panel,
-  .mobile-menu-backdrop {
+  .mobile-menu-overlay {
     display: none;
   }
 
