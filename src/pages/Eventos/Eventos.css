@@ -34,7 +34,7 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  padding: 96px 16px 64px;
+  padding: 90px 16px 64px;
   text-align: center;
 }
 
@@ -386,7 +386,7 @@
 /* ==================== Desktop ==================== */
 @media (min-width: 900px) {
   .eventos-hero__inner {
-    padding: 128px 72px 88px;
+    padding: 180px 72px 88px;
     gap: 20px;
   }
 

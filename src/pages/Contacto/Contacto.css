@@ -1,7 +1,7 @@
 /* ---------- Hero + form ---------- */
 .contacto-hero {
   background: #fdf4f6;
-  padding: 96px 16px 64px;
+  padding: 90px 16px 64px;
 }
 
 .contacto-hero__inner {
@@ -419,7 +419,7 @@
 /* ==================== Desktop ==================== */
 @media (min-width: 900px) {
   .contacto-hero {
-    padding: 128px 72px 88px;
+    padding: 180px 72px 88px;
   }
 
   .contacto-hero__lead {

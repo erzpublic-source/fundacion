@@ -32,6 +32,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  padding-top: 90px;
 }
 
 /* Mobile: the photo forms its own full-width block, in normal flow above
@@ -469,6 +470,7 @@
     align-items: stretch;
     height: 720px;
     padding-left: var(--hero-gutter);
+    padding-top: 180px;
     position: relative;
     overflow: hidden;
   }
