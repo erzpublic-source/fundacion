@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import type { ReactNode } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Historias from './pages/Historias/Historias'
@@ -26,19 +27,32 @@ function ScrollToTop() {
   return null
 }
 
+// Remounting this wrapper on every pathname change restarts its CSS fade-in
+// animation, so each page eases in instead of popping in instantly.
+function PageTransition({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation()
+  return (
+    <div key={pathname} className="page-fade">
+      {children}
+    </div>
+  )
+}
+
 function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/historias" element={<Historias />} />
-        <Route path="/donar" element={<Donar />} />
-        <Route path="/voluntariado" element={<Voluntariado />} />
-        <Route path="/eventos" element={<Eventos />} />
-        <Route path="/contacto" element={<Contacto />} />
-        <Route path="*" element={<Home />} />
-      </Routes>
+      <PageTransition>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/historias" element={<Historias />} />
+          <Route path="/donar" element={<Donar />} />
+          <Route path="/voluntariado" element={<Voluntariado />} />
+          <Route path="/eventos" element={<Eventos />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
+      </PageTransition>
     </BrowserRouter>
   )
 }
