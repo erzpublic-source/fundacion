@@ -34,6 +34,14 @@
   background-repeat: no-repeat;
 }
 
+/* Mobile gets a smaller, lighter export of the hero photo to keep the
+   page's network cost down on cellular connections. */
+@media (max-width: 899px) {
+  .hero__media {
+    background-image: var(--hero-media-mobile) !important;
+  }
+}
+
 .hero__particles {
   position: absolute;
   inset: 0;

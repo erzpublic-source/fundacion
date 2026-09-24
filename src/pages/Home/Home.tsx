@@ -1,10 +1,12 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import HeroParticles from './HeroParticles'
 import HeroPreloader from './HeroPreloader'
 import heroImage from '../../assets/images/hero.jpg'
+import heroImageMobile from '../../assets/images/hero-mobile.jpg'
 import impactoHistorias from '../../assets/images/impacto-historias.jpg'
 import impactoEventos from '../../assets/images/impacto-eventos.jpg'
 import impactoVoluntariado from '../../assets/images/impacto-voluntariado.jpg'
@@ -132,6 +134,7 @@ function ChevronRight() {
 
 export default function Home() {
   const heroParallaxRef = useRef<HTMLDivElement>(null)
+  const [isMobile] = useState(() => !window.matchMedia('(min-width: 900px)').matches)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 900px)')
@@ -168,10 +171,15 @@ export default function Home() {
                 role="img"
                 aria-label="Dos mujeres conversando en un ambiente cálido y acogedor"
                 ref={heroParallaxRef}
-                style={{ backgroundImage: `url(${heroImage})` }}
+                style={
+                  {
+                    backgroundImage: `url(${heroImage})`,
+                    '--hero-media-mobile': `url(${heroImageMobile})`,
+                  } as CSSProperties
+                }
               />
               <HeroParticles />
-              <HeroPreloader imageSrc={heroImage} />
+              <HeroPreloader imageSrc={isMobile ? heroImageMobile : heroImage} />
             </div>
             <div className="hero__content">
               <h1 className="hero__title">
