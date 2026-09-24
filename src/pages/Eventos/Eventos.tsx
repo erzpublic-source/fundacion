@@ -3,6 +3,8 @@ import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import ReservationDrawer from '../../components/ReservationDrawer/ReservationDrawer'
 import type { ReservationDrawerEvent } from '../../components/ReservationDrawer/ReservationDrawer'
+import eventosAvatar1 from '../../assets/images/eventos-avatar-1.jpg'
+import eventosAvatar2 from '../../assets/images/eventos-avatar-2.jpg'
 import featuredImage from '../../assets/images/eventos-featured.jpg'
 import escuchaActivaImage from '../../assets/images/eventos-escucha-activa.jpg'
 import aireLibreImage from '../../assets/images/eventos-aire-libre.jpg'
@@ -161,6 +163,11 @@ export default function Eventos() {
           <span className="eventos-hero__blob eventos-hero__blob--b" aria-hidden="true" />
 
           <div className="eventos-hero__inner">
+            <div className="eventos-hero__avatars" aria-hidden="true">
+              <img src={eventosAvatar1} alt="" className="eventos-hero__avatar" />
+              <img src={eventosAvatar2} alt="" className="eventos-hero__avatar" />
+            </div>
+
             <h1 className="eventos-hero__title">Eventos</h1>
             <p className="eventos-hero__lead">
               Historias que también se cuentan en imágenes. Conoce los encuentros, actividades y experiencias que

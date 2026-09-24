@@ -38,6 +38,23 @@
   text-align: center;
 }
 
+.eventos-hero__avatars {
+  display: flex;
+  justify-content: center;
+}
+
+.eventos-hero__avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #fdf4f6;
+  object-fit: cover;
+}
+
+.eventos-hero__avatars .eventos-hero__avatar:first-child {
+  margin-right: -16px;
+}
+
 .eventos-hero__title {
   margin: 0;
   font-weight: var(--font-weight-light);
@@ -388,6 +405,15 @@
   .eventos-hero__inner {
     padding: 180px 72px 88px;
     gap: 20px;
+  }
+
+  .eventos-hero__avatar {
+    width: 124px;
+    height: 124px;
+  }
+
+  .eventos-hero__avatars .eventos-hero__avatar:first-child {
+    margin-right: -28px;
   }
 
   .eventos-hero__title {
