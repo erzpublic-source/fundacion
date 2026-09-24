@@ -114,10 +114,16 @@ export default function Donar() {
 
       <main>
         <section className="donar-hero">
-          <span className="donar-hero__blob donar-hero__blob--a" aria-hidden="true" />
-          <span className="donar-hero__blob donar-hero__blob--b" aria-hidden="true" />
-
           <div className="donar-hero__inner">
+            <div className="donar-hero__visual">
+              <div
+                className="donar-hero__media"
+                role="img"
+                aria-label="Foto — Dos mujeres pintando juntas en un taller"
+                style={{ backgroundImage: `url(${heroImage})` }}
+              />
+            </div>
+
             <div className="donar-hero__content">
               <h1 className="donar-hero__title">
                 Tu aporte puede
@@ -125,34 +131,16 @@ export default function Donar() {
                 <strong>cambiar una vida</strong>
               </h1>
 
+              <p className="donar-hero__lead">
+                Cada donación nos ayuda a brindar orientación, educación emocional, acompañamiento psicosocial y
+                atención en salud mental a personas que necesitan una oportunidad para continuar.
+              </p>
+
               <div className="donar-hero__ctas">
                 <a href="#donacion-personas" className="btn btn--support">
                   Quiero donar
                   <ArrowRight />
                 </a>
-                <button type="button" className="btn btn--secondary">
-                  Quiero ayudar
-                </button>
-              </div>
-            </div>
-
-            <div className="donar-hero__media-wrap">
-              <div
-                className="donar-hero__media"
-                role="img"
-                aria-label="Foto — Mano recibiendo luz cálida"
-                style={{ backgroundImage: `url(${heroImage})` }}
-              />
-
-              <div className="donar-hero__card">
-                <span className="donar-hero__card-tag">
-                  <span className="donar-hero__card-dot" aria-hidden="true" />
-                  Un día más puede comenzar contigo.
-                </span>
-                <p>
-                  Cada donación nos ayuda a brindar orientación, educación emocional, acompañamiento psicosocial y
-                  atención en salud mental a personas que necesitan una oportunidad para continuar.
-                </p>
               </div>
             </div>
           </div>

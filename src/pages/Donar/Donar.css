@@ -3,43 +3,39 @@
   position: relative;
   overflow: hidden;
   background: #fafaf8;
-  padding: 40px 16px 64px;
-}
-
-.donar-hero__blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  pointer-events: none;
-}
-
-.donar-hero__blob--a {
-  top: -80px;
-  right: -100px;
-  width: 260px;
-  height: 260px;
-  background: rgba(212, 103, 154, 0.16);
-}
-
-.donar-hero__blob--b {
-  bottom: -100px;
-  left: -80px;
-  width: 220px;
-  height: 220px;
-  background: rgba(153, 129, 193, 0.14);
 }
 
 .donar-hero__inner {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+}
+
+/* Mobile: the photo forms its own full-width block, in normal flow above
+   the text — never overlaid with it, which would fight for legibility on a
+   narrow screen. */
+.donar-hero__visual {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 2000 / 857;
+}
+
+.donar-hero__media {
+  position: absolute;
+  inset: 0;
+  background-color: #f0e9f2;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .donar-hero__content {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 24px 16px 32px;
 }
 
 .donar-hero__title {
@@ -59,6 +55,14 @@
   font-weight: var(--font-weight-bold);
 }
 
+.donar-hero__lead {
+  margin: 0;
+  max-width: 620px;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 20px;
+}
+
 .donar-hero__ctas {
   display: flex;
   flex-direction: column;
@@ -67,62 +71,6 @@
 
 .donar-hero__ctas .btn {
   width: 100%;
-}
-
-.donar-hero__media-wrap {
-  position: relative;
-  width: 100%;
-}
-
-.donar-hero__media {
-  aspect-ratio: 4 / 3;
-  width: 100%;
-  border-radius: var(--radius-lg);
-  background-color: #f0e9f2;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.donar-hero__card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: -32px;
-  margin-left: 16px;
-  margin-right: 16px;
-  padding: 16px;
-  background: #fff;
-  border-radius: var(--radius-md);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
-}
-
-.donar-hero__card p {
-  margin: 0;
-  font-size: 14px;
-  line-height: 20px;
-  color: #6b7280;
-}
-
-.donar-hero__card-tag {
-  display: inline-flex;
-  align-self: flex-start;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border-radius: var(--radius-full);
-  background: rgba(101, 152, 209, 0.07);
-  color: var(--color-azul-confianza);
-  font-size: 11px;
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-}
-
-.donar-hero__card-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--color-azul-confianza);
 }
 
 /* ---------- Donation grids (Personas / Empresas) ---------- */
@@ -235,20 +183,34 @@
 /* ==================== Desktop ==================== */
 @media (min-width: 900px) {
   .donar-hero {
-    padding: 99px 72px 131px;
+    position: relative;
   }
 
   .donar-hero__inner {
+    --hero-gutter: calc(72px + max(0px, (100vw - 1424px) / 2));
     flex-direction: row;
-    align-items: center;
-    gap: 64px;
-    max-width: var(--grid-max-width);
-    margin: 0 auto;
+    align-items: stretch;
+    height: 720px;
+    padding-left: var(--hero-gutter);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .donar-hero__visual {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: auto;
+    aspect-ratio: auto;
   }
 
   .donar-hero__content {
-    width: 480px;
-    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    order: -1;
+    justify-content: center;
+    width: 520px;
+    padding: 0 40px 0 0;
     gap: 32px;
   }
 
@@ -258,30 +220,17 @@
     letter-spacing: -1.2px;
   }
 
+  .donar-hero__lead {
+    font-size: 22px;
+    line-height: 24px;
+  }
+
   .donar-hero__ctas {
     flex-direction: row;
   }
 
   .donar-hero__ctas .btn {
     width: auto;
-  }
-
-  .donar-hero__media-wrap {
-    flex: 1;
-  }
-
-  .donar-hero__media {
-    aspect-ratio: 16 / 11;
-  }
-
-  .donar-hero__card {
-    position: absolute;
-    left: -32px;
-    bottom: -32px;
-    width: 360px;
-    margin: 0;
-    padding: 20px 24px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 
   .donar-grid-section {

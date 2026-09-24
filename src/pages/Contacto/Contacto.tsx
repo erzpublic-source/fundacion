@@ -218,7 +218,7 @@ export default function Contacto() {
                 responderemos a la mayor brevedad posible.
               </p>
 
-              <a href="#ubicacion-direccion" className="btn btn--secondary contacto-hero__cta">
+              <a href="#ubicacion-direccion" className="btn btn--primary contacto-hero__cta">
                 Nuestros datos
               </a>
             </div>
