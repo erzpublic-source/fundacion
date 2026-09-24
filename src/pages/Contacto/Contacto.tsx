@@ -140,6 +140,7 @@ interface ContactFields {
 
 const INITIAL_FIELDS: ContactFields = { nombre: '', correo: '', asunto: '', mensaje: '' }
 
+const NOMBRE_MAX_LENGTH = 30
 const ASUNTO_MAX_LENGTH = 30
 const MENSAJE_MAX_LENGTH = 700
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -236,6 +237,7 @@ export default function Contacto() {
                     placeholder="Ej: Juan Pérez"
                     value={fields.nombre}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('nombre', e.target.value)}
+                    maxLength={NOMBRE_MAX_LENGTH}
                     required
                   />
                 </div>
