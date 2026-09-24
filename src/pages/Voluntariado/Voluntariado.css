@@ -31,6 +31,14 @@
   background-repeat: no-repeat;
 }
 
+/* Mobile gets a smaller, lighter export of the hero photo to keep the
+   page's network cost down on cellular connections. */
+@media (max-width: 899px) {
+  .voluntariado-hero__media {
+    background-image: var(--voluntariado-hero-media-mobile) !important;
+  }
+}
+
 .voluntariado-hero__content {
   position: relative;
   display: flex;

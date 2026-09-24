@@ -1,9 +1,10 @@
 import { useMemo, useRef, useState } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
+import type { ChangeEvent, CSSProperties, FormEvent } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import LegalModal from '../../components/LegalModal/LegalModal'
 import heroImage from '../../assets/images/voluntariado-hero.jpg'
+import heroImageMobile from '../../assets/images/voluntariado-hero-mobile.jpg'
 import { COLOMBIA_CITIES } from '../../data/colombiaCities'
 import './Voluntariado.css'
 
@@ -326,7 +327,12 @@ export default function Voluntariado() {
                 className="voluntariado-hero__media"
                 role="img"
                 aria-label="Foto — Equipo de profesionales de la salud"
-                style={{ backgroundImage: `url(${heroImage})` }}
+                style={
+                  {
+                    backgroundImage: `url(${heroImage})`,
+                    '--voluntariado-hero-media-mobile': `url(${heroImageMobile})`,
+                  } as CSSProperties
+                }
               />
             </div>
 
