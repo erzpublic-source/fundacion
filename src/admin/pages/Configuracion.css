@@ -1,0 +1,95 @@
+.configuracion-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 720px;
+}
+
+.configuracion__page-title {
+  margin-bottom: 4px;
+}
+
+.configuracion__card-heading h2 {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: var(--font-weight-bold);
+  color: #221920;
+}
+
+.configuracion__card-heading p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.configuracion__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: #f5eff7;
+  color: var(--color-violeta-esperanza);
+  font-size: 13px;
+  line-height: 19px;
+}
+
+.configuracion__note svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.admin-field__control--disabled {
+  background: var(--color-bg-disabled);
+}
+
+.admin-field__control--disabled input {
+  color: #9b93a3;
+  cursor: not-allowed;
+}
+
+.configuracion__divider {
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid rgba(203, 196, 208, 0.4);
+}
+
+.configuracion__profile-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.configuracion__subheading {
+  margin: 0;
+  font-size: 15px;
+  font-weight: var(--font-weight-bold);
+  color: #221920;
+}
+
+.configuracion__password-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.configuracion__password-actions .btn--secondary {
+  flex-shrink: 0;
+  width: auto;
+  padding: 0 22px;
+}
+
+.configuracion__password-actions .admin-submit {
+  width: auto;
+  flex: 1;
+}
+
+@media (min-width: 700px) {
+  .configuracion__password-actions {
+    justify-content: flex-start;
+  }
+
+  .configuracion__password-actions .admin-submit {
+    flex: none;
+  }
+}

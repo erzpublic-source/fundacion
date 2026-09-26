@@ -25,6 +25,12 @@ export interface AdminSession {
 
 export type AuthErrorCode = 'invalid-email' | 'invalid-credentials' | 'network-error'
 
+export type ChangePasswordErrorCode = 'wrong-current-password'
+
+export interface ChangePasswordResult {
+  error: ChangePasswordErrorCode | null
+}
+
 export interface AuthResult {
   error: AuthErrorCode | null
 }
@@ -39,6 +45,16 @@ interface AdminAuthContextValue {
   resetPasswordForEmail: (email: string) => Promise<AuthResult>
   // TODO(Supabase): replace this mock with supabase.auth.updateUser({ password: newPassword }).
   updateUser: (newPassword: string) => Promise<AuthResult>
+  /**
+   * Used by the "Cambiar contraseña" form in Configuración, where (unlike
+   * the forgot-password flow above) the admin must prove they know the
+   * current password before setting a new one.
+   * TODO(Supabase): Supabase's updateUser() doesn't check the current
+   * password itself — re-verify it first with a throwaway
+   * supabase.auth.signInWithPassword({ email, password: currentPassword })
+   * call, then call updateUser({ password: newPassword }) once that succeeds.
+   */
+  changePassword: (currentPassword: string, newPassword: string) => Promise<ChangePasswordResult>
   // TODO(Supabase): replace this mock with supabase.auth.signOut().
   signOut: () => void
 }
@@ -124,13 +140,21 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     return { error: null }
   }, [])
 
+  const changePassword = useCallback(async (currentPassword: string, _newPassword: string): Promise<ChangePasswordResult> => {
+    await wait(MOCK_LATENCY_MS)
+    if (currentPassword !== MOCK_ADMIN_PASSWORD) {
+      return { error: 'wrong-current-password' }
+    }
+    return { error: null }
+  }, [])
+
   const signOut = useCallback(() => {
     persistSession(null)
   }, [persistSession])
 
   const value = useMemo<AdminAuthContextValue>(
-    () => ({ session, initializing, signInWithPassword, resetPasswordForEmail, updateUser, signOut }),
-    [session, initializing, signInWithPassword, resetPasswordForEmail, updateUser, signOut],
+    () => ({ session, initializing, signInWithPassword, resetPasswordForEmail, updateUser, changePassword, signOut }),
+    [session, initializing, signInWithPassword, resetPasswordForEmail, updateUser, changePassword, signOut],
   )
 
   return <AdminAuthContext.Provider value={value}>{children}</AdminAuthContext.Provider>
