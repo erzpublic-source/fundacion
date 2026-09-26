@@ -1,0 +1,104 @@
+@import './styles/tokens.css';
+@import './styles/shared.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+@media (min-width: 900px) {
+  section[id] {
+    scroll-margin-top: 96px;
+  }
+}
+
+body {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-tinta-humana);
+  background: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Opacity-only: a `transform` here would create a new containing block for
+   the navbar's `position: fixed` elements, making them scroll away with the
+   page for the animation's duration instead of staying pinned. */
+.page-fade {
+  animation: pageFadeIn 0.4s ease both;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-fade {
+    animation: none;
+  }
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.logo-img {
+  height: 28px;
+  width: auto;
+}
+
+@media (max-width: 899px) {
+  main {
+    display: block;
+    padding-top: 55px;
+  }
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

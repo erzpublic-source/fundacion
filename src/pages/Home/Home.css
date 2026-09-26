@@ -1,0 +1,621 @@
+.donaciones__media,
+.impacto__media {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  background: #fafaf8;
+}
+
+.hero__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile: the photo + animation form their own complete block, in normal
+   flow right below the logo bar — never overlaid with text/buttons, which
+   would otherwise fight for legibility on a narrow screen. */
+.hero__visual {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 2000 / 857;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+/* Mobile gets a smaller, lighter export of the hero photo to keep the
+   page's network cost down on cellular connections. */
+@media (max-width: 899px) {
+  .hero__media {
+    background-image: var(--hero-media-mobile) !important;
+  }
+}
+
+.hero__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ---------- Hero preloader ---------- */
+.hero-preloader {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  pointer-events: none;
+}
+
+.hero-preloader__bar {
+  flex: 1;
+  background: #fafaf8;
+  transform: translateY(0);
+  transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hero-preloader__bar:nth-child(1) {
+  transition-delay: 0ms;
+}
+.hero-preloader__bar:nth-child(2) {
+  transition-delay: 70ms;
+}
+.hero-preloader__bar:nth-child(3) {
+  transition-delay: 140ms;
+}
+.hero-preloader__bar:nth-child(4) {
+  transition-delay: 210ms;
+}
+.hero-preloader__bar:nth-child(5) {
+  transition-delay: 280ms;
+}
+.hero-preloader__bar:nth-child(6) {
+  transition-delay: 350ms;
+}
+
+.hero-preloader--reveal .hero-preloader__bar {
+  transform: translateY(-100%);
+}
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 16px 32px;
+}
+
+.hero__title {
+  margin: 0;
+  font-weight: var(--font-weight-light);
+  font-size: 36px;
+  line-height: 1.17;
+  letter-spacing: -1px;
+  color: #6a5390;
+}
+
+.hero__title strong {
+  font-weight: var(--font-weight-bold);
+}
+
+.hero__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero__ctas .btn {
+  width: 100%;
+}
+
+.hero__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.hero__card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: #6b7280;
+}
+
+.hero__card-tag {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(101, 152, 209, 0.07);
+  color: var(--color-azul-confianza);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.hero__card-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-azul-confianza);
+}
+
+/* ---------- Esencia ---------- */
+.esencia {
+  padding: 64px 16px;
+  background: #fff;
+}
+
+.esencia__cards {
+  display: flex;
+  flex-direction: column;
+}
+
+.esencia__divider {
+  border: none;
+  border-top: 1px solid #ece7ef;
+  margin: 0;
+}
+
+.esencia__row {
+  display: flex;
+  gap: 16px;
+  padding: 20px 0;
+}
+
+.esencia__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+}
+
+.esencia__row h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color: #1a1a1a;
+}
+
+.esencia__row p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6b7280;
+}
+
+.esencia__row p strong {
+  color: #1a1a1a;
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ---------- Impacto ---------- */
+.impacto {
+  padding: 64px 16px;
+  background: #fafaf8;
+}
+
+.impacto__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.impacto__card {
+  display: block;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--shadow-01);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.impacto__card:hover,
+.impacto__card:focus-visible {
+  box-shadow: var(--shadow-02);
+  transform: translateY(-2px);
+}
+
+.impacto__media {
+  height: 180px;
+}
+
+.impacto__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.impacto__tag {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.impacto__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color: #111827;
+}
+
+.impacto__text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: #6b7280;
+}
+
+.impacto__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-azul-confianza);
+  font-weight: var(--font-weight-bold);
+  font-size: 14px;
+}
+
+/* ---------- Donaciones ---------- */
+.donaciones {
+  padding: 64px 16px;
+  background: var(--color-bg-hover-secondary);
+}
+
+.donaciones__card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+}
+
+.donaciones__media {
+  height: 200px;
+}
+
+.donaciones__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+
+.donaciones__body h2 {
+  margin: 0;
+  font-weight: var(--font-weight-light);
+  font-size: 28px;
+  line-height: 1.2;
+  color: #1a1a1a;
+}
+
+.donaciones__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6b7280;
+}
+
+.donaciones__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.donaciones__ctas .btn {
+  width: 100%;
+}
+
+/* ---------- Sponsors ---------- */
+.sponsors {
+  padding: 64px 16px;
+  background: #fff;
+  text-align: center;
+}
+
+.sponsors__heading {
+  margin: 0 0 20px;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #6a5390;
+}
+
+.sponsors__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sponsors__logo {
+  font-weight: var(--font-weight-bold);
+  font-size: 16px;
+  color: #c4c9d4;
+}
+
+/* ==================== Desktop ==================== */
+@media (min-width: 900px) {
+  .hero {
+    position: relative;
+  }
+
+  .hero__inner {
+    --hero-gutter: calc(72px + max(0px, (100vw - 1424px) / 2));
+    flex-direction: row;
+    align-items: stretch;
+    height: 720px;
+    padding-left: var(--hero-gutter);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero__visual {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: auto;
+    aspect-ratio: auto;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    order: -1;
+    justify-content: center;
+    width: 588px;
+    padding: 0 40px 0 0;
+    gap: 32px;
+  }
+
+  .hero__title {
+    font-size: 50px;
+    line-height: 1.2;
+    letter-spacing: -1.2px;
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero__title strong {
+    white-space: nowrap;
+  }
+
+  .hero__ctas {
+    flex-direction: row;
+  }
+
+  .hero__ctas .btn {
+    width: auto;
+  }
+
+  .hero__media {
+    background-position: center;
+  }
+
+  .hero__card {
+    position: absolute;
+    left: 412px;
+    bottom: 87px;
+    width: 488px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* From the design's native 1280px canvas up, use the full 72px headline */
+@media (min-width: 1280px) {
+  .hero__content {
+    width: 760px;
+  }
+
+  .hero__title {
+    font-size: 72px;
+    line-height: 1.06;
+    letter-spacing: -2.5px;
+  }
+
+  .hero__card {
+    left: 584px;
+  }
+}
+
+@media (min-width: 900px) {
+  .section-heading {
+    max-width: var(--grid-max-width);
+    margin: 0 auto 24px;
+  }
+
+  .section-heading h2 {
+    font-size: 48px;
+    letter-spacing: -1.5px;
+  }
+
+  .esencia {
+    padding: 88px 72px;
+  }
+
+  .esencia__cards {
+    max-width: var(--grid-max-width);
+    margin: 0 auto;
+  }
+
+  .esencia__row {
+    padding: 40px 0;
+    gap: 32px;
+  }
+
+  .esencia__row h3 {
+    font-size: 22px;
+  }
+
+  .esencia__row p {
+    font-size: 16px;
+    line-height: 27px;
+  }
+
+  .impacto {
+    padding: 88px 72px;
+  }
+
+  .impacto__grid,
+  .section-heading--left {
+    max-width: var(--grid-max-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-heading--left h2 {
+    font-size: 56px;
+    letter-spacing: -2px;
+  }
+
+  .impacto__grid {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .impacto__card {
+    flex: 1;
+    position: relative;
+  }
+
+  .impacto__media {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+
+  .impacto__body {
+    position: relative;
+    margin-top: 328px;
+    background: #fff;
+    padding: 28px;
+  }
+
+  .donaciones {
+    padding: 88px 72px;
+  }
+
+  .donaciones__card {
+    flex-direction: row;
+    max-width: var(--grid-max-width);
+    margin: 0 auto;
+    height: 340px;
+  }
+
+  .donaciones__media {
+    width: 480px;
+    height: auto;
+  }
+
+  .donaciones__body {
+    justify-content: center;
+    padding: 64px;
+  }
+
+  .donaciones__body h2 {
+    font-size: 44px;
+  }
+
+  .donaciones__ctas {
+    flex-direction: row;
+  }
+
+  .donaciones__ctas .btn {
+    width: auto;
+  }
+
+  .sponsors {
+    padding: 88px 72px;
+  }
+
+  .sponsors__row {
+    gap: 56px;
+  }
+}
+
+/* ==================== Accessibility: larger mobile type ==================== */
+@media (max-width: 899px) {
+  .hero__title {
+    font-size: 38px;
+  }
+
+  .hero__card p {
+    font-size: 16px;
+  }
+
+  .hero__card-tag {
+    font-size: 13px;
+  }
+
+  .esencia__row h3 {
+    font-size: 20px;
+  }
+
+  .esencia__row p {
+    font-size: 16px;
+  }
+
+  .impacto__tag {
+    font-size: 12px;
+  }
+
+  .impacto__title {
+    font-size: 20px;
+  }
+
+  .impacto__text {
+    font-size: 15px;
+  }
+
+  .impacto__link {
+    font-size: 16px;
+  }
+
+  .donaciones__body h2 {
+    font-size: 30px;
+  }
+
+  .donaciones__text {
+    font-size: 16px;
+  }
+
+  .sponsors__heading {
+    font-size: 13px;
+  }
+
+  .sponsors__logo {
+    font-size: 18px;
+  }
+}

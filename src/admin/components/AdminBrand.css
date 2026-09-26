@@ -1,0 +1,15 @@
+.admin-brand {
+  display: flex;
+  justify-content: center;
+}
+
+.admin-brand__logo {
+  height: 28px;
+  width: auto;
+}
+
+@media (min-width: 900px) {
+  .admin-brand__logo {
+    height: 32px;
+  }
+}
