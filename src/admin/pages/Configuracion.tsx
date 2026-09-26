@@ -122,145 +122,148 @@ export default function Configuracion() {
       <p className="event-form__title configuracion__page-title">Configuración</p>
       <p className="event-form__subtitle">Gestiona tu cuenta, datos de pago y contacto de soporte.</p>
 
-      <form className="event-form__card" onSubmit={handleSavePayment} noValidate>
-        <div className="configuracion__card-heading">
-          <h2>Datos de pago</h2>
-          <p>Información que se mostrará a los usuarios en el momento de reservar una entrada de pago.</p>
-        </div>
-
-        <div className="admin-field">
-          <label htmlFor="config-nequi">Número Nequi</label>
-          <div className="admin-field__control">
-            <input
-              id="config-nequi"
-              type="text"
-              placeholder="300 123 4567"
-              value={payment.nequiNumber}
-              onChange={(e) => setPayment((p) => ({ ...p, nequiNumber: e.target.value }))}
-              disabled={savingPayment}
-            />
-          </div>
-        </div>
-
-        <div className="admin-field">
-          <label htmlFor="config-breb">Llave Bre-B</label>
-          <div className="admin-field__control">
-            <input
-              id="config-breb"
-              type="text"
-              placeholder="Ingresa tu llave Bre-B"
-              value={payment.breBKey}
-              onChange={(e) => setPayment((p) => ({ ...p, breBKey: e.target.value }))}
-              disabled={savingPayment}
-            />
-          </div>
-        </div>
-
-        <div className="admin-field">
-          <label htmlFor="config-holder">Nombre del titular</label>
-          <div className="admin-field__control">
-            <input
-              id="config-holder"
-              type="text"
-              placeholder="Nombre como aparece en el comprobante"
-              value={payment.accountHolder}
-              onChange={(e) => setPayment((p) => ({ ...p, accountHolder: e.target.value }))}
-              disabled={savingPayment}
-            />
-          </div>
-        </div>
-
-        <div className="configuracion__note">
-          <StarIcon />
-          Esta información se mostrará a los usuarios en el momento de reservar una entrada de pago.
-        </div>
-
-        <AdminSubmitButton
-          loading={savingPayment}
-          disabled={!canSavePayment}
-          idleLabel="Guardar cambios"
-          loadingLabel="Guardando..."
-        />
-      </form>
-
-      <section className="event-form__card configuracion__profile-card">
-        <div className="configuracion__card-heading">
-          <h2>Perfil / Cuenta</h2>
-          <p>Información básica de acceso al panel administrativo.</p>
-        </div>
-
-        <div className="admin-field">
-          <label htmlFor="config-email">Correo electrónico</label>
-          <div className="admin-field__control admin-field__control--disabled">
-            <input id="config-email" type="email" value={session?.email ?? ''} disabled readOnly />
-          </div>
-        </div>
-
-        <hr className="configuracion__divider" />
-
-        <form onSubmit={handleSubmitPassword} noValidate>
-          <h3 className="configuracion__subheading">Cambiar contraseña</h3>
-
-          <PasswordField
-            label="Ingresa la contraseña actual"
-            value={currentPassword}
-            onChange={(value) => {
-              setCurrentPassword(value)
-              setCurrentPasswordError(undefined)
-            }}
-            autoComplete="current-password"
-            disabled={savingPassword}
-            error={currentPasswordError}
-          />
-
-          <PasswordField
-            label="Nueva contraseña"
-            value={newPassword}
-            onChange={setNewPassword}
-            autoComplete="new-password"
-            disabled={savingPassword}
-          />
-
-          <PasswordField
-            label="Confirmar contraseña"
-            value={confirmPassword}
-            onChange={(value) => {
-              setConfirmPassword(value)
-              setMatchTouched(true)
-            }}
-            autoComplete="new-password"
-            disabled={savingPassword}
-            error={matchTouched && !passwordsMatch ? 'Las contraseñas no coinciden.' : undefined}
-          />
-
-          <div className="admin-requirements">
-            <p className="admin-requirements__title">Requisitos de seguridad</p>
-            {requirements.map((req) => (
-              <span key={req.label} className={`admin-requirement admin-requirement--${req.met ? 'met' : 'unmet'}`}>
-                {req.met ? <CheckSmallIcon /> : <CrossSmallIcon />}
-                {req.label}
-              </span>
-            ))}
+      <div className="configuracion__columns">
+        <section className="event-form__card configuracion__profile-card">
+          <div className="configuracion__card-heading">
+            <h2>Perfil / Cuenta</h2>
+            <p>Información básica de acceso al panel administrativo.</p>
           </div>
 
-          <div className="configuracion__password-actions">
-            <button
-              type="button"
-              className="btn btn--secondary"
-              onClick={resetPasswordForm}
+          <div className="admin-field">
+            <label htmlFor="config-email">Correo electrónico</label>
+            <div className="admin-field__control admin-field__control--disabled">
+              <input id="config-email" type="email" value={session?.email ?? ''} disabled readOnly />
+            </div>
+          </div>
+
+          <hr className="configuracion__divider" />
+
+          <form onSubmit={handleSubmitPassword} noValidate>
+            <h3 className="configuracion__subheading">Cambiar contraseña</h3>
+
+            <PasswordField
+              label="Ingresa la contraseña actual"
+              value={currentPassword}
+              onChange={(value) => {
+                setCurrentPassword(value)
+                setCurrentPasswordError(undefined)
+              }}
+              autoComplete="current-password"
               disabled={savingPassword}
-            >
-              Cancelar
-            </button>
-            <AdminSubmitButton
-              loading={savingPassword}
-              disabled={!canSubmitPassword}
-              idleLabel="Guardar contraseña"
-              loadingLabel="Guardando..."
+              error={currentPasswordError}
             />
+
+            <PasswordField
+              label="Nueva contraseña"
+              value={newPassword}
+              onChange={setNewPassword}
+              autoComplete="new-password"
+              disabled={savingPassword}
+            />
+
+            <PasswordField
+              label="Confirmar contraseña"
+              value={confirmPassword}
+              onChange={(value) => {
+                setConfirmPassword(value)
+                setMatchTouched(true)
+              }}
+              autoComplete="new-password"
+              disabled={savingPassword}
+              error={matchTouched && !passwordsMatch ? 'Las contraseñas no coinciden.' : undefined}
+            />
+
+            <div className="admin-requirements">
+              <p className="admin-requirements__title">Requisitos de seguridad</p>
+              {requirements.map((req) => (
+                <span key={req.label} className={`admin-requirement admin-requirement--${req.met ? 'met' : 'unmet'}`}>
+                  {req.met ? <CheckSmallIcon /> : <CrossSmallIcon />}
+                  {req.label}
+                </span>
+              ))}
+            </div>
+
+            <div className="configuracion__password-actions">
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={resetPasswordForm}
+                disabled={savingPassword}
+              >
+                Cancelar
+              </button>
+              <AdminSubmitButton
+                loading={savingPassword}
+                disabled={!canSubmitPassword}
+                idleLabel="Guardar contraseña"
+                loadingLabel="Guardando..."
+              />
+            </div>
+          </form>
+        </section>
+
+        <form className="event-form__card" onSubmit={handleSavePayment} noValidate>
+          <div className="configuracion__card-heading">
+            <h2>Datos de pago</h2>
+            <p>Información que se mostrará a los usuarios en el momento de reservar una entrada de pago.</p>
           </div>
+
+          <div className="admin-field">
+            <label htmlFor="config-nequi">Número Nequi</label>
+            <div className="admin-field__control">
+              <input
+                id="config-nequi"
+                type="text"
+                inputMode="numeric"
+                placeholder="3001234567"
+                value={payment.nequiNumber}
+                onChange={(e) => setPayment((p) => ({ ...p, nequiNumber: e.target.value.replace(/\D/g, '').slice(0, 10) }))}
+                disabled={savingPayment}
+              />
+            </div>
+          </div>
+
+          <div className="admin-field">
+            <label htmlFor="config-breb">Llave Bre-B</label>
+            <div className="admin-field__control">
+              <input
+                id="config-breb"
+                type="text"
+                placeholder="Ingresa tu llave Bre-B"
+                value={payment.breBKey}
+                onChange={(e) => setPayment((p) => ({ ...p, breBKey: e.target.value }))}
+                disabled={savingPayment}
+              />
+            </div>
+          </div>
+
+          <div className="admin-field">
+            <label htmlFor="config-holder">Nombre del titular</label>
+            <div className="admin-field__control">
+              <input
+                id="config-holder"
+                type="text"
+                placeholder="Nombre como aparece en el comprobante"
+                value={payment.accountHolder}
+                onChange={(e) => setPayment((p) => ({ ...p, accountHolder: e.target.value }))}
+                disabled={savingPayment}
+              />
+            </div>
+          </div>
+
+          <div className="configuracion__note">
+            <StarIcon />
+            Esta información se mostrará a los usuarios en el momento de reservar una entrada de pago.
+          </div>
+
+          <AdminSubmitButton
+            loading={savingPayment}
+            disabled={!canSavePayment}
+            idleLabel="Guardar cambios"
+            loadingLabel="Guardando..."
+          />
         </form>
-      </section>
+      </div>
       </div>
 
       {toastMessage && <Toast message={toastMessage} onDismiss={() => setToastMessage(null)} />}
