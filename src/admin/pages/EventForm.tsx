@@ -225,12 +225,14 @@ export default function EventForm() {
 
               <div className="admin-field">
                 <label htmlFor="event-description">Descripción breve</label>
-                <textarea
-                  id="event-description"
-                  placeholder="Describa el propósito y detalles clave del evento para los asistentes..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
+                <div className="admin-field__control admin-field__control--textarea">
+                  <textarea
+                    id="event-description"
+                    placeholder="Describa el propósito y detalles clave del evento para los asistentes..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
               </div>
 
               <div className="event-form__row">
