@@ -69,14 +69,14 @@
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.admin-sidebar__link:hover {
+.admin-sidebar__link:hover:not(.admin-sidebar__link--active) {
   background: #f5eff7;
   color: var(--color-violeta-esperanza);
 }
 
 .admin-sidebar__link--active {
-  background: var(--gradient-primary);
-  color: #fff;
+  background: rgba(153, 129, 193, 0.25);
+  color: #7b2d8e;
 }
 
 .admin-sidebar__signout {

@@ -51,7 +51,7 @@
 }
 
 .gestion-eventos__filter--active {
-  background: var(--gradient-primary);
+  background: #7b2d8e;
   border-color: transparent;
   color: #fff;
 }
