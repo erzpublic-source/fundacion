@@ -26,10 +26,15 @@ function TrashIcon() {
 }
 
 const EVENT_KINDS: { value: EventKind; label: string }[] = [
-  { value: 'gratis', label: 'Gratis' },
   { value: 'pago', label: 'De pago' },
+  { value: 'gratis', label: 'Gratis' },
   { value: 'hibrido', label: 'Híbrido' },
 ]
+
+function formatThousands(digits: string): string {
+  if (!digits) return ''
+  return Number(digits).toLocaleString('es-CO')
+}
 
 const DISCOUNT_KINDS: { value: DiscountKind; label: string }[] = [
   { value: 'percent', label: '% Descuento' },
@@ -65,7 +70,7 @@ export default function EventForm() {
   const [uploadingImage, setUploadingImage] = useState(false)
   const [kind, setKind] = useState<EventKind>('gratis')
   const [price, setPrice] = useState('')
-  const [capacity, setCapacity] = useState('')
+  const [capacity, setCapacity] = useState('100')
   const [published, setPublished] = useState(true)
   const [discountCodes, setDiscountCodes] = useState<DiscountCode[]>([])
   const [newCode, setNewCode] = useState({ code: '', kind: 'percent' as DiscountKind, value: '', maxUses: '' })
@@ -90,6 +95,10 @@ export default function EventForm() {
     setPublished(existing.published)
     setDiscountCodes(existing.discountCodes)
   }, [isEditing, existing])
+
+  function handlePriceChange(event: ChangeEvent<HTMLInputElement>) {
+    setPrice(event.target.value.replace(/\D/g, ''))
+  }
 
   async function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -307,11 +316,11 @@ export default function EventForm() {
                       <div className={`admin-field__control${errors.price ? ' admin-field__control--error' : ''}`}>
                         <input
                           id="event-price"
-                          type="number"
-                          min={0}
-                          placeholder="25000"
-                          value={price}
-                          onChange={(e) => setPrice(e.target.value)}
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="25.000"
+                          value={formatThousands(price)}
+                          onChange={handlePriceChange}
                         />
                       </div>
                       {errors.price && <p className="admin-field__error">{errors.price}</p>}
