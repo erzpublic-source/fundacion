@@ -44,15 +44,15 @@
 }
 
 .eventos-hero__avatar {
-  width: 64px;
-  height: 64px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   border: 2px solid #fafaf8;
   object-fit: cover;
 }
 
 .eventos-hero__avatars .eventos-hero__avatar:first-child {
-  margin-right: -16px;
+  margin-right: -38px;
 }
 
 .eventos-hero__title {
@@ -408,12 +408,12 @@
   }
 
   .eventos-hero__avatar {
-    width: 124px;
-    height: 124px;
+    width: 250px;
+    height: 250px;
   }
 
   .eventos-hero__avatars .eventos-hero__avatar:first-child {
-    margin-right: -28px;
+    margin-right: -58px;
   }
 
   .eventos-hero__title {

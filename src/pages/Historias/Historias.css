@@ -44,15 +44,15 @@
 }
 
 .historias-hero__avatar {
-  width: 64px;
-  height: 64px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   border: 2px solid #fafaf8;
   object-fit: cover;
 }
 
 .historias-hero__avatars .historias-hero__avatar:first-child {
-  margin-right: -16px;
+  margin-right: -38px;
 }
 
 .historias-hero__title {
@@ -498,12 +498,12 @@
   }
 
   .historias-hero__avatar {
-    width: 124px;
-    height: 124px;
+    width: 250px;
+    height: 250px;
   }
 
   .historias-hero__avatars .historias-hero__avatar:first-child {
-    margin-right: -28px;
+    margin-right: -58px;
   }
 
   .historias-hero__title {
