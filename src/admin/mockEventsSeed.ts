@@ -3,6 +3,7 @@ import lanzamientoImg from '../assets/images/eventos-featured.jpg'
 import escuchaActivaImg from '../assets/images/eventos-escucha-activa.jpg'
 import aireLibreImg from '../assets/images/eventos-aire-libre.jpg'
 import circulosApoyoImg from '../assets/images/eventos-circulos-apoyo.jpg'
+import festivalOtonoImg from '../assets/images/impacto-eventos.jpg'
 
 function daysFromNow(offset: number): string {
   const d = new Date()
@@ -34,6 +35,7 @@ export function createSeedEvents(): AdminEvent[] {
       capacity: 100,
       reservedCount: 45,
       published: true,
+      featured: false,
       discountCodes: [],
       createdAt: Date.now() - 1000 * 60 * 60 * 24 * 20,
     },
@@ -50,6 +52,7 @@ export function createSeedEvents(): AdminEvent[] {
       capacity: 50,
       reservedCount: 0,
       published: false,
+      featured: false,
       discountCodes: [],
       createdAt: Date.now() - 1000 * 60 * 60 * 24 * 2,
     },
@@ -66,6 +69,7 @@ export function createSeedEvents(): AdminEvent[] {
       capacity: 30,
       reservedCount: 30,
       published: true,
+      featured: false,
       discountCodes: [],
       createdAt: Date.now() - 1000 * 60 * 60 * 24 * 15,
     },
@@ -82,6 +86,7 @@ export function createSeedEvents(): AdminEvent[] {
       capacity: 25,
       reservedCount: 18,
       published: true,
+      featured: false,
       discountCodes: [],
       createdAt: Date.now() - 1000 * 60 * 60 * 24 * 40,
     },
@@ -98,6 +103,7 @@ export function createSeedEvents(): AdminEvent[] {
       capacity: 200,
       reservedCount: 60,
       published: true,
+      featured: false,
       discountCodes: [
         { id: seedId('code'), code: 'AMIGOS2024', kind: 'percent', value: 50, maxUses: 10, usedCount: 3 },
         { id: seedId('code'), code: 'VIP100', kind: 'free', value: 0, maxUses: 5, usedCount: 1 },
@@ -117,6 +123,7 @@ export function createSeedEvents(): AdminEvent[] {
       capacity: 40,
       reservedCount: 10,
       published: false,
+      featured: false,
       discountCodes: [],
       createdAt: Date.now() - 1000 * 60 * 60 * 24 * 1,
     },
@@ -133,8 +140,26 @@ export function createSeedEvents(): AdminEvent[] {
       capacity: 60,
       reservedCount: 5,
       published: true,
+      featured: false,
       discountCodes: [],
       createdAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
+    },
+    {
+      id: seedId('evt'),
+      title: 'Festival Solidario de Otoño',
+      description: 'Una tarde de comunidad, música y causas solidarias para cerrar la temporada con la fundación.',
+      date: daysFromNow(10),
+      time: '16:00',
+      place: 'Parque Central, Bogotá',
+      imageUrl: festivalOtonoImg,
+      kind: 'pago',
+      price: 30000,
+      capacity: 100,
+      reservedCount: 65,
+      published: true,
+      featured: true,
+      discountCodes: [],
+      createdAt: Date.now() - 1000 * 60 * 60 * 24 * 5,
     },
   ]
 }

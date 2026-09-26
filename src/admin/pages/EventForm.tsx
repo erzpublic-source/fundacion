@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import AdminHeader from '../components/AdminHeader'
+import AdminLayout from '../components/AdminLayout'
 import { useAdminEvents } from '../AdminEventsContext'
 import type { DiscountCode, DiscountKind, EventKind } from '../adminEventsTypes'
 import '../AdminAuth.css'
@@ -147,6 +147,9 @@ export default function EventForm() {
       price: kind === 'gratis' ? null : Number(price),
       capacity: Number(capacity),
       published,
+      // No featured toggle here by design — featured is managed only from the
+      // event list (see GestionEventos), never from this create/edit form.
+      featured: existing?.featured ?? false,
       discountCodes: kind === 'hibrido' ? discountCodes : [],
     }
 
@@ -161,24 +164,18 @@ export default function EventForm() {
 
   if (notFound) {
     return (
-      <div className="admin-page">
-        <AdminHeader />
-        <div className="admin-page__body">
-          <p>No encontramos ese evento.</p>
-          <Link to="/admin/eventos" className="admin-link">
-            Volver a Gestión de Eventos
-          </Link>
-        </div>
-      </div>
+      <AdminLayout>
+        <p>No encontramos ese evento.</p>
+        <Link to="/admin/eventos" className="admin-link">
+          Volver a Gestión de Eventos
+        </Link>
+      </AdminLayout>
     )
   }
 
   return (
-    <div className="admin-page">
-      <AdminHeader />
-
-      <div className="admin-page__body">
-        <p className="event-form__breadcrumb">
+    <AdminLayout>
+      <p className="event-form__breadcrumb">
           EVENTOS &gt; {isEditing ? 'EDITAR EVENTO' : 'CREAR NUEVO EVENTO'}
         </p>
         <h1 className="event-form__title">{isEditing ? 'Editar evento' : 'Crear nuevo evento'}</h1>
@@ -413,7 +410,6 @@ export default function EventForm() {
             </div>
           </div>
         </form>
-      </div>
-    </div>
+    </AdminLayout>
   )
 }

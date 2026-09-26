@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import './ConfirmDialog.css'
 
 function CheckIcon() {
@@ -27,24 +28,28 @@ function CloseIcon() {
 }
 
 interface ConfirmDialogProps {
-  tone: 'confirm' | 'danger'
+  tone: 'confirm' | 'danger' | 'warning'
   title: string
   description: string
   confirmLabel?: string
   loading?: boolean
+  /** Overrides the tone's default icon — used by the featured-toggle flows (star vs. exclamation), both amber-toned but with different glyphs. */
+  icon?: ReactNode
   onConfirm: () => void
   onClose: () => void
 }
 
 // Shared by every "are you sure?" moment in the admin panel (approve/reject
-// a reservation, delete an event) so the interaction stays identical: same
-// icon language, same button layout, same escape hatch.
+// a reservation, delete an event, destacar/quitar destacado) so the
+// interaction stays identical: same icon language, same button layout, same
+// escape hatch.
 export default function ConfirmDialog({
   tone,
   title,
   description,
   confirmLabel = 'Confirmar',
   loading = false,
+  icon,
   onConfirm,
   onClose,
 }: ConfirmDialogProps) {
@@ -62,7 +67,7 @@ export default function ConfirmDialog({
         </button>
 
         <span className={`confirm-dialog__icon confirm-dialog__icon--${tone}`}>
-          {tone === 'confirm' ? <CheckIcon /> : <WarningIcon />}
+          {icon ?? (tone === 'confirm' ? <CheckIcon /> : <WarningIcon />)}
         </span>
 
         <h3 id="confirm-dialog-title">{title}</h3>

@@ -62,6 +62,11 @@
   color: #e0455a;
 }
 
+.confirm-dialog__icon--warning {
+  background: #fdf3d9;
+  color: #8a6d1f;
+}
+
 .confirm-dialog h3 {
   margin: 0;
   font-size: 19px;

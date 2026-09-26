@@ -17,6 +17,7 @@ interface AdminEventsContextValue {
   events: AdminEvent[]
   saving: boolean
   deleting: string | null
+  featuring: string | null
   getEvent: (id: string) => AdminEvent | undefined
   // TODO(Supabase): replace with `supabase.from('events').insert(...)`.
   createEvent: (input: EventInput) => Promise<AdminEvent>
@@ -24,6 +25,14 @@ interface AdminEventsContextValue {
   updateEvent: (id: string, input: EventInput) => Promise<AdminEvent | null>
   // TODO(Supabase): replace with `supabase.from('events').update({ published }).eq('id', id)`.
   setPublished: (id: string, published: boolean) => Promise<void>
+  /**
+   * Sets or clears the featured flag on one event, unsetting any other
+   * currently-featured event in the same call so at most one stays featured.
+   * TODO(Supabase): in production this becomes two updates inside a single
+   * transaction/RPC (clear the old featured row, set the new one), backed by
+   * a partial unique index `UNIQUE (featured) WHERE featured` as a safety net.
+   */
+  setFeatured: (id: string, featured: boolean) => Promise<void>
   // TODO(Supabase): replace with `supabase.from('events').delete().eq('id', id)`.
   deleteEvent: (id: string) => Promise<void>
   // TODO(Supabase): replace with an upload to Storage (bucket "event-images")
@@ -45,6 +54,7 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
   const [events, setEvents] = useState<AdminEvent[]>(() => createSeedEvents())
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [featuring, setFeaturing] = useState<string | null>(null)
 
   const getEvent = useCallback((id: string) => events.find((e) => e.id === id), [events])
 
@@ -89,6 +99,13 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
     setEvents((prev) => prev.map((e) => (e.id === id ? { ...e, published } : e)))
   }, [])
 
+  const setFeatured = useCallback(async (id: string, featured: boolean) => {
+    setFeaturing(id)
+    await wait(MOCK_LATENCY_MS)
+    setEvents((prev) => prev.map((e) => ({ ...e, featured: e.id === id ? featured : featured ? false : e.featured })))
+    setFeaturing(null)
+  }, [])
+
   const deleteEvent = useCallback(async (id: string) => {
     setDeleting(id)
     await wait(MOCK_LATENCY_MS)
@@ -102,8 +119,20 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo<AdminEventsContextValue>(
-    () => ({ events, saving, deleting, getEvent, createEvent, updateEvent, setPublished, deleteEvent, uploadEventImage }),
-    [events, saving, deleting, getEvent, createEvent, updateEvent, setPublished, deleteEvent, uploadEventImage],
+    () => ({
+      events,
+      saving,
+      deleting,
+      featuring,
+      getEvent,
+      createEvent,
+      updateEvent,
+      setPublished,
+      setFeatured,
+      deleteEvent,
+      uploadEventImage,
+    }),
+    [events, saving, deleting, featuring, getEvent, createEvent, updateEvent, setPublished, setFeatured, deleteEvent, uploadEventImage],
   )
 
   return <AdminEventsContext.Provider value={value}>{children}</AdminEventsContext.Provider>

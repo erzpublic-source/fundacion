@@ -31,21 +31,18 @@ function UsersIcon() {
   )
 }
 
-function EyeIcon() {
+function StarIcon({ filled }: { filled: boolean }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M1 8s2.6-5 7-5 7 5 7 5-2.6 5-7 5-7-5-7-5Z" strokeLinejoin="round" />
-      <circle cx="8" cy="8" r="2" />
-    </svg>
-  )
-}
-
-function EyeOffIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M1 8s2.6-5 7-5 7 5 7 5-2.6 5-7 5-7-5-7-5Z" strokeLinejoin="round" />
-      <circle cx="8" cy="8" r="2" />
-      <path d="M2 2l12 12" strokeLinecap="round" />
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill={filled ? 'currentColor' : 'none'}
+      stroke="currentColor"
+      strokeWidth="1.4"
+      aria-hidden="true"
+    >
+      <path d="M8 1.6l1.9 3.9 4.2.6-3 3 .7 4.2L8 11.3l-3.8 2 .7-4.2-3-3 4.2-.6L8 1.6Z" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -60,25 +57,36 @@ function TrashIcon() {
 
 interface EventCardProps {
   event: AdminEvent
-  onTogglePublished: (event: AdminEvent) => void
+  onToggleFeatured: (event: AdminEvent) => void
   onDelete: (event: AdminEvent) => void
 }
 
-export default function EventCard({ event, onTogglePublished, onDelete }: EventCardProps) {
+export default function EventCard({ event, onToggleFeatured, onDelete }: EventCardProps) {
   const status = getEventStatus(event)
   const statusMeta = STATUS_META[status]
   const occupancy = event.capacity > 0 ? Math.min(100, Math.round((event.reservedCount / event.capacity) * 100)) : 0
 
   return (
-    <article className="event-card">
+    <article className={`event-card${event.featured ? ' event-card--featured' : ''}`}>
       <div className="event-card__media" style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}>
         {!event.imageUrl && <span className="event-card__media-fallback">Sin imagen</span>}
-        <span className={`status-pill event-card__status ${statusMeta.className}`}>{statusMeta.label}</span>
+        {event.featured ? (
+          <span className="status-pill status-pill--destacado event-card__status">DESTACADO</span>
+        ) : (
+          <span className={`status-pill event-card__status ${statusMeta.className}`}>{statusMeta.label}</span>
+        )}
       </div>
 
       <div className="event-card__body">
         <h3>{event.title}</h3>
-        <p className="event-card__schedule">{formatEventSchedule(event.date, event.time)}</p>
+        <p className="event-card__schedule">
+          {event.featured && (
+            <span className="event-card__featured-star" aria-hidden="true">
+              <StarIcon filled />
+            </span>
+          )}
+          {formatEventSchedule(event.date, event.time)}
+        </p>
         <p className="event-card__place">
           <PlaceIcon /> {event.place}
         </p>
@@ -86,7 +94,7 @@ export default function EventCard({ event, onTogglePublished, onDelete }: EventC
         <div className="event-card__occupancy">
           <div className="event-card__occupancy-bar">
             <span
-              className={`event-card__occupancy-fill${status === 'sin_cupos' ? ' event-card__occupancy-fill--full' : ''}`}
+              className={`event-card__occupancy-fill event-card__occupancy-fill--${status}`}
               style={{ width: `${occupancy}%` }}
             />
           </div>
@@ -116,13 +124,13 @@ export default function EventCard({ event, onTogglePublished, onDelete }: EventC
         <span className="icon-action">
           <button
             type="button"
-            className={`icon-action__btn${event.published ? ' icon-action__btn--active' : ''}`}
-            onClick={() => onTogglePublished(event)}
-            aria-label={event.published ? 'Desactivar publicación' : 'Activar publicación'}
+            className={`icon-action__btn icon-action__btn--star${event.featured ? ' icon-action__btn--active' : ''}`}
+            onClick={() => onToggleFeatured(event)}
+            aria-label={event.featured ? 'Quitar destacado' : 'Destacar evento'}
           >
-            {event.published ? <EyeIcon /> : <EyeOffIcon />}
+            <StarIcon filled={event.featured} />
           </button>
-          <span className="icon-action__tooltip">{event.published ? 'Desactivar publicación' : 'Activar publicación'}</span>
+          <span className="icon-action__tooltip">{event.featured ? 'Quitar destacado' : 'Destacar evento'}</span>
         </span>
 
         <span className="icon-action">

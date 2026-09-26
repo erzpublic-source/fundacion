@@ -1,0 +1,116 @@
+.admin-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 210;
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  max-width: 82vw;
+  padding: 20px 16px 24px;
+  background: #fff;
+  border-right: 1px solid rgba(203, 196, 208, 0.3);
+  transform: translateX(-100%);
+  transition: transform 0.2s ease;
+}
+
+.admin-sidebar--open {
+  transform: translateX(0);
+}
+
+.admin-sidebar__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 205;
+  background: color-mix(in oklab, var(--color-tinta-humana) 45%, transparent);
+}
+
+.admin-sidebar__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.admin-sidebar__brand {
+  display: inline-flex;
+}
+
+.admin-sidebar__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: #f2f0ee;
+  color: #221920;
+  cursor: pointer;
+}
+
+.admin-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.admin-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-sidebar__link:hover {
+  background: #f5eff7;
+  color: var(--color-violeta-esperanza);
+}
+
+.admin-sidebar__link--active {
+  background: var(--gradient-primary);
+  color: #fff;
+}
+
+.admin-sidebar__signout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 14px;
+  margin-top: 12px;
+  border: none;
+  border-top: 1px solid rgba(203, 196, 208, 0.3);
+  background: none;
+  color: #e0455a;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  text-align: left;
+}
+
+@media (min-width: 900px) {
+  .admin-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    transform: none;
+    flex-shrink: 0;
+  }
+
+  .admin-sidebar__backdrop {
+    display: none;
+  }
+
+  .admin-sidebar__close {
+    display: none;
+  }
+}

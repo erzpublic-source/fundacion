@@ -17,6 +17,7 @@ import AdminNuevaContrasena from './admin/pages/NuevaContrasena'
 import GestionEventos from './admin/pages/GestionEventos'
 import EventForm from './admin/pages/EventForm'
 import EventoReservasStub from './admin/pages/EventoReservasStub'
+import Configuracion from './admin/pages/Configuracion'
 
 // Client-side route changes don't reset scroll position by default, and on a
 // full page load the browser tries to scroll to the URL's #hash before React
@@ -104,6 +105,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <EventoReservasStub />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/configuracion"
+                element={
+                  <ProtectedRoute>
+                    <Configuracion />
                   </ProtectedRoute>
                 }
               />

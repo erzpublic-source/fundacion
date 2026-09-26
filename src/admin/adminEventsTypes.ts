@@ -15,10 +15,10 @@ export interface DiscountCode {
 // TODO(Supabase): this shape maps almost directly onto an `events` table —
 // see the session summary for the proposed column list (id, title,
 // description, event_date, event_time, place, image_url, kind, price,
-// capacity, published, created_at) plus a child `discount_codes` table
-// keyed by event_id. `reservedCount` is NOT a column: in production it's a
-// COUNT(*) over the `reservations` table for that event, computed with a
-// query/view rather than stored redundantly on the event row.
+// capacity, published, featured, created_at) plus a child `discount_codes`
+// table keyed by event_id. `reservedCount` is NOT a column: in production
+// it's a COUNT(*) over the `reservations` table for that event, computed
+// with a query/view rather than stored redundantly on the event row.
 export interface AdminEvent {
   id: string
   title: string
@@ -36,37 +36,48 @@ export interface AdminEvent {
   capacity: number
   reservedCount: number
   published: boolean
+  /**
+   * Highlights this event as the featured/hero event on the public home page.
+   * TODO(Supabase): enforce "at most one featured event" with a partial
+   * unique index (e.g. `UNIQUE (featured) WHERE featured`) instead of the
+   * mock's app-level "unset every other row" logic in setFeatured().
+   */
+  featured: boolean
   discountCodes: DiscountCode[]
   createdAt: number
 }
 
-export type EventStatus = 'activo' | 'sin_cupos' | 'proximamente' | 'finalizado' | 'inactivo'
+export type EventStatus = 'publicado' | 'borrador' | 'cupos_agotados' | 'proximamente' | 'finalizado'
 
 export const STATUS_META: Record<EventStatus, { label: string; className: string }> = {
-  activo: { label: 'Activo', className: 'status-pill--activo' },
-  sin_cupos: { label: 'Sin cupos', className: 'status-pill--sin-cupos' },
+  publicado: { label: 'Publicado', className: 'status-pill--publicado' },
+  borrador: { label: 'Borrador', className: 'status-pill--borrador' },
+  cupos_agotados: { label: 'Cupos agotados', className: 'status-pill--cupos-agotados' },
   proximamente: { label: 'Próximamente', className: 'status-pill--proximamente' },
   finalizado: { label: 'Finalizado', className: 'status-pill--finalizado' },
-  inactivo: { label: 'Inactivo', className: 'status-pill--inactivo' },
 }
+
+// Same visual order used for the filter segmented control and (implicitly)
+// for status precedence below.
+export const STATUS_ORDER: EventStatus[] = ['publicado', 'borrador', 'cupos_agotados', 'proximamente', 'finalizado']
 
 /**
  * Precedence, most to least specific: an unpublished event is always
- * "inactivo" regardless of its date; a full event is "sin_cupos" even if
- * upcoming; a missing date reads as "proximamente" (date still TBD); a past
- * date is "finalizado"; anything else published with a set future date and
- * open capacity is "activo".
+ * "borrador" regardless of its date; a full event is "cupos_agotados" even
+ * if upcoming; a missing date reads as "proximamente" (date still TBD); a
+ * past date is "finalizado"; anything else published with a set future date
+ * and open capacity is "publicado".
  */
 export function getEventStatus(event: Pick<AdminEvent, 'published' | 'capacity' | 'reservedCount' | 'date'>): EventStatus {
-  if (!event.published) return 'inactivo'
-  if (event.reservedCount >= event.capacity) return 'sin_cupos'
+  if (!event.published) return 'borrador'
+  if (event.reservedCount >= event.capacity) return 'cupos_agotados'
   if (!event.date) return 'proximamente'
 
   const eventDateTime = new Date(event.date)
   eventDateTime.setHours(23, 59, 59, 999)
   if (eventDateTime.getTime() < Date.now()) return 'finalizado'
 
-  return 'activo'
+  return 'publicado'
 }
 
 export function formatEventSchedule(date: string | null, time: string | null): string {
