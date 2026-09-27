@@ -29,6 +29,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
 }
 
 .event-form__card {
@@ -39,6 +40,7 @@
   background: #fff;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-01);
+  min-width: 0;
 }
 
 .event-form__card h2 {
@@ -205,14 +207,20 @@
   cursor: pointer;
 }
 
+/* Flex-wrap instead of a rigid grid: each field has a comfortable minimum
+   width and wraps onto the next line ("flex-start" style) whenever the
+   available width — which shrinks a lot in the narrow sidebar column —
+   can't fit everything on one row, instead of overflowing the card. */
 .event-form__add-code {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .event-form__add-code input,
 .event-form__add-code select {
+  flex: 1 1 130px;
+  min-width: 0;
   height: 42px;
   padding: 0 14px;
   border: 1px solid var(--color-border-input);
@@ -224,6 +232,7 @@
 }
 
 .event-form__add-code button {
+  flex: 1 1 100%;
   height: 42px;
 }
 
@@ -331,11 +340,6 @@
 
   .event-form__row {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .event-form__add-code {
-    grid-template-columns: 1.3fr 1fr 0.8fr 0.7fr auto;
-    align-items: center;
   }
 
   .event-form__footer {
