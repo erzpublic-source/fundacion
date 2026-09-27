@@ -308,6 +308,13 @@
   gap: 20px;
 }
 
+/* .admin-link (reused from the auth forms) sets align-self: flex-start for
+   its usual vertical layout — override it here so "Cancelar" centers
+   against the 51px-tall submit button instead of pinning to the top. */
+.event-form__footer-actions .admin-link {
+  align-self: center;
+}
+
 @media (min-width: 900px) {
   .event-form__columns {
     flex-direction: row;
