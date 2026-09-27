@@ -68,7 +68,7 @@ export default function EventForm() {
   const [place, setPlace] = useState('')
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [uploadingImage, setUploadingImage] = useState(false)
-  const [kind, setKind] = useState<EventKind>('gratis')
+  const [kind, setKind] = useState<EventKind>('pago')
   const [price, setPrice] = useState('')
   const [capacity, setCapacity] = useState('100')
   const [published, setPublished] = useState(true)
