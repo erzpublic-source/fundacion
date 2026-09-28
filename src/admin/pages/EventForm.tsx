@@ -339,8 +339,8 @@ export default function EventForm() {
                   <p>
                     Este evento se mostrará como <strong>Próximamente</strong> — solo un aviso, sin venta de entradas
                     todavía.{' '}
-                    {isAnnouncement && date.trim() !== '' && 'Desactiva "Es solo un aviso" cuando quieras configurar cupo, precio y códigos de descuento.'}
-                    {isAnnouncement && date.trim() === '' && 'Agrega la fecha y desactiva "Es solo un aviso" cuando quieras abrir la venta.'}
+                    {isAnnouncement && date.trim() !== '' && 'Desactiva "Evento próximo" cuando quieras configurar cupo, precio y códigos de descuento.'}
+                    {isAnnouncement && date.trim() === '' && 'Agrega la fecha y desactiva "Evento próximo" cuando quieras abrir la venta.'}
                     {!isAnnouncement && date.trim() === '' && 'Agrega una fecha para configurar cupo, precio y códigos de descuento.'}
                   </p>
                 </section>
@@ -478,54 +478,57 @@ export default function EventForm() {
               )}
               </>
               )}
+
+              <section className="event-form__card">
+                <h2>Opciones del evento</h2>
+                <div className="event-form__toggles event-form__toggles--vertical">
+                  <label className="event-form__toggle-row">
+                    <span>
+                      <strong>Publicar evento</strong>
+                      <small>Visible para el público general</small>
+                    </span>
+                    <span className={`event-form__switch${published ? ' event-form__switch--on' : ''}`}>
+                      <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />
+                      <span className="event-form__switch-knob" />
+                    </span>
+                  </label>
+
+                  <label className="event-form__toggle-row">
+                    <span>
+                      <strong>Evento próximo</strong>
+                      <small>Sin configuración de entradas</small>
+                    </span>
+                    <span className={`event-form__switch${isAnnouncement ? ' event-form__switch--on' : ''}`}>
+                      <input
+                        type="checkbox"
+                        checked={isAnnouncement}
+                        onChange={(e) => setIsAnnouncement(e.target.checked)}
+                      />
+                      <span className="event-form__switch-knob" />
+                    </span>
+                  </label>
+
+                  <label className={`event-form__toggle-row${isAnnouncement ? ' event-form__toggle-row--disabled' : ''}`}>
+                    <span>
+                      <strong>Pausar ventas</strong>
+                      <small>Detener adquisición temporalmente</small>
+                    </span>
+                    <span className={`event-form__switch event-form__switch--pause${salesPaused && !isAnnouncement ? ' event-form__switch--on' : ''}`}>
+                      <input
+                        type="checkbox"
+                        checked={salesPaused && !isAnnouncement}
+                        disabled={isAnnouncement}
+                        onChange={(e) => setSalesPaused(e.target.checked)}
+                      />
+                      <span className="event-form__switch-knob" />
+                    </span>
+                  </label>
+                </div>
+              </section>
             </div>
           </div>
 
           <div className="event-form__footer">
-            <div className="event-form__toggles">
-              <label className="event-form__toggle-row">
-                <span>
-                  <strong>Publicar evento</strong>
-                  <small>Visible para el público general</small>
-                </span>
-                <span className={`event-form__switch${published ? ' event-form__switch--on' : ''}`}>
-                  <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />
-                  <span className="event-form__switch-knob" />
-                </span>
-              </label>
-
-              <label className="event-form__toggle-row">
-                <span>
-                  <strong>Es solo un aviso</strong>
-                  <small>Próximamente, sin configuración de entradas</small>
-                </span>
-                <span className={`event-form__switch${isAnnouncement ? ' event-form__switch--on' : ''}`}>
-                  <input
-                    type="checkbox"
-                    checked={isAnnouncement}
-                    onChange={(e) => setIsAnnouncement(e.target.checked)}
-                  />
-                  <span className="event-form__switch-knob" />
-                </span>
-              </label>
-
-              <label className={`event-form__toggle-row${isAnnouncement ? ' event-form__toggle-row--disabled' : ''}`}>
-                <span>
-                  <strong>Pausar ventas</strong>
-                  <small>Detener adquisición temporalmente</small>
-                </span>
-                <span className={`event-form__switch event-form__switch--pause${salesPaused && !isAnnouncement ? ' event-form__switch--on' : ''}`}>
-                  <input
-                    type="checkbox"
-                    checked={salesPaused && !isAnnouncement}
-                    disabled={isAnnouncement}
-                    onChange={(e) => setSalesPaused(e.target.checked)}
-                  />
-                  <span className="event-form__switch-knob" />
-                </span>
-              </label>
-            </div>
-
             <div className="event-form__footer-actions">
               <Link to="/admin/eventos" className="admin-link">
                 Cancelar

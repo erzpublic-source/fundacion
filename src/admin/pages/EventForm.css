@@ -313,6 +313,15 @@
   gap: 20px;
 }
 
+/* Always a vertical list, even on the desktop breakpoint below where the
+   footer's own (now-removed) toggle row used to switch to a horizontal
+   layout — this card keeps the switches stacked regardless of width. */
+.event-form__toggles--vertical {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 18px !important;
+}
+
 .event-form__toggle-row {
   display: flex;
   align-items: center;
@@ -422,12 +431,6 @@
   .event-form__footer {
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-  }
-
-  .event-form__toggles {
-    flex-direction: row;
-    align-items: center;
-    gap: 32px;
+    justify-content: flex-end;
   }
 }
