@@ -248,6 +248,12 @@
   box-shadow: var(--shadow-01);
 }
 
+.event-form__toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .event-form__toggle-row {
   display: flex;
   align-items: center;
@@ -310,6 +316,13 @@
   transform: translateX(18px);
 }
 
+/* "Pausar ventas" gets its own accent (distinct from the primary gradient
+   used for "Publicar evento") so the two toggles stay visually separate
+   at a glance — stops sales without touching the event's visibility. */
+.event-form__switch--pause.event-form__switch--on {
+  background: #a855f7;
+}
+
 .event-form__footer-actions {
   display: flex;
   align-items: center;
@@ -346,5 +359,11 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .event-form__toggles {
+    flex-direction: row;
+    align-items: center;
+    gap: 32px;
   }
 }

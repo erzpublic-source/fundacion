@@ -96,6 +96,13 @@
   color: #e0455a;
 }
 
+.admin-field__hint {
+  margin: 0;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-violeta-esperanza);
+}
+
 .admin-link {
   display: inline-flex;
   align-items: center;

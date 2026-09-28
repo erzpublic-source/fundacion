@@ -43,6 +43,15 @@ export interface AdminEvent {
    * mock's app-level "unset every other row" logic in setFeatured().
    */
   featured: boolean
+  /**
+   * Temporarily stops new ticket sales without unpublishing the event (it
+   * stays visible on the public site, just not purchasable) — distinct from
+   * `published`, which controls visibility altogether.
+   * TODO(Supabase): a `sales_paused` boolean column on `events`; the public
+   * reservation flow must check it alongside capacity before allowing a
+   * new reservation.
+   */
+  salesPaused: boolean
   discountCodes: DiscountCode[]
   createdAt: number
 }

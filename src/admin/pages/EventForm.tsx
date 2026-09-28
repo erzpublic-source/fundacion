@@ -36,6 +36,18 @@ function formatThousands(digits: string): string {
   return Number(digits).toLocaleString('es-CO')
 }
 
+// "29/feb/2026" — abbreviated-month mask shown under the native date input
+// so the selected date reads unambiguously regardless of the browser's own
+// (locale- and OS-dependent) date-field display format.
+function formatDateMask(value: string): string {
+  if (!value) return ''
+  const parsed = new Date(`${value}T00:00:00`)
+  const day = String(parsed.getDate()).padStart(2, '0')
+  const month = new Intl.DateTimeFormat('es-CO', { month: 'short' }).format(parsed).replace('.', '')
+  const year = parsed.getFullYear()
+  return `${day}/${month}/${year}`
+}
+
 const DISCOUNT_KINDS: { value: DiscountKind; label: string }[] = [
   { value: 'percent', label: '% Descuento' },
   { value: 'fixed', label: 'Monto fijo' },
@@ -72,6 +84,7 @@ export default function EventForm() {
   const [price, setPrice] = useState('')
   const [capacity, setCapacity] = useState('100')
   const [published, setPublished] = useState(true)
+  const [salesPaused, setSalesPaused] = useState(false)
   const [discountCodes, setDiscountCodes] = useState<DiscountCode[]>([])
   const [newCode, setNewCode] = useState({ code: '', kind: 'percent' as DiscountKind, value: '', maxUses: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -93,6 +106,7 @@ export default function EventForm() {
     setPrice(existing.price ? String(existing.price) : '')
     setCapacity(String(existing.capacity))
     setPublished(existing.published)
+    setSalesPaused(existing.salesPaused)
     setDiscountCodes(existing.discountCodes)
   }, [isEditing, existing])
 
@@ -156,6 +170,7 @@ export default function EventForm() {
       price: kind === 'gratis' ? null : Number(price),
       capacity: Number(capacity),
       published,
+      salesPaused,
       // No featured toggle here by design — featured is managed only from the
       // event list (see GestionEventos), never from this create/edit form.
       featured: existing?.featured ?? false,
@@ -250,6 +265,7 @@ export default function EventForm() {
                   <div className="admin-field__control">
                     <input id="event-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
                   </div>
+                  {date && <p className="admin-field__hint">{formatDateMask(date)}</p>}
                 </div>
                 <div className="admin-field">
                   <label htmlFor="event-time">Hora</label>
@@ -374,13 +390,22 @@ export default function EventForm() {
                         </option>
                       ))}
                     </select>
-                    {newCode.kind !== 'free' && (
+                    {newCode.kind === 'percent' && (
                       <input
                         type="number"
                         min={0}
-                        placeholder={newCode.kind === 'percent' ? '%' : 'COP'}
+                        placeholder="%"
                         value={newCode.value}
                         onChange={(e) => setNewCode((c) => ({ ...c, value: e.target.value }))}
+                      />
+                    )}
+                    {newCode.kind === 'fixed' && (
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="10.000"
+                        value={formatThousands(newCode.value)}
+                        onChange={(e) => setNewCode((c) => ({ ...c, value: e.target.value.replace(/\D/g, '') }))}
                       />
                     )}
                     <input
@@ -400,16 +425,29 @@ export default function EventForm() {
           </div>
 
           <div className="event-form__footer">
-            <label className="event-form__toggle-row">
-              <span>
-                <strong>Publicar evento</strong>
-                <small>Visible para el público general</small>
-              </span>
-              <span className={`event-form__switch${published ? ' event-form__switch--on' : ''}`}>
-                <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />
-                <span className="event-form__switch-knob" />
-              </span>
-            </label>
+            <div className="event-form__toggles">
+              <label className="event-form__toggle-row">
+                <span>
+                  <strong>Publicar evento</strong>
+                  <small>Visible para el público general</small>
+                </span>
+                <span className={`event-form__switch${published ? ' event-form__switch--on' : ''}`}>
+                  <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />
+                  <span className="event-form__switch-knob" />
+                </span>
+              </label>
+
+              <label className="event-form__toggle-row">
+                <span>
+                  <strong>Pausar ventas</strong>
+                  <small>Detener adquisición temporalmente</small>
+                </span>
+                <span className={`event-form__switch event-form__switch--pause${salesPaused ? ' event-form__switch--on' : ''}`}>
+                  <input type="checkbox" checked={salesPaused} onChange={(e) => setSalesPaused(e.target.checked)} />
+                  <span className="event-form__switch-knob" />
+                </span>
+              </label>
+            </div>
 
             <div className="event-form__footer-actions">
               <Link to="/admin/eventos" className="admin-link">
