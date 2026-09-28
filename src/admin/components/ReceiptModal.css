@@ -59,7 +59,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 16px;
-  background: rgba(203, 196, 208, 0.25);
+  background: #fbf9fb;
   border-radius: var(--radius-md);
 }
 
