@@ -59,6 +59,22 @@
   color: #201a1e;
 }
 
+/* ---------- Reservation status pill (Gestión de Reservas) ---------- */
+.reserva-status--pendiente {
+  background: #fdece0;
+  color: #c9611b;
+}
+
+.reserva-status--aprobado {
+  background: #e8f8f0;
+  color: #1f9d5a;
+}
+
+.reserva-status--rechazado {
+  background: #fff0f2;
+  color: #e0455a;
+}
+
 /* ---------- Occupancy bar fill, matched to the event's status color ---------- */
 .event-card__occupancy-fill--publicado {
   background: var(--color-violeta-esperanza);

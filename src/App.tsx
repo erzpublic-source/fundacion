@@ -9,6 +9,7 @@ import Eventos from './pages/Eventos/Eventos'
 import Contacto from './pages/Contacto/Contacto'
 import { AdminAuthProvider } from './admin/AdminAuthContext'
 import { AdminEventsProvider } from './admin/AdminEventsContext'
+import { AdminReservationsProvider } from './admin/AdminReservationsContext'
 import ProtectedRoute from './admin/ProtectedRoute'
 import AdminLogin from './admin/pages/Login'
 import AdminRecuperarContrasena from './admin/pages/RecuperarContrasena'
@@ -16,7 +17,7 @@ import AdminEnlaceEnviado from './admin/pages/EnlaceEnviado'
 import AdminNuevaContrasena from './admin/pages/NuevaContrasena'
 import GestionEventos from './admin/pages/GestionEventos'
 import EventForm from './admin/pages/EventForm'
-import EventoReservasStub from './admin/pages/EventoReservasStub'
+import EventoReservas from './admin/pages/EventoReservas'
 import Configuracion from './admin/pages/Configuracion'
 
 // Client-side route changes don't reset scroll position by default, and on a
@@ -60,6 +61,7 @@ function App() {
           client-side navigation instead of resetting on every route change. */}
       <AdminAuthProvider>
         <AdminEventsProvider>
+        <AdminReservationsProvider>
           <ScrollToTop />
           <PageTransition>
             <Routes>
@@ -104,7 +106,7 @@ function App() {
                 path="/admin/eventos/:id/reservas"
                 element={
                   <ProtectedRoute>
-                    <EventoReservasStub />
+                    <EventoReservas />
                   </ProtectedRoute>
                 }
               />
@@ -120,6 +122,7 @@ function App() {
               <Route path="*" element={<Home />} />
             </Routes>
           </PageTransition>
+        </AdminReservationsProvider>
         </AdminEventsProvider>
       </AdminAuthProvider>
     </BrowserRouter>
