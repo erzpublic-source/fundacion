@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AdminLayout from '../components/AdminLayout'
 import EventCard from '../components/EventCard'
 import EmptyState from '../components/EmptyState'
 import ConfirmDialog from '../components/ConfirmDialog'
 import Toast from '../components/Toast'
+import UndoToast from '../components/UndoToast'
 import { useAdminEvents } from '../AdminEventsContext'
 import type { AdminEvent, EventStatus } from '../adminEventsTypes'
 import { STATUS_META, STATUS_ORDER, getEventStatus } from '../adminEventsTypes'
@@ -38,15 +39,39 @@ function StarOffIcon() {
 
 type FilterValue = 'todos' | EventStatus
 
+const DELETE_UNDO_WINDOW_MS = 7000
+
 export default function GestionEventos() {
-  const { events, setFeatured, featuring, deleteEvent, deleting } = useAdminEvents()
+  const { events, setFeatured, featuring, deleteEvent, deleting, pendingDeleteIds, undoDelete, finalizeDelete } = useAdminEvents()
   const [filter, setFilter] = useState<FilterValue>('todos')
   const [search, setSearch] = useState('')
   const [pendingDelete, setPendingDelete] = useState<AdminEvent | null>(null)
   const [pendingFeature, setPendingFeature] = useState<AdminEvent | null>(null)
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
-  const eventsWithStatus = useMemo(() => events.map((event) => ({ event, status: getEventStatus(event) })), [events])
+  // Deleting only *hides* the event (pendingDeleteIds) until the "Deshacer"
+  // toast's grace window resolves — unlike the reject-reservation flow, the
+  // event isn't fully removed from the store yet, so navigating away before
+  // that window closes must finalize it explicitly (see the cleanup below)
+  // instead of relying on the store to already hold the final state.
+  const [pendingDeleteUndo, setPendingDeleteUndo] = useState<{ id: string; title: string } | null>(null)
+  const pendingDeleteUndoIdRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    pendingDeleteUndoIdRef.current = pendingDeleteUndo?.id ?? null
+  }, [pendingDeleteUndo])
+
+  useEffect(() => {
+    return () => {
+      if (pendingDeleteUndoIdRef.current) finalizeDelete(pendingDeleteUndoIdRef.current)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const eventsWithStatus = useMemo(
+    () => events.filter((event) => !pendingDeleteIds.includes(event.id)).map((event) => ({ event, status: getEventStatus(event) })),
+    [events, pendingDeleteIds],
+  )
 
   const filters = useMemo<{ value: FilterValue; label: string }[]>(
     () => [{ value: 'todos', label: 'Todos' }, ...STATUS_ORDER.map((status) => ({ value: status, label: STATUS_META[status].label }))],
@@ -82,8 +107,22 @@ export default function GestionEventos() {
 
   async function handleConfirmDelete() {
     if (!pendingDelete) return
-    await deleteEvent(pendingDelete.id)
+    const { id, title } = pendingDelete
+    await deleteEvent(id)
     setPendingDelete(null)
+    setPendingDeleteUndo({ id, title })
+  }
+
+  function handleUndoDelete() {
+    if (!pendingDeleteUndo) return
+    undoDelete(pendingDeleteUndo.id)
+    setPendingDeleteUndo(null)
+  }
+
+  function handleDismissDeleteToast() {
+    if (!pendingDeleteUndo) return
+    finalizeDelete(pendingDeleteUndo.id)
+    setPendingDeleteUndo(null)
   }
 
   async function handleConfirmFeatureToggle() {
@@ -199,7 +238,16 @@ export default function GestionEventos() {
         />
       )}
 
-      {toastMessage && <Toast message={toastMessage} onDismiss={() => setToastMessage(null)} />}
+      {pendingDeleteUndo && (
+        <UndoToast
+          message={`'${pendingDeleteUndo.title}' eliminado`}
+          durationMs={DELETE_UNDO_WINDOW_MS}
+          onUndo={handleUndoDelete}
+          onDismiss={handleDismissDeleteToast}
+        />
+      )}
+
+      {toastMessage && !pendingDeleteUndo && <Toast message={toastMessage} onDismiss={() => setToastMessage(null)} />}
     </AdminLayout>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import AdminLayout from '../components/AdminLayout'
+import BackLink from '../components/BackLink'
 import { useAdminEvents } from '../AdminEventsContext'
 import type { DiscountCode, DiscountKind, EventKind } from '../adminEventsTypes'
 import '../AdminAuth.css'
@@ -199,6 +200,7 @@ export default function EventForm() {
 
   return (
     <AdminLayout>
+      <BackLink to="/admin/eventos" label="Volver a eventos" />
       <p className="event-form__breadcrumb">
           EVENTOS &gt; {isEditing ? 'EDITAR EVENTO' : 'CREAR NUEVO EVENTO'}
         </p>

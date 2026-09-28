@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import AdminLayout from '../components/AdminLayout'
+import BackLink from '../components/BackLink'
 import EmptyState from '../components/EmptyState'
 import ConfirmDialog from '../components/ConfirmDialog'
 import ReceiptModal from '../components/ReceiptModal'
 import TicketApprovedModal from '../components/TicketApprovedModal'
-import RejectUndoToast from '../components/RejectUndoToast'
+import UndoToast from '../components/UndoToast'
+import Toast from '../components/Toast'
 import { useAdminEvents } from '../AdminEventsContext'
 import { useAdminReservations } from '../AdminReservationsContext'
 import type { Reservation, ReservationStatus } from '../reservationsTypes'
@@ -132,19 +134,18 @@ export default function EventoReservas() {
   const [viewReceipt, setViewReceipt] = useState<Reservation | null>(null)
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null)
   const [approvedResult, setApprovedResult] = useState<{ name: string; code: string } | null>(null)
+  // The rejection itself is applied to the shared store the instant it's
+  // confirmed (see handleConfirmReject) — pendingUndo only tracks whether the
+  // "Deshacer" toast is showing. UndoToast owns its own timer, so no cleanup
+  // is needed here on unmount: the store keeps the rejection sealed on its
+  // own since it lives above the router's page-remount boundary (App.tsx).
   const [pendingUndo, setPendingUndo] = useState<{ id: string; name: string } | null>(null)
-  const undoTimerRef = useRef<number | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const copiedTimerRef = useRef<number | null>(null)
+  const [copyToastMessage, setCopyToastMessage] = useState<string | null>(null)
 
-  // The rejection itself is already applied to the shared store the instant
-  // it's confirmed (see handleConfirmReject) — this cleanup only has to stop
-  // the dangling JS timer on unmount, not "finalize" anything: the store
-  // keeps the rejection sealed on its own since it lives above the router's
-  // page-remount boundary (see App.tsx).
   useEffect(() => {
     return () => {
-      if (undoTimerRef.current) window.clearTimeout(undoTimerRef.current)
       if (copiedTimerRef.current) window.clearTimeout(copiedTimerRef.current)
     }
   }, [])
@@ -185,6 +186,7 @@ export default function EventoReservas() {
     try {
       await navigator.clipboard.writeText(reservation.ticketCode)
       setCopiedId(reservation.id)
+      setCopyToastMessage(`Código ${reservation.ticketCode} copiado`)
       if (copiedTimerRef.current) window.clearTimeout(copiedTimerRef.current)
       copiedTimerRef.current = window.setTimeout(() => setCopiedId(null), 2000)
     } catch {
@@ -215,30 +217,16 @@ export default function EventoReservas() {
     const { reservation } = confirmAction
     await rejectReservation(id, reservation.id)
     setConfirmAction(null)
-
-    if (undoTimerRef.current) window.clearTimeout(undoTimerRef.current)
     setPendingUndo({ id: reservation.id, name: reservation.attendeeName })
-    undoTimerRef.current = window.setTimeout(() => {
-      setPendingUndo(null)
-      undoTimerRef.current = null
-    }, UNDO_WINDOW_MS)
   }
 
   function handleUndoReject() {
     if (!pendingUndo || !id) return
-    if (undoTimerRef.current) {
-      window.clearTimeout(undoTimerRef.current)
-      undoTimerRef.current = null
-    }
     undoReject(id, pendingUndo.id)
     setPendingUndo(null)
   }
 
   function handleDismissRejectToast() {
-    if (undoTimerRef.current) {
-      window.clearTimeout(undoTimerRef.current)
-      undoTimerRef.current = null
-    }
     setPendingUndo(null)
   }
 
@@ -263,6 +251,7 @@ export default function EventoReservas() {
   return (
     <AdminLayout>
       <div className="reservas-page">
+        <BackLink to="/admin/eventos" label="Volver a eventos" />
         <p className="event-form__breadcrumb">
           EVENTOS &gt; {(event?.title ?? 'EVENTO').split(' ')[0].toUpperCase()} &gt; RESERVAS
         </p>
@@ -500,12 +489,16 @@ export default function EventoReservas() {
       )}
 
       {pendingUndo && (
-        <RejectUndoToast
-          attendeeName={pendingUndo.name}
+        <UndoToast
+          message={`Reserva de ${pendingUndo.name} rechazada`}
           durationMs={UNDO_WINDOW_MS}
           onUndo={handleUndoReject}
           onDismiss={handleDismissRejectToast}
         />
+      )}
+
+      {copyToastMessage && !pendingUndo && (
+        <Toast message={copyToastMessage} onDismiss={() => setCopyToastMessage(null)} />
       )}
     </AdminLayout>
   )

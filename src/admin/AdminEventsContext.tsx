@@ -18,6 +18,8 @@ interface AdminEventsContextValue {
   saving: boolean
   deleting: string | null
   featuring: string | null
+  /** Ids currently in their "Deshacer" grace window — hide these from any visible list. */
+  pendingDeleteIds: string[]
   getEvent: (id: string) => AdminEvent | undefined
   // TODO(Supabase): replace with `supabase.from('events').insert(...)`.
   createEvent: (input: EventInput) => Promise<AdminEvent>
@@ -33,8 +35,18 @@ interface AdminEventsContextValue {
    * a partial unique index `UNIQUE (featured) WHERE featured` as a safety net.
    */
   setFeatured: (id: string, featured: boolean) => Promise<void>
-  // TODO(Supabase): replace with `supabase.from('events').delete().eq('id', id)`.
+  /**
+   * Marks an event as deleted right away (optimistic — hidden from any
+   * visible list via pendingDeleteIds) without yet removing it from the
+   * store, so a "Deshacer" toast can restore it within its grace window.
+   * TODO(Supabase): replace with `supabase.from('events').delete().eq('id', id)`,
+   * called from `finalizeDelete` once the window closes — not from here.
+   */
   deleteEvent: (id: string) => Promise<void>
+  /** Reverts a pending deletion — used by the "Deshacer" toast window. */
+  undoDelete: (id: string) => void
+  /** Seals a pending deletion for good — called when the toast's window expires or the page unmounts before it does. */
+  finalizeDelete: (id: string) => void
   // TODO(Supabase): replace with an upload to Storage (bucket "event-images")
   // followed by `getPublicUrl`; this mock just returns a local object URL.
   uploadEventImage: (file: File) => Promise<string>
@@ -55,6 +67,7 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [featuring, setFeaturing] = useState<string | null>(null)
+  const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([])
 
   const getEvent = useCallback((id: string) => events.find((e) => e.id === id), [events])
 
@@ -109,8 +122,17 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
   const deleteEvent = useCallback(async (id: string) => {
     setDeleting(id)
     await wait(MOCK_LATENCY_MS)
-    setEvents((prev) => prev.filter((e) => e.id !== id))
+    setPendingDeleteIds((prev) => (prev.includes(id) ? prev : [...prev, id]))
     setDeleting(null)
+  }, [])
+
+  const undoDelete = useCallback((id: string) => {
+    setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
+  }, [])
+
+  const finalizeDelete = useCallback((id: string) => {
+    setEvents((prev) => prev.filter((e) => e.id !== id))
+    setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
   }, [])
 
   const uploadEventImage = useCallback(async (file: File): Promise<string> => {
@@ -124,15 +146,33 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
       saving,
       deleting,
       featuring,
+      pendingDeleteIds,
       getEvent,
       createEvent,
       updateEvent,
       setPublished,
       setFeatured,
       deleteEvent,
+      undoDelete,
+      finalizeDelete,
       uploadEventImage,
     }),
-    [events, saving, deleting, featuring, getEvent, createEvent, updateEvent, setPublished, setFeatured, deleteEvent, uploadEventImage],
+    [
+      events,
+      saving,
+      deleting,
+      featuring,
+      pendingDeleteIds,
+      getEvent,
+      createEvent,
+      updateEvent,
+      setPublished,
+      setFeatured,
+      deleteEvent,
+      undoDelete,
+      finalizeDelete,
+      uploadEventImage,
+    ],
   )
 
   return <AdminEventsContext.Provider value={value}>{children}</AdminEventsContext.Provider>

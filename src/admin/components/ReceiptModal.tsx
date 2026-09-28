@@ -90,16 +90,18 @@ export default function ReceiptModal({ reservation, onClose, onRequestApprove, o
         <div className="receipt-modal__actions">
           {reservation.status === 'pendiente' ? (
             <>
-              <button
-                type="button"
-                className="btn receipt-modal__btn receipt-modal__btn--reject"
-                onClick={() => onRequestReject(reservation)}
-              >
-                Rechazar
-              </button>
-              <button type="button" className="admin-link receipt-modal__btn-close" onClick={onClose}>
-                Cerrar
-              </button>
+              <div className="receipt-modal__actions-left">
+                <button
+                  type="button"
+                  className="btn receipt-modal__btn receipt-modal__btn--reject"
+                  onClick={() => onRequestReject(reservation)}
+                >
+                  Rechazar
+                </button>
+                <button type="button" className="admin-link receipt-modal__btn-close" onClick={onClose}>
+                  Cerrar
+                </button>
+              </div>
               <button
                 type="button"
                 className="btn receipt-modal__btn receipt-modal__btn--approve"

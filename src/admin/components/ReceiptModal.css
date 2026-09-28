@@ -59,7 +59,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 16px;
-  background: #fbf8fc;
+  background: rgba(203, 196, 208, 0.25);
   border-radius: var(--radius-md);
 }
 
@@ -215,6 +215,14 @@
   align-self: center;
 }
 
+/* Just a semantic grouping wrapper on mobile — its children (Rechazar,
+   Cerrar) keep participating directly in .receipt-modal__actions' own
+   column-reverse stack, so the visual order there is unchanged. It only
+   becomes a real side-by-side group once there's room for a row layout. */
+.receipt-modal__actions-left {
+  display: contents;
+}
+
 @media (min-width: 560px) {
   .receipt-modal__actions {
     flex-direction: row;
@@ -222,16 +230,14 @@
     justify-content: space-between;
   }
 
+  .receipt-modal__actions-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
   .receipt-modal__btn {
     width: auto;
     padding: 0 24px;
-  }
-
-  .receipt-modal__btn-close {
-    order: 2;
-  }
-
-  .receipt-modal__btn--approve {
-    order: 3;
   }
 }

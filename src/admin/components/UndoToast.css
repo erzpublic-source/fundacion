@@ -1,4 +1,4 @@
-.reject-toast {
+.undo-toast {
   position: fixed;
   left: 50%;
   bottom: 24px;
@@ -10,10 +10,10 @@
   background: #221920;
   box-shadow: var(--shadow-03);
   transform: translateX(-50%);
-  animation: reject-toast-in 0.2s ease;
+  animation: undo-toast-in 0.2s ease;
 }
 
-.reject-toast__row {
+.undo-toast__row {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -21,13 +21,13 @@
   border-left: 3px solid var(--color-amarillo-impulso);
 }
 
-.reject-toast__icon {
+.undo-toast__icon {
   display: flex;
   flex-shrink: 0;
   color: var(--color-amarillo-impulso);
 }
 
-.reject-toast__message {
+.undo-toast__message {
   flex: 1;
   min-width: 0;
   margin: 0;
@@ -36,7 +36,7 @@
   line-height: 18px;
 }
 
-.reject-toast__undo {
+.undo-toast__undo {
   flex-shrink: 0;
   border: none;
   background: none;
@@ -48,7 +48,7 @@
   cursor: pointer;
 }
 
-.reject-toast__close {
+.undo-toast__close {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,16 +62,16 @@
   cursor: pointer;
 }
 
-.reject-toast__bar {
+.undo-toast__bar {
   display: block;
   height: 3px;
   background: var(--gradient-primary);
-  animation-name: reject-toast-countdown;
+  animation-name: undo-toast-countdown;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
 }
 
-@keyframes reject-toast-in {
+@keyframes undo-toast-in {
   from {
     opacity: 0;
     transform: translate(-50%, 8px);
@@ -82,7 +82,7 @@
   }
 }
 
-@keyframes reject-toast-countdown {
+@keyframes undo-toast-countdown {
   from {
     width: 100%;
   }
@@ -92,7 +92,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reject-toast__bar {
+  .undo-toast__bar {
     animation: none;
     width: 0%;
   }
