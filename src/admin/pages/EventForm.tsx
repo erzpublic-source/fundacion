@@ -94,6 +94,7 @@ export default function EventForm() {
   const [price, setPrice] = useState('')
   const [capacity, setCapacity] = useState('100')
   const [published, setPublished] = useState(true)
+  const [isAnnouncement, setIsAnnouncement] = useState(false)
   const [salesPaused, setSalesPaused] = useState(false)
   const [discountCodes, setDiscountCodes] = useState<DiscountCode[]>([])
   const [newCode, setNewCode] = useState({ code: '', kind: 'percent' as DiscountKind, value: '', maxUses: '' })
@@ -102,11 +103,13 @@ export default function EventForm() {
 
   // Mirrors getEventStatus's own precedence (adminEventsTypes.ts): a
   // published event reads as "Próximamente" — a pure announcement, not a
-  // sellable event yet — either while it has no date, or while "Pausar
-  // ventas" is on. A Próximamente event CAN already have a confirmed date
-  // (the date and the ticket configuration are independent decisions), so
-  // this can't be keyed off the date alone.
-  const isAnnouncementOnly = salesPaused || date.trim() === ''
+  // sellable event yet — either while it's explicitly marked as an
+  // announcement, or while it has no date. A Próximamente event CAN already
+  // have a confirmed date (the date and the ticket configuration are
+  // independent decisions), so this can't be keyed off the date alone.
+  // Unlike salesPaused (a pause on an already-launched event), this hides
+  // ticket configuration entirely rather than just blocking new sales.
+  const isAnnouncementOnly = isAnnouncement || date.trim() === ''
 
   useEffect(() => {
     if (!isEditing) return
@@ -124,6 +127,7 @@ export default function EventForm() {
     setPrice(existing.price ? String(existing.price) : '')
     setCapacity(String(existing.capacity))
     setPublished(existing.published)
+    setIsAnnouncement(existing.isAnnouncement)
     setSalesPaused(existing.salesPaused)
     setDiscountCodes(existing.discountCodes)
   }, [isEditing, existing])
@@ -192,7 +196,9 @@ export default function EventForm() {
       price: isAnnouncementOnly || kind === 'gratis' ? null : Number(price),
       capacity: Number(capacity),
       published,
-      salesPaused,
+      isAnnouncement,
+      // Pausing sales is meaningless before the event is even configured.
+      salesPaused: isAnnouncement ? false : salesPaused,
       // No featured toggle here by design — featured is managed only from the
       // event list (see GestionEventos), never from this create/edit form.
       featured: existing?.featured ?? false,
@@ -333,9 +339,9 @@ export default function EventForm() {
                   <p>
                     Este evento se mostrará como <strong>Próximamente</strong> — solo un aviso, sin venta de entradas
                     todavía.{' '}
-                    {salesPaused && date.trim() !== '' && 'Desactiva "Pausar ventas" cuando quieras abrir la venta.'}
-                    {salesPaused && date.trim() === '' && 'Agrega la fecha y desactiva "Pausar ventas" cuando quieras abrir la venta.'}
-                    {!salesPaused && date.trim() === '' && 'Agrega una fecha para configurar cupo, precio y códigos de descuento.'}
+                    {isAnnouncement && date.trim() !== '' && 'Desactiva "Es solo un aviso" cuando quieras configurar cupo, precio y códigos de descuento.'}
+                    {isAnnouncement && date.trim() === '' && 'Agrega la fecha y desactiva "Es solo un aviso" cuando quieras abrir la venta.'}
+                    {!isAnnouncement && date.trim() === '' && 'Agrega una fecha para configurar cupo, precio y códigos de descuento.'}
                   </p>
                 </section>
               ) : (
@@ -490,11 +496,31 @@ export default function EventForm() {
 
               <label className="event-form__toggle-row">
                 <span>
+                  <strong>Es solo un aviso</strong>
+                  <small>Próximamente, sin configuración de entradas</small>
+                </span>
+                <span className={`event-form__switch${isAnnouncement ? ' event-form__switch--on' : ''}`}>
+                  <input
+                    type="checkbox"
+                    checked={isAnnouncement}
+                    onChange={(e) => setIsAnnouncement(e.target.checked)}
+                  />
+                  <span className="event-form__switch-knob" />
+                </span>
+              </label>
+
+              <label className={`event-form__toggle-row${isAnnouncement ? ' event-form__toggle-row--disabled' : ''}`}>
+                <span>
                   <strong>Pausar ventas</strong>
                   <small>Detener adquisición temporalmente</small>
                 </span>
-                <span className={`event-form__switch event-form__switch--pause${salesPaused ? ' event-form__switch--on' : ''}`}>
-                  <input type="checkbox" checked={salesPaused} onChange={(e) => setSalesPaused(e.target.checked)} />
+                <span className={`event-form__switch event-form__switch--pause${salesPaused && !isAnnouncement ? ' event-form__switch--on' : ''}`}>
+                  <input
+                    type="checkbox"
+                    checked={salesPaused && !isAnnouncement}
+                    disabled={isAnnouncement}
+                    onChange={(e) => setSalesPaused(e.target.checked)}
+                  />
                   <span className="event-form__switch-knob" />
                 </span>
               </label>

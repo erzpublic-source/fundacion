@@ -75,6 +75,9 @@ export default function EventCard({ event, onToggleFeatured, onDelete }: EventCa
         ) : (
           <span className={`status-pill event-card__status ${statusMeta.className}`}>{statusMeta.label}</span>
         )}
+        {event.salesPaused && !event.isAnnouncement && (
+          <span className="status-pill event-card__paused-badge">⏸ Ventas pausadas</span>
+        )}
       </div>
 
       <div className="event-card__body">

@@ -45,6 +45,14 @@
   left: 12px;
 }
 
+.event-card__paused-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #a855f7;
+  color: #fff;
+}
+
 .event-card__body {
   display: flex;
   flex-direction: column;

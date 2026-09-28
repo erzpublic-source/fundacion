@@ -44,9 +44,24 @@ export interface AdminEvent {
    */
   featured: boolean
   /**
-   * Temporarily stops new ticket sales without unpublishing the event (it
-   * stays visible on the public site, just not purchasable) — distinct from
-   * `published`, which controls visibility altogether.
+   * Marks the event as a pre-launch announcement: it has no ticket
+   * configuration yet (capacity/price/discount codes), regardless of
+   * whether a date has been confirmed — the date and the ticket setup are
+   * independent decisions. Drives the "proximamente" status together with
+   * a missing date. Distinct from `salesPaused`, which pauses sales on an
+   * event that's already fully configured and launched.
+   * TODO(Supabase): an `is_announcement` boolean column on `events`.
+   */
+  isAnnouncement: boolean
+  /**
+   * Temporarily stops new ticket sales on an already-configured, launched
+   * event (e.g. it sold out its current batch, or the organizer needs to
+   * pause while sorting out logistics) without unpublishing it (it stays
+   * visible on the public site, just not purchasable) and without reverting
+   * it to "proximamente" — it keeps its computed status and simply shows a
+   * secondary "ventas pausadas" badge. Distinct from `published`, which
+   * controls visibility altogether, and from `isAnnouncement`, which is the
+   * pre-launch stage before any ticket configuration exists.
    * TODO(Supabase): a `sales_paused` boolean column on `events`; the public
    * reservation flow must check it alongside capacity before allowing a
    * new reservation.
@@ -72,19 +87,22 @@ export const STATUS_ORDER: EventStatus[] = ['publicado', 'borrador', 'cupos_agot
 
 /**
  * Precedence, most to least specific: an unpublished event is always
- * "borrador" regardless of its date; paused sales read as "proximamente"
- * even when a date is already set (an announcement that isn't sellable yet
- * — the date can be confirmed before ticket configuration is) — same as a
- * missing date, which reads "proximamente" for the same reason if sales
- * were never explicitly paused; a full event is "cupos_agotados"; a past
- * date is "finalizado"; anything else published, sellable, with a set
- * future date and open capacity is "publicado".
+ * "borrador" regardless of its date; an announcement (no ticket
+ * configuration yet) reads as "proximamente" even when a date is already
+ * set — the date can be confirmed before ticket configuration is — same as
+ * a missing date, which reads "proximamente" for the same reason even if
+ * the event isn't explicitly marked as an announcement; a full event is
+ * "cupos_agotados"; a past date is "finalizado"; anything else published,
+ * configured, with a set future date and open capacity is "publicado".
+ * Note `salesPaused` never appears here: pausing sales on an
+ * already-configured, launched event doesn't change its computed status —
+ * it's surfaced as a secondary badge instead (see EventCard).
  */
 export function getEventStatus(
-  event: Pick<AdminEvent, 'published' | 'capacity' | 'reservedCount' | 'date' | 'salesPaused'>,
+  event: Pick<AdminEvent, 'published' | 'capacity' | 'reservedCount' | 'date' | 'isAnnouncement'>,
 ): EventStatus {
   if (!event.published) return 'borrador'
-  if (event.salesPaused || !event.date) return 'proximamente'
+  if (event.isAnnouncement || !event.date) return 'proximamente'
   if (event.reservedCount >= event.capacity) return 'cupos_agotados'
 
   const eventDateTime = new Date(event.date)
