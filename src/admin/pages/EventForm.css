@@ -56,10 +56,18 @@
   justify-content: space-between;
 }
 
+/* Same flex-wrap pattern as .event-form__add-code: each field has a
+   comfortable minimum width and wraps/shrinks with the available space
+   instead of being locked into a rigid grid column that can overflow. */
 .event-form__row {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
+}
+
+.event-form__row > .admin-field {
+  flex: 1 1 160px;
+  min-width: 0;
 }
 
 .event-form__label {
@@ -371,10 +379,6 @@
 
   .event-form__side {
     flex: 1;
-  }
-
-  .event-form__row {
-    grid-template-columns: 1fr 1fr;
   }
 
   .event-form__footer {
