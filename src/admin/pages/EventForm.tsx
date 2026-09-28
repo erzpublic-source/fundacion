@@ -26,6 +26,15 @@ function TrashIcon() {
   )
 }
 
+function CalendarNoticeIcon() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <rect x="3" y="4.5" width="18" height="16" rx="2.5" />
+      <path d="M3 9.5h18M8 2.5v4M16 2.5v4" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 const EVENT_KINDS: { value: EventKind; label: string }[] = [
   { value: 'pago', label: 'De pago' },
   { value: 'gratis', label: 'Gratis' },
@@ -91,6 +100,12 @@ export default function EventForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [notFound, setNotFound] = useState(false)
 
+  // Mirrors getEventStatus's own precedence (adminEventsTypes.ts): a
+  // published event with no date reads as "Próximamente" — a pure
+  // announcement, not a sellable event yet — so ticket configuration
+  // (and pausing sales) doesn't apply until a date is set.
+  const isAnnouncementOnly = date.trim() === ''
+
   useEffect(() => {
     if (!isEditing) return
     if (!existing) {
@@ -143,12 +158,14 @@ export default function EventForm() {
     if (title.trim() === '') next.title = 'El título es obligatorio.'
     if (place.trim() === '') next.place = 'El lugar es obligatorio.'
 
-    const capacityNum = Number(capacity)
-    if (!capacity || capacityNum <= 0) next.capacity = 'El cupo debe ser mayor a 0.'
+    if (!isAnnouncementOnly) {
+      const capacityNum = Number(capacity)
+      if (!capacity || capacityNum <= 0) next.capacity = 'El cupo debe ser mayor a 0.'
 
-    if (kind !== 'gratis') {
-      const priceNum = Number(price)
-      if (!price || priceNum <= 0) next.price = 'Ingresa el valor de la entrada.'
+      if (kind !== 'gratis') {
+        const priceNum = Number(price)
+        if (!price || priceNum <= 0) next.price = 'Ingresa el valor de la entrada.'
+      }
     }
 
     setErrors(next)
@@ -168,14 +185,16 @@ export default function EventForm() {
       place: place.trim(),
       imageUrl,
       kind,
-      price: kind === 'gratis' ? null : Number(price),
+      // Ticket config (price/capacity/discounts) doesn't exist yet on a
+      // pure "Próximamente" announcement — see isAnnouncementOnly above.
+      price: isAnnouncementOnly || kind === 'gratis' ? null : Number(price),
       capacity: Number(capacity),
       published,
-      salesPaused,
+      salesPaused: isAnnouncementOnly ? false : salesPaused,
       // No featured toggle here by design — featured is managed only from the
       // event list (see GestionEventos), never from this create/edit form.
       featured: existing?.featured ?? false,
-      discountCodes: kind === 'hibrido' ? discountCodes : [],
+      discountCodes: !isAnnouncementOnly && kind === 'hibrido' ? discountCodes : [],
     }
 
     if (isEditing && existing) {
@@ -303,6 +322,19 @@ export default function EventForm() {
             </section>
 
             <div className="event-form__side">
+              {isAnnouncementOnly ? (
+                <section className="event-form__card event-form__announcement-notice">
+                  <span className="event-form__announcement-notice-icon" aria-hidden="true">
+                    <CalendarNoticeIcon />
+                  </span>
+                  <h2>Configuración de entradas</h2>
+                  <p>
+                    Este evento se mostrará como <strong>Próximamente</strong> — solo un aviso, todavía sin fecha.
+                    Agrega una fecha para configurar cupo, precio y códigos de descuento.
+                  </p>
+                </section>
+              ) : (
+              <>
               <section className="event-form__card">
                 <h2>Configuración de entradas</h2>
 
@@ -433,6 +465,8 @@ export default function EventForm() {
                   </div>
                 </section>
               )}
+              </>
+              )}
             </div>
           </div>
 
@@ -449,16 +483,18 @@ export default function EventForm() {
                 </span>
               </label>
 
-              <label className="event-form__toggle-row">
-                <span>
-                  <strong>Pausar ventas</strong>
-                  <small>Detener adquisición temporalmente</small>
-                </span>
-                <span className={`event-form__switch event-form__switch--pause${salesPaused ? ' event-form__switch--on' : ''}`}>
-                  <input type="checkbox" checked={salesPaused} onChange={(e) => setSalesPaused(e.target.checked)} />
-                  <span className="event-form__switch-knob" />
-                </span>
-              </label>
+              {!isAnnouncementOnly && (
+                <label className="event-form__toggle-row">
+                  <span>
+                    <strong>Pausar ventas</strong>
+                    <small>Detener adquisición temporalmente</small>
+                  </span>
+                  <span className={`event-form__switch event-form__switch--pause${salesPaused ? ' event-form__switch--on' : ''}`}>
+                    <input type="checkbox" checked={salesPaused} onChange={(e) => setSalesPaused(e.target.checked)} />
+                    <span className="event-form__switch-knob" />
+                  </span>
+                </label>
+              )}
             </div>
 
             <div className="event-form__footer-actions">
