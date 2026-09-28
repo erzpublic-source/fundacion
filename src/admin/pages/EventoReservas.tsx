@@ -44,6 +44,23 @@ function TicketTagIcon() {
   )
 }
 
+function CopyIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
+      <path d="M3 10.5V3.5A1.5 1.5 0 0 1 4.5 2h7" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function CheckSmallIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M3 8.5l3 3 7-7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 function ChevronLeftIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -117,6 +134,8 @@ export default function EventoReservas() {
   const [approvedResult, setApprovedResult] = useState<{ name: string; code: string } | null>(null)
   const [pendingUndo, setPendingUndo] = useState<{ id: string; name: string } | null>(null)
   const undoTimerRef = useRef<number | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+  const copiedTimerRef = useRef<number | null>(null)
 
   // The rejection itself is already applied to the shared store the instant
   // it's confirmed (see handleConfirmReject) — this cleanup only has to stop
@@ -126,6 +145,7 @@ export default function EventoReservas() {
   useEffect(() => {
     return () => {
       if (undoTimerRef.current) window.clearTimeout(undoTimerRef.current)
+      if (copiedTimerRef.current) window.clearTimeout(copiedTimerRef.current)
     }
   }, [])
 
@@ -158,6 +178,19 @@ export default function EventoReservas() {
 
   function openReceipt(reservation: Reservation) {
     setViewReceipt(reservation)
+  }
+
+  async function handleCopyCode(reservation: Reservation) {
+    if (!reservation.ticketCode) return
+    try {
+      await navigator.clipboard.writeText(reservation.ticketCode)
+      setCopiedId(reservation.id)
+      if (copiedTimerRef.current) window.clearTimeout(copiedTimerRef.current)
+      copiedTimerRef.current = window.setTimeout(() => setCopiedId(null), 2000)
+    } catch {
+      // Clipboard access can be denied by the browser — the code is already
+      // visible on screen, so there's nothing further to recover here.
+    }
   }
 
   function requestApprove(reservation: Reservation) {
@@ -316,11 +349,6 @@ export default function EventoReservas() {
                   <div className="reservas-table__row" key={r.id}>
                     <div className="reservas-table__cell" data-label="Asistente">
                       <strong>{r.attendeeName}</strong>
-                      {r.ticketCode && (
-                        <span className="reservas-table__ticket-code">
-                          <TicketTagIcon /> Código: {r.ticketCode}
-                        </span>
-                      )}
                     </div>
 
                     <div className="reservas-table__cell reservas-table__cell--email" data-label="Correo electrónico" title={r.email}>
@@ -359,6 +387,20 @@ export default function EventoReservas() {
                             Aprobar
                           </button>
                         </>
+                      ) : r.status === 'aprobado' && r.ticketCode ? (
+                        <span className="reservas-table__ticket-code">
+                          <TicketTagIcon />
+                          {r.ticketCode}
+                          <button
+                            type="button"
+                            className="reservas-table__copy-btn"
+                            onClick={() => handleCopyCode(r)}
+                            aria-label={`Copiar código ${r.ticketCode}`}
+                            title={copiedId === r.id ? '¡Copiado!' : 'Copiar código'}
+                          >
+                            {copiedId === r.id ? <CheckSmallIcon /> : <CopyIcon />}
+                          </button>
+                        </span>
                       ) : (
                         <span className="reservas-table__no-action">—</span>
                       )}
