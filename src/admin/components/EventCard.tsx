@@ -114,24 +114,28 @@ export default function EventCard({ event, onToggleFeatured, onDelete }: EventCa
           <span className="icon-action__tooltip">Editar evento</span>
         </span>
 
-        <span className="icon-action">
-          <Link to={`/admin/eventos/${event.id}/reservas`} className="icon-action__btn" aria-label="Ver reservas">
-            <UsersIcon />
-          </Link>
-          <span className="icon-action__tooltip">Ver reservas</span>
-        </span>
+        {status !== 'borrador' && (
+          <span className="icon-action">
+            <Link to={`/admin/eventos/${event.id}/reservas`} className="icon-action__btn" aria-label="Ver reservas">
+              <UsersIcon />
+            </Link>
+            <span className="icon-action__tooltip">Ver reservas</span>
+          </span>
+        )}
 
-        <span className="icon-action">
-          <button
-            type="button"
-            className={`icon-action__btn icon-action__btn--star${event.featured ? ' icon-action__btn--active' : ''}`}
-            onClick={() => onToggleFeatured(event)}
-            aria-label={event.featured ? 'Quitar destacado' : 'Destacar evento'}
-          >
-            <StarIcon filled={event.featured} />
-          </button>
-          <span className="icon-action__tooltip">{event.featured ? 'Quitar destacado' : 'Destacar evento'}</span>
-        </span>
+        {status !== 'borrador' && (
+          <span className="icon-action">
+            <button
+              type="button"
+              className={`icon-action__btn icon-action__btn--star${event.featured ? ' icon-action__btn--active' : ''}`}
+              onClick={() => onToggleFeatured(event)}
+              aria-label={event.featured ? 'Quitar destacado' : 'Destacar evento'}
+            >
+              <StarIcon filled={event.featured} />
+            </button>
+            <span className="icon-action__tooltip">{event.featured ? 'Quitar destacado' : 'Destacar evento'}</span>
+          </span>
+        )}
 
         <span className="icon-action">
           <button
