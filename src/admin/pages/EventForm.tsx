@@ -101,10 +101,12 @@ export default function EventForm() {
   const [notFound, setNotFound] = useState(false)
 
   // Mirrors getEventStatus's own precedence (adminEventsTypes.ts): a
-  // published event with no date reads as "Próximamente" — a pure
-  // announcement, not a sellable event yet — so ticket configuration
-  // (and pausing sales) doesn't apply until a date is set.
-  const isAnnouncementOnly = date.trim() === ''
+  // published event reads as "Próximamente" — a pure announcement, not a
+  // sellable event yet — either while it has no date, or while "Pausar
+  // ventas" is on. A Próximamente event CAN already have a confirmed date
+  // (the date and the ticket configuration are independent decisions), so
+  // this can't be keyed off the date alone.
+  const isAnnouncementOnly = salesPaused || date.trim() === ''
 
   useEffect(() => {
     if (!isEditing) return
@@ -190,7 +192,7 @@ export default function EventForm() {
       price: isAnnouncementOnly || kind === 'gratis' ? null : Number(price),
       capacity: Number(capacity),
       published,
-      salesPaused: isAnnouncementOnly ? false : salesPaused,
+      salesPaused,
       // No featured toggle here by design — featured is managed only from the
       // event list (see GestionEventos), never from this create/edit form.
       featured: existing?.featured ?? false,
@@ -329,8 +331,11 @@ export default function EventForm() {
                   </span>
                   <h2>Configuración de entradas</h2>
                   <p>
-                    Este evento se mostrará como <strong>Próximamente</strong> — solo un aviso, todavía sin fecha.
-                    Agrega una fecha para configurar cupo, precio y códigos de descuento.
+                    Este evento se mostrará como <strong>Próximamente</strong> — solo un aviso, sin venta de entradas
+                    todavía.{' '}
+                    {salesPaused && date.trim() !== '' && 'Desactiva "Pausar ventas" cuando quieras abrir la venta.'}
+                    {salesPaused && date.trim() === '' && 'Agrega la fecha y desactiva "Pausar ventas" cuando quieras abrir la venta.'}
+                    {!salesPaused && date.trim() === '' && 'Agrega una fecha para configurar cupo, precio y códigos de descuento.'}
                   </p>
                 </section>
               ) : (
@@ -483,18 +488,16 @@ export default function EventForm() {
                 </span>
               </label>
 
-              {!isAnnouncementOnly && (
-                <label className="event-form__toggle-row">
-                  <span>
-                    <strong>Pausar ventas</strong>
-                    <small>Detener adquisición temporalmente</small>
-                  </span>
-                  <span className={`event-form__switch event-form__switch--pause${salesPaused ? ' event-form__switch--on' : ''}`}>
-                    <input type="checkbox" checked={salesPaused} onChange={(e) => setSalesPaused(e.target.checked)} />
-                    <span className="event-form__switch-knob" />
-                  </span>
-                </label>
-              )}
+              <label className="event-form__toggle-row">
+                <span>
+                  <strong>Pausar ventas</strong>
+                  <small>Detener adquisición temporalmente</small>
+                </span>
+                <span className={`event-form__switch event-form__switch--pause${salesPaused ? ' event-form__switch--on' : ''}`}>
+                  <input type="checkbox" checked={salesPaused} onChange={(e) => setSalesPaused(e.target.checked)} />
+                  <span className="event-form__switch-knob" />
+                </span>
+              </label>
             </div>
 
             <div className="event-form__footer-actions">

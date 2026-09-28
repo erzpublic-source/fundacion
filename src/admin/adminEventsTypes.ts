@@ -72,15 +72,20 @@ export const STATUS_ORDER: EventStatus[] = ['publicado', 'borrador', 'cupos_agot
 
 /**
  * Precedence, most to least specific: an unpublished event is always
- * "borrador" regardless of its date; a full event is "cupos_agotados" even
- * if upcoming; a missing date reads as "proximamente" (date still TBD); a
- * past date is "finalizado"; anything else published with a set future date
- * and open capacity is "publicado".
+ * "borrador" regardless of its date; paused sales read as "proximamente"
+ * even when a date is already set (an announcement that isn't sellable yet
+ * — the date can be confirmed before ticket configuration is) — same as a
+ * missing date, which reads "proximamente" for the same reason if sales
+ * were never explicitly paused; a full event is "cupos_agotados"; a past
+ * date is "finalizado"; anything else published, sellable, with a set
+ * future date and open capacity is "publicado".
  */
-export function getEventStatus(event: Pick<AdminEvent, 'published' | 'capacity' | 'reservedCount' | 'date'>): EventStatus {
+export function getEventStatus(
+  event: Pick<AdminEvent, 'published' | 'capacity' | 'reservedCount' | 'date' | 'salesPaused'>,
+): EventStatus {
   if (!event.published) return 'borrador'
+  if (event.salesPaused || !event.date) return 'proximamente'
   if (event.reservedCount >= event.capacity) return 'cupos_agotados'
-  if (!event.date) return 'proximamente'
 
   const eventDateTime = new Date(event.date)
   eventDateTime.setHours(23, 59, 59, 999)
