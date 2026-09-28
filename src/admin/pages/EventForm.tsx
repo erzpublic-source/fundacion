@@ -262,10 +262,20 @@ export default function EventForm() {
               <div className="event-form__row">
                 <div className="admin-field">
                   <label htmlFor="event-date">Fecha</label>
-                  <div className="admin-field__control">
-                    <input id="event-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+                  <div className="admin-field__control event-form__date-control">
+                    <input
+                      id="event-date"
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      className={date ? 'event-form__date-input--masked' : undefined}
+                    />
+                    {/* Overlays the browser's own (locale/OS-dependent) date
+                        text with a consistent dd/mmm/aaaa mask, while the
+                        native input stays underneath for the calendar
+                        picker and click/keyboard interaction. */}
+                    {date && <span className="event-form__date-mask">{formatDateMask(date)}</span>}
                   </div>
-                  {date && <p className="admin-field__hint">{formatDateMask(date)}</p>}
                 </div>
                 <div className="admin-field">
                   <label htmlFor="event-time">Hora</label>

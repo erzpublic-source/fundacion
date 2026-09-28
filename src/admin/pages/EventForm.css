@@ -68,6 +68,28 @@
   color: #221920;
 }
 
+/* ---------- Date field mask (dd/mmm/aaaa) ---------- */
+.event-form__date-control {
+  position: relative;
+}
+
+.event-form__date-input--masked {
+  color: transparent;
+  /* Chromium paints a native date input's segments (dd/mm/yyyy) via
+     -webkit-text-fill-color rather than `color` alone — without this the
+     native text still shows through underneath our overlay mask. */
+  -webkit-text-fill-color: transparent;
+}
+
+.event-form__date-mask {
+  position: absolute;
+  left: 16px;
+  font-size: 14px;
+  color: #221920;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 /* ---------- Image dropzone ---------- */
 .event-form__dropzone {
   position: relative;
