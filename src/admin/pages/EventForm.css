@@ -409,9 +409,11 @@
 
 /* "Pausar ventas" gets its own accent (distinct from the primary gradient
    used for "Publicar evento") so the two toggles stay visually separate
-   at a glance — stops sales without touching the event's visibility. */
+   at a glance — an orange gradient reads as "pause/caution", echoing the
+   universal pause/warning color instead of the brand purple, since it
+   stops sales without touching the event's visibility. */
 .event-form__switch--pause.event-form__switch--on {
-  background: #a855f7;
+  background: linear-gradient(135deg, #fb923c, #ea580c);
 }
 
 .event-form__footer-actions {
