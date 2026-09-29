@@ -117,7 +117,7 @@ export default function EventCard({ event, onToggleFeatured, onDelete }: EventCa
           <span className="icon-action__tooltip">Editar evento</span>
         </span>
 
-        {status !== 'borrador' && (
+        {status !== 'borrador' && status !== 'proximamente' && (
           <span className="icon-action">
             <Link to={`/admin/eventos/${event.id}/reservas`} className="icon-action__btn" aria-label="Ver reservas">
               <UsersIcon />

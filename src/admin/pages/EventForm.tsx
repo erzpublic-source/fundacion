@@ -26,15 +26,6 @@ function TrashIcon() {
   )
 }
 
-function CalendarNoticeIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <rect x="3" y="4.5" width="18" height="16" rx="2.5" />
-      <path d="M3 9.5h18M8 2.5v4M16 2.5v4" strokeLinecap="round" />
-    </svg>
-  )
-}
-
 const EVENT_KINDS: { value: EventKind; label: string }[] = [
   { value: 'pago', label: 'De pago' },
   { value: 'gratis', label: 'Gratis' },
@@ -101,21 +92,6 @@ export default function EventForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [notFound, setNotFound] = useState(false)
 
-  // Mirrors getEventStatus's own precedence (adminEventsTypes.ts): a
-  // published event reads as "Próximamente" — a pure announcement, not a
-  // sellable event yet — either while it's explicitly marked as an
-  // announcement, or while it has no date. A Próximamente event CAN already
-  // have a confirmed date (the date and the ticket configuration are
-  // independent decisions), so this can't be keyed off the date alone.
-  // Unlike salesPaused (a pause on an already-launched event), this hides
-  // ticket configuration entirely rather than just blocking new sales.
-  // A borrador is excluded on purpose: it always keeps its ticket
-  // configuration editable (type, cupo, precio, códigos) even without a
-  // date, since a draft is exactly where an admin sets that up ahead of
-  // publishing it as de pago, gratis or híbrido — "Evento próximo" only
-  // takes effect (and hides the module) once the event is published.
-  const isAnnouncementOnly = published && (isAnnouncement || date.trim() === '')
-
   useEffect(() => {
     if (!isEditing) return
     if (!existing) {
@@ -169,14 +145,12 @@ export default function EventForm() {
     if (title.trim() === '') next.title = 'El título es obligatorio.'
     if (place.trim() === '') next.place = 'El lugar es obligatorio.'
 
-    if (!isAnnouncementOnly) {
-      const capacityNum = Number(capacity)
-      if (!capacity || capacityNum <= 0) next.capacity = 'El cupo debe ser mayor a 0.'
+    const capacityNum = Number(capacity)
+    if (!capacity || capacityNum <= 0) next.capacity = 'El cupo debe ser mayor a 0.'
 
-      if (kind !== 'gratis') {
-        const priceNum = Number(price)
-        if (!price || priceNum <= 0) next.price = 'Ingresa el valor de la entrada.'
-      }
+    if (kind !== 'gratis') {
+      const priceNum = Number(price)
+      if (!price || priceNum <= 0) next.price = 'Ingresa el valor de la entrada.'
     }
 
     setErrors(next)
@@ -196,9 +170,7 @@ export default function EventForm() {
       place: place.trim(),
       imageUrl,
       kind,
-      // Ticket config (price/capacity/discounts) doesn't exist yet on a
-      // pure "Próximamente" announcement — see isAnnouncementOnly above.
-      price: isAnnouncementOnly || kind === 'gratis' ? null : Number(price),
+      price: kind === 'gratis' ? null : Number(price),
       capacity: Number(capacity),
       published,
       isAnnouncement,
@@ -207,7 +179,7 @@ export default function EventForm() {
       // No featured toggle here by design — featured is managed only from the
       // event list (see GestionEventos), never from this create/edit form.
       featured: existing?.featured ?? false,
-      discountCodes: !isAnnouncementOnly && kind === 'hibrido' ? discountCodes : [],
+      discountCodes: kind === 'hibrido' ? discountCodes : [],
     }
 
     if (isEditing && existing) {
@@ -335,22 +307,6 @@ export default function EventForm() {
             </section>
 
             <div className="event-form__side">
-              {isAnnouncementOnly ? (
-                <section className="event-form__card event-form__announcement-notice">
-                  <span className="event-form__announcement-notice-icon" aria-hidden="true">
-                    <CalendarNoticeIcon />
-                  </span>
-                  <h2>Configuración de entradas</h2>
-                  <p>
-                    Este evento se mostrará como <strong>Próximamente</strong> — solo un aviso, sin venta de entradas
-                    todavía.{' '}
-                    {isAnnouncement && date.trim() !== '' && 'Desactiva "Evento próximo" cuando quieras configurar cupo, precio y códigos de descuento.'}
-                    {isAnnouncement && date.trim() === '' && 'Agrega la fecha y desactiva "Evento próximo" cuando quieras abrir la venta.'}
-                    {!isAnnouncement && date.trim() === '' && 'Agrega una fecha para configurar cupo, precio y códigos de descuento.'}
-                  </p>
-                </section>
-              ) : (
-              <>
               <section className="event-form__card">
                 <h2>Configuración de entradas</h2>
 
@@ -481,8 +437,6 @@ export default function EventForm() {
                   </div>
                 </section>
               )}
-              </>
-              )}
 
               <section className="event-form__card">
                 <h2>Opciones del evento</h2>
@@ -501,7 +455,7 @@ export default function EventForm() {
                   <label className="event-form__toggle-row">
                     <span>
                       <strong>Evento próximo</strong>
-                      <small>Sin configuración de entradas</small>
+                      <small>Visible en la web, aún sin venta de entradas</small>
                     </span>
                     <span className={`event-form__switch${isAnnouncement ? ' event-form__switch--on' : ''}`}>
                       <input
