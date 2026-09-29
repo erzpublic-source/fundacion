@@ -26,6 +26,15 @@ function TrashIcon() {
   )
 }
 
+function LockIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <rect x="3" y="7.5" width="10" height="6.5" rx="1.5" />
+      <path d="M5 7.5V5a3 3 0 0 1 6 0v2.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 const EVENT_KINDS: { value: EventKind; label: string }[] = [
   { value: 'pago', label: 'De pago' },
   { value: 'gratis', label: 'Gratis' },
@@ -84,13 +93,26 @@ export default function EventForm() {
   const [kind, setKind] = useState<EventKind>('pago')
   const [price, setPrice] = useState('')
   const [capacity, setCapacity] = useState('100')
-  const [published, setPublished] = useState(true)
+  // A new event starts with every "Opciones del evento" switch off — it's
+  // the admin's explicit decision to publish it or mark it "Evento próximo"
+  // that unlocks ticket configuration, not a default.
+  const [published, setPublished] = useState(false)
   const [isAnnouncement, setIsAnnouncement] = useState(false)
   const [salesPaused, setSalesPaused] = useState(false)
   const [discountCodes, setDiscountCodes] = useState<DiscountCode[]>([])
   const [newCode, setNewCode] = useState({ code: '', kind: 'percent' as DiscountKind, value: '', maxUses: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [notFound, setNotFound] = useState(false)
+
+  // "Configuración de entradas" (and, when applicable, "Códigos de
+  // descuento") stays locked/disabled until the admin decides the event is
+  // either published or an explicit "Evento próximo" announcement — either
+  // one is a real commitment to have ticket info ready; a plain, untouched
+  // draft has neither yet.
+  const configLocked = !(published || isAnnouncement)
+  // "Pausar ventas" only makes sense on an event that's actually live and
+  // sellable: published, and not merely an announcement.
+  const pausarVentasLocked = !published || isAnnouncement
 
   useEffect(() => {
     if (!isEditing) return
@@ -145,12 +167,14 @@ export default function EventForm() {
     if (title.trim() === '') next.title = 'El título es obligatorio.'
     if (place.trim() === '') next.place = 'El lugar es obligatorio.'
 
-    const capacityNum = Number(capacity)
-    if (!capacity || capacityNum <= 0) next.capacity = 'El cupo debe ser mayor a 0.'
+    if (!configLocked) {
+      const capacityNum = Number(capacity)
+      if (!capacity || capacityNum <= 0) next.capacity = 'El cupo debe ser mayor a 0.'
 
-    if (kind !== 'gratis') {
-      const priceNum = Number(price)
-      if (!price || priceNum <= 0) next.price = 'Ingresa el valor de la entrada.'
+      if (kind !== 'gratis') {
+        const priceNum = Number(price)
+        if (!price || priceNum <= 0) next.price = 'Ingresa el valor de la entrada.'
+      }
     }
 
     setErrors(next)
@@ -170,16 +194,16 @@ export default function EventForm() {
       place: place.trim(),
       imageUrl,
       kind,
-      price: kind === 'gratis' ? null : Number(price),
+      price: configLocked || kind === 'gratis' ? null : Number(price),
       capacity: Number(capacity),
       published,
       isAnnouncement,
-      // Pausing sales is meaningless before the event is even configured.
-      salesPaused: isAnnouncement ? false : salesPaused,
+      // Pausing sales is meaningless before the event is live and sellable.
+      salesPaused: pausarVentasLocked ? false : salesPaused,
       // No featured toggle here by design — featured is managed only from the
       // event list (see GestionEventos), never from this create/edit form.
       featured: existing?.featured ?? false,
-      discountCodes: kind === 'hibrido' ? discountCodes : [],
+      discountCodes: !configLocked && kind === 'hibrido' ? discountCodes : [],
     }
 
     if (isEditing && existing) {
@@ -308,137 +332,6 @@ export default function EventForm() {
 
             <div className="event-form__side">
               <section className="event-form__card">
-                <h2>Configuración de entradas</h2>
-
-                <div className="admin-field">
-                  <span className="event-form__label">Tipo de evento</span>
-                  <div className="event-form__segmented">
-                    {EVENT_KINDS.map((k) => (
-                      <button
-                        key={k.value}
-                        type="button"
-                        className={`event-form__segment${kind === k.value ? ' event-form__segment--active' : ''}`}
-                        onClick={() => setKind(k.value)}
-                      >
-                        {k.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="event-form__row">
-                  <div className="admin-field">
-                    <label htmlFor="event-capacity">Cupo máximo</label>
-                    <div className={`admin-field__control${errors.capacity ? ' admin-field__control--error' : ''}`}>
-                      <input
-                        id="event-capacity"
-                        type="number"
-                        min={1}
-                        placeholder="100"
-                        value={capacity}
-                        onChange={(e) => setCapacity(e.target.value)}
-                      />
-                    </div>
-                    {errors.capacity && <p className="admin-field__error">{errors.capacity}</p>}
-                  </div>
-
-                  {kind !== 'gratis' && (
-                    <div className="admin-field">
-                      <label htmlFor="event-price">Precio por entrada</label>
-                      <div className={`admin-field__control${errors.price ? ' admin-field__control--error' : ''}`}>
-                        <input
-                          id="event-price"
-                          type="text"
-                          inputMode="numeric"
-                          placeholder="25.000"
-                          value={formatThousands(price)}
-                          onChange={handlePriceChange}
-                        />
-                      </div>
-                      {errors.price && <p className="admin-field__error">{errors.price}</p>}
-                    </div>
-                  )}
-                </div>
-              </section>
-
-              {kind === 'hibrido' && (
-                <section className="event-form__card">
-                  <div className="event-form__card-header">
-                    <h2>Códigos de descuento</h2>
-                    <span className="status-pill status-pill--proximamente">Híbrido</span>
-                  </div>
-
-                  {discountCodes.length > 0 && (
-                    <ul className="event-form__codes-list">
-                      {discountCodes.map((code) => (
-                        <li key={code.id}>
-                          <div>
-                            <strong>{code.code}</strong>
-                            <span>{describeDiscount(code)}</span>
-                          </div>
-                          <div className="event-form__codes-list-right">
-                            <span>
-                              {code.usedCount}/{code.maxUses}
-                            </span>
-                            <button type="button" onClick={() => handleRemoveCode(code.id)} aria-label={`Quitar código ${code.code}`}>
-                              <TrashIcon />
-                            </button>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  <div className="event-form__add-code">
-                    <input
-                      type="text"
-                      placeholder="Código"
-                      value={newCode.code}
-                      onChange={(e) => setNewCode((c) => ({ ...c, code: e.target.value }))}
-                    />
-                    <select
-                      value={newCode.kind}
-                      onChange={(e) => setNewCode((c) => ({ ...c, kind: e.target.value as DiscountKind }))}
-                    >
-                      {DISCOUNT_KINDS.map((k) => (
-                        <option key={k.value} value={k.value}>
-                          {k.label}
-                        </option>
-                      ))}
-                    </select>
-                    {newCode.kind === 'percent' && (
-                      <input
-                        type="number"
-                        min={0}
-                        placeholder="%"
-                        value={newCode.value}
-                        onChange={(e) => setNewCode((c) => ({ ...c, value: e.target.value }))}
-                      />
-                    )}
-                    {newCode.kind === 'fixed' && (
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        placeholder="10.000"
-                        value={formatThousands(newCode.value)}
-                        onChange={(e) => setNewCode((c) => ({ ...c, value: e.target.value.replace(/\D/g, '') }))}
-                      />
-                    )}
-                    <input
-                      type="number"
-                      min={1}
-                      placeholder="Usos"
-                      value={newCode.maxUses}
-                      onChange={(e) => setNewCode((c) => ({ ...c, maxUses: e.target.value }))}
-                    />
-                    <button type="button" className="btn btn--secondary" onClick={handleAddCode}>
-                      + Agregar código
-                    </button>
-                  </div>
-                </section>
-              )}
-
-              <section className="event-form__card">
                 <h2>Opciones del evento</h2>
                 <div className="event-form__toggles event-form__toggles--vertical">
                   <label className="event-form__toggle-row">
@@ -467,16 +360,16 @@ export default function EventForm() {
                     </span>
                   </label>
 
-                  <label className={`event-form__toggle-row${isAnnouncement ? ' event-form__toggle-row--disabled' : ''}`}>
+                  <label className={`event-form__toggle-row${pausarVentasLocked ? ' event-form__toggle-row--disabled' : ''}`}>
                     <span>
                       <strong>Pausar ventas</strong>
                       <small>Detener adquisición temporalmente</small>
                     </span>
-                    <span className={`event-form__switch event-form__switch--pause${salesPaused && !isAnnouncement ? ' event-form__switch--on' : ''}`}>
+                    <span className={`event-form__switch event-form__switch--pause${salesPaused && !pausarVentasLocked ? ' event-form__switch--on' : ''}`}>
                       <input
                         type="checkbox"
-                        checked={salesPaused && !isAnnouncement}
-                        disabled={isAnnouncement}
+                        checked={salesPaused && !pausarVentasLocked}
+                        disabled={pausarVentasLocked}
                         onChange={(e) => setSalesPaused(e.target.checked)}
                       />
                       <span className="event-form__switch-knob" />
@@ -484,6 +377,153 @@ export default function EventForm() {
                   </label>
                 </div>
               </section>
+
+              <section className={`event-form__card${configLocked ? ' event-form__card--locked' : ''}`}>
+                <div className="event-form__card-header">
+                  <h2>Configuración de entradas</h2>
+                  {configLocked && (
+                    <span className="event-form__lock-badge">
+                      <LockIcon /> Bloqueado
+                    </span>
+                  )}
+                </div>
+                {configLocked && (
+                  <p className="event-form__lock-hint">
+                    Actívalo publicando el evento o marcándolo como "Evento próximo".
+                  </p>
+                )}
+
+                <fieldset className="event-form__fieldset" disabled={configLocked}>
+                  <div className="admin-field">
+                    <span className="event-form__label">Tipo de evento</span>
+                    <div className="event-form__segmented">
+                      {EVENT_KINDS.map((k) => (
+                        <button
+                          key={k.value}
+                          type="button"
+                          className={`event-form__segment${kind === k.value ? ' event-form__segment--active' : ''}`}
+                          onClick={() => setKind(k.value)}
+                        >
+                          {k.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="event-form__row">
+                    <div className="admin-field">
+                      <label htmlFor="event-capacity">Cupo máximo</label>
+                      <div className={`admin-field__control${errors.capacity ? ' admin-field__control--error' : ''}`}>
+                        <input
+                          id="event-capacity"
+                          type="number"
+                          min={1}
+                          placeholder="100"
+                          value={capacity}
+                          onChange={(e) => setCapacity(e.target.value)}
+                        />
+                      </div>
+                      {errors.capacity && <p className="admin-field__error">{errors.capacity}</p>}
+                    </div>
+
+                    {kind !== 'gratis' && (
+                      <div className="admin-field">
+                        <label htmlFor="event-price">Precio por entrada</label>
+                        <div className={`admin-field__control${errors.price ? ' admin-field__control--error' : ''}`}>
+                          <input
+                            id="event-price"
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="25.000"
+                            value={formatThousands(price)}
+                            onChange={handlePriceChange}
+                          />
+                        </div>
+                        {errors.price && <p className="admin-field__error">{errors.price}</p>}
+                      </div>
+                    )}
+                  </div>
+                </fieldset>
+              </section>
+
+              {kind === 'hibrido' && (
+                <section className={`event-form__card${configLocked ? ' event-form__card--locked' : ''}`}>
+                  <div className="event-form__card-header">
+                    <h2>Códigos de descuento</h2>
+                    <span className="status-pill status-pill--proximamente">Híbrido</span>
+                  </div>
+
+                  <fieldset className="event-form__fieldset" disabled={configLocked}>
+                    {discountCodes.length > 0 && (
+                      <ul className="event-form__codes-list">
+                        {discountCodes.map((code) => (
+                          <li key={code.id}>
+                            <div>
+                              <strong>{code.code}</strong>
+                              <span>{describeDiscount(code)}</span>
+                            </div>
+                            <div className="event-form__codes-list-right">
+                              <span>
+                                {code.usedCount}/{code.maxUses}
+                              </span>
+                              <button type="button" onClick={() => handleRemoveCode(code.id)} aria-label={`Quitar código ${code.code}`}>
+                                <TrashIcon />
+                              </button>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <div className="event-form__add-code">
+                      <input
+                        type="text"
+                        placeholder="Código"
+                        value={newCode.code}
+                        onChange={(e) => setNewCode((c) => ({ ...c, code: e.target.value }))}
+                      />
+                      <select
+                        value={newCode.kind}
+                        onChange={(e) => setNewCode((c) => ({ ...c, kind: e.target.value as DiscountKind }))}
+                      >
+                        {DISCOUNT_KINDS.map((k) => (
+                          <option key={k.value} value={k.value}>
+                            {k.label}
+                          </option>
+                        ))}
+                      </select>
+                      {newCode.kind === 'percent' && (
+                        <input
+                          type="number"
+                          min={0}
+                          placeholder="%"
+                          value={newCode.value}
+                          onChange={(e) => setNewCode((c) => ({ ...c, value: e.target.value }))}
+                        />
+                      )}
+                      {newCode.kind === 'fixed' && (
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="10.000"
+                          value={formatThousands(newCode.value)}
+                          onChange={(e) => setNewCode((c) => ({ ...c, value: e.target.value.replace(/\D/g, '') }))}
+                        />
+                      )}
+                      <input
+                        type="number"
+                        min={1}
+                        placeholder="Usos"
+                        value={newCode.maxUses}
+                        onChange={(e) => setNewCode((c) => ({ ...c, maxUses: e.target.value }))}
+                      />
+                      <button type="button" className="btn btn--secondary" onClick={handleAddCode}>
+                        + Agregar código
+                      </button>
+                    </div>
+                  </fieldset>
+                </section>
+              )}
             </div>
           </div>
 
