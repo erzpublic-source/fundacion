@@ -109,7 +109,12 @@ export default function EventForm() {
   // independent decisions), so this can't be keyed off the date alone.
   // Unlike salesPaused (a pause on an already-launched event), this hides
   // ticket configuration entirely rather than just blocking new sales.
-  const isAnnouncementOnly = isAnnouncement || date.trim() === ''
+  // A borrador is excluded on purpose: it always keeps its ticket
+  // configuration editable (type, cupo, precio, códigos) even without a
+  // date, since a draft is exactly where an admin sets that up ahead of
+  // publishing it as de pago, gratis or híbrido — "Evento próximo" only
+  // takes effect (and hides the module) once the event is published.
+  const isAnnouncementOnly = published && (isAnnouncement || date.trim() === '')
 
   useEffect(() => {
     if (!isEditing) return
