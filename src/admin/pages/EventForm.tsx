@@ -105,11 +105,10 @@ export default function EventForm() {
   const [notFound, setNotFound] = useState(false)
 
   // "Configuración de entradas" (and, when applicable, "Códigos de
-  // descuento") stays locked/disabled until the admin decides the event is
-  // either published or an explicit "Evento próximo" announcement — either
-  // one is a real commitment to have ticket info ready; a plain, untouched
-  // draft has neither yet.
-  const configLocked = !(published || isAnnouncement)
+  // descuento") stays locked/disabled until the event is actually
+  // published. "Evento próximo" alone does NOT unlock it — it's just an
+  // announcement, and an announcement doesn't talk about pricing yet.
+  const configLocked = !published
   // "Pausar ventas" only makes sense on an event that's actually live and
   // sellable: published, and not merely an announcement.
   const pausarVentasLocked = !published || isAnnouncement
@@ -389,7 +388,7 @@ export default function EventForm() {
                 </div>
                 {configLocked && (
                   <p className="event-form__lock-hint">
-                    Actívalo publicando el evento o marcándolo como "Evento próximo".
+                    Actívalo publicando el evento. Un aviso "Evento próximo" aún no habla de costos.
                   </p>
                 )}
 
