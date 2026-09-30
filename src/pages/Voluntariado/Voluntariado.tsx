@@ -84,6 +84,15 @@ function LocationIcon() {
   )
 }
 
+function MailIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <rect x="1.5" y="3" width="13" height="10" rx="1.5" />
+      <path d="M2 4l6 4.5L14 4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 function PhoneIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -168,6 +177,7 @@ interface FormFields {
   especialidad: string
   ciudad: string
   celular: string
+  correo: string
 }
 
 const INITIAL_FIELDS: FormFields = {
@@ -175,9 +185,11 @@ const INITIAL_FIELDS: FormFields = {
   especialidad: '',
   ciudad: '',
   celular: '',
+  correo: '',
 }
 
 const CELULAR_LENGTH = 10
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
 
@@ -191,6 +203,7 @@ export default function Voluntariado() {
   const [termsOpen, setTermsOpen] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
   const [ciudadOpen, setCiudadOpen] = useState(false)
+  const [correoTouched, setCorreoTouched] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const ciudadBlurTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -198,6 +211,8 @@ export default function Voluntariado() {
     () => COLOMBIA_CITIES.some((city) => city.toLowerCase() === fields.ciudad.trim().toLowerCase()),
     [fields.ciudad],
   )
+
+  const isCorreoValid = useMemo(() => EMAIL_PATTERN.test(fields.correo.trim()), [fields.correo])
 
   const filteredCities = useMemo(() => {
     const query = fields.ciudad.trim().toLowerCase()
@@ -211,12 +226,13 @@ export default function Voluntariado() {
       fields.especialidad.trim() !== '' &&
       isCiudadValid &&
       fields.celular.trim().length === CELULAR_LENGTH &&
+      isCorreoValid &&
       file !== null &&
       fileError === null &&
       aceptaPrivacidad &&
       aceptaTerminos
     )
-  }, [fields, isCiudadValid, file, fileError, aceptaPrivacidad, aceptaTerminos])
+  }, [fields, isCiudadValid, isCorreoValid, file, fileError, aceptaPrivacidad, aceptaTerminos])
 
   function updateField(key: keyof FormFields, value: string) {
     setFields((prev) => ({ ...prev, [key]: value }))
@@ -290,6 +306,7 @@ export default function Voluntariado() {
       formData.append('especialidad', fields.especialidad)
       formData.append('ciudad', fields.ciudad)
       formData.append('celular', fields.celular)
+      formData.append('correo', fields.correo)
       formData.append('hoja_de_vida', file)
 
       const response = await fetch(VOLUNTARIADO_ENDPOINT, { method: 'POST', body: formData })
@@ -312,6 +329,7 @@ export default function Voluntariado() {
     setFileError(null)
     setAceptaPrivacidad(false)
     setAceptaTerminos(false)
+    setCorreoTouched(false)
     if (fileInputRef.current) fileInputRef.current.value = ''
     setSubmitStatus('idle')
   }
@@ -477,6 +495,25 @@ export default function Voluntariado() {
                   required
                 />
               </div>
+            </div>
+
+            <div className="voluntariado-field">
+              <label htmlFor="correo">Correo Electrónico</label>
+              <div className={`voluntariado-field__control${correoTouched && !isCorreoValid ? ' voluntariado-field__control--error' : ''}`}>
+                <MailIcon />
+                <input
+                  id="correo"
+                  type="email"
+                  placeholder="Ej: correo@ejemplo.com"
+                  value={fields.correo}
+                  onChange={(e) => updateField('correo', e.target.value)}
+                  onBlur={() => setCorreoTouched(true)}
+                  required
+                />
+              </div>
+              {correoTouched && !isCorreoValid && (
+                <p className="voluntariado-field__error">Ingresa un correo válido, ej: correo@ejemplo.com</p>
+              )}
             </div>
 
             <div className="voluntariado-field">
