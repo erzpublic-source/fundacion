@@ -332,6 +332,37 @@
   color: #e0455a;
 }
 
+/* ---------- File upload spinner (shown while the form — and its
+   attached file — is being submitted) ---------- */
+.voluntariado-field__spinner {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid rgba(103, 81, 141, 0.25);
+  border-top-color: var(--color-violeta-esperanza);
+  animation: voluntariado-spin 0.7s linear infinite;
+}
+
+@keyframes voluntariado-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voluntariado-field__spinner {
+    animation: none;
+  }
+}
+
+.voluntariado-field__file-status {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-violeta-esperanza);
+}
+
 .voluntariado-checkbox {
   display: flex;
   align-items: flex-start;
@@ -600,6 +631,10 @@
 
   .voluntariado-field__filename {
     font-size: 16px;
+  }
+
+  .voluntariado-field__file-status {
+    font-size: 14px;
   }
 
   .voluntariado-checkbox label {

@@ -547,9 +547,19 @@ export default function Voluntariado() {
 
             <div className="voluntariado-field">
               <label htmlFor="hoja-de-vida">Hoja de Vida / Credenciales (máximo 7 MB, solo PDF)</label>
-              <div className={`voluntariado-field__control voluntariado-field__control--file${fileError ? ' voluntariado-field__control--error' : ''}`}>
+              <div
+                className={`voluntariado-field__control voluntariado-field__control--file${
+                  fileError || (submitStatus === 'error' && file) ? ' voluntariado-field__control--error' : ''
+                }`}
+              >
                 <DocumentIcon />
-                {file ? (
+                {file && submitStatus === 'loading' ? (
+                  <>
+                    <span className="voluntariado-field__filename">{file.name}</span>
+                    <span className="voluntariado-field__spinner" aria-hidden="true" />
+                    <span className="voluntariado-field__file-status">Subiendo...</span>
+                  </>
+                ) : file ? (
                   <>
                     <span className="voluntariado-field__filename">{file.name}</span>
                     <CheckCircleSmallIcon />
@@ -579,9 +589,15 @@ export default function Voluntariado() {
                   onChange={handleFileChange}
                   className="voluntariado-field__file-input"
                   tabIndex={-1}
+                  disabled={submitStatus === 'loading'}
                 />
               </div>
               {fileError && <p className="voluntariado-field__error">{fileError}</p>}
+              {!fileError && submitStatus === 'error' && file && (
+                <p className="voluntariado-field__error">
+                  No se pudo subir el archivo. Verifica tu conexión e inténtalo de nuevo.
+                </p>
+              )}
             </div>
 
             {/* Honeypot: invisible to real visitors, real users never focus or fill
