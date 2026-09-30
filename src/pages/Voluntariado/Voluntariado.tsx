@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import LegalModal from '../../components/LegalModal/LegalModal'
 import { PRIVACY_POLICY_TITLE, PRIVACY_POLICY_UPDATED_LABEL, PrivacyPolicyContent } from '../../content/privacyPolicy'
+import { TERMS_CONDITIONS_TITLE, TERMS_CONDITIONS_UPDATED_LABEL, TermsConditionsContent } from '../../content/termsConditions'
 import heroImage from '../../assets/images/voluntariado-hero.jpg'
 import heroImageMobile from '../../assets/images/voluntariado-hero-mobile.jpg'
 import { COLOMBIA_CITIES } from '../../data/colombiaCities'
@@ -585,13 +586,11 @@ export default function Voluntariado() {
           setAceptaTerminos(true)
           setTermsOpen(false)
         }}
-        title="Términos y Condiciones"
-        updatedLabel="Última actualización: Febrero 2026"
+        title={TERMS_CONDITIONS_TITLE}
+        updatedLabel={TERMS_CONDITIONS_UPDATED_LABEL}
         note="Al aceptar, confirmas que cumples los requisitos del programa de voluntariado profesional."
       >
-        <div>
-          <p>Contenido pendiente por definir. Se actualizará con el texto oficial de Términos y Condiciones.</p>
-        </div>
+        <TermsConditionsContent />
       </LegalModal>
 
       {submitStatus === 'success' && (
