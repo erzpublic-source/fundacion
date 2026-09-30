@@ -73,7 +73,7 @@ export default function Footer() {
       </div>
 
       <div className="footer__bottom">
-        <p>© 2026 Fundación Un Día Más. Todos los derechos reservados.</p>
+        <p>© {new Date().getFullYear()} Fundación Un Día Más. Todos los derechos reservados.</p>
       </div>
     </footer>
 
