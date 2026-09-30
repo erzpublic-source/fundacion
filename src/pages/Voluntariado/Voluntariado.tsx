@@ -368,12 +368,15 @@ export default function Voluntariado() {
                 <a href="#formulario-voluntariado" className="btn btn--primary">
                   Quiero apoyar
                 </a>
+                <a href="#rol-profesional" className="btn btn--secondary">
+                  Más información
+                </a>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="voluntariado-roles">
+        <section className="voluntariado-roles" id="rol-profesional">
           <div className="section-heading">
             <h2>El rol del profesional de la salud en nuestra misión</h2>
             <p className="voluntariado-roles__lead">
