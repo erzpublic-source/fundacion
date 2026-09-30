@@ -22,7 +22,7 @@ export default function Footer() {
               <Link to="/historias">Historias</Link>
             </li>
             <li>
-              <a href={homeAnchor('voluntariado')}>Voluntariado</a>
+              <Link to="/voluntariado">Voluntariado</Link>
             </li>
             <li>
               <a href="#privacidad">Privacidad</a>
