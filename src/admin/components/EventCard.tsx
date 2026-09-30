@@ -94,17 +94,21 @@ export default function EventCard({ event, onToggleFeatured, onDelete }: EventCa
           <PlaceIcon /> {event.place}
         </p>
 
-        <div className="event-card__occupancy">
-          <div className="event-card__occupancy-bar">
-            <span
-              className={`event-card__occupancy-fill event-card__occupancy-fill--${status}`}
-              style={{ width: `${occupancy}%` }}
-            />
+        {event.requiresRegistration ? (
+          <div className="event-card__occupancy">
+            <div className="event-card__occupancy-bar">
+              <span
+                className={`event-card__occupancy-fill event-card__occupancy-fill--${status}`}
+                style={{ width: `${occupancy}%` }}
+              />
+            </div>
+            <span className="event-card__occupancy-label">
+              {event.reservedCount}/{event.capacity} cupos
+            </span>
           </div>
-          <span className="event-card__occupancy-label">
-            {event.reservedCount}/{event.capacity} cupos
-          </span>
-        </div>
+        ) : (
+          <span className="event-card__occupancy-label event-card__occupancy-label--open">Aforo libre, sin registro</span>
+        )}
 
         <p className="event-card__price">{formatPrice(event.kind, event.price)}</p>
       </div>
@@ -117,7 +121,7 @@ export default function EventCard({ event, onToggleFeatured, onDelete }: EventCa
           <span className="icon-action__tooltip">Editar evento</span>
         </span>
 
-        {status !== 'borrador' && status !== 'proximamente' && (
+        {status !== 'borrador' && status !== 'proximamente' && event.requiresRegistration && (
           <span className="icon-action">
             <Link to={`/admin/eventos/${event.id}/reservas`} className="icon-action__btn" aria-label="Ver reservas">
               <UsersIcon />

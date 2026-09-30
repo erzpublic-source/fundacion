@@ -234,6 +234,11 @@
   color: var(--color-text-disabled);
 }
 
+.evento-actual__tag--abierto {
+  background: #e8f8f0;
+  color: #1f9d5a;
+}
+
 .evento-actual__body h3 {
   margin: 0;
   font-size: 18px;

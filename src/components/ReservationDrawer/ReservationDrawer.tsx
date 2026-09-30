@@ -118,6 +118,10 @@ export interface ReservationDrawerEvent {
   capacityNote: string
   price: number
   description: string
+  /** False for a free, open event with no capacity to track — renders the
+   *  drawer as event info only, skipping the buyer/attendee/payment form
+   *  entirely since there's nothing to reserve. */
+  requiresRegistration: boolean
 }
 
 interface ReservationDrawerProps {
@@ -294,7 +298,77 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
           <CloseIcon />
         </button>
 
-        {step === 'form' && (
+        {step === 'form' && !event.requiresRegistration && (
+          <div className="reservation-drawer__scroll">
+            <div className="reservation-drawer__carousel">
+              <div
+                className="reservation-drawer__carousel-image"
+                role="img"
+                aria-label={event.title}
+                style={{ backgroundImage: `url(${event.images[activeImage]})` }}
+              />
+              {event.images.length > 1 && (
+                <div className="reservation-drawer__dots">
+                  {event.images.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className={`reservation-drawer__dot${i === activeImage ? ' reservation-drawer__dot--active' : ''}`}
+                      aria-label={`Foto ${i + 1}`}
+                      onClick={() => setActiveImage(i)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="reservation-drawer__section">
+              <span className={`reservation-drawer__status reservation-drawer__status--${event.statusTone}`}>
+                {event.statusLabel}
+              </span>
+              <h2 className="reservation-drawer__title">{event.title}</h2>
+
+              <div className="reservation-drawer__facts">
+                <p>
+                  <CalendarIcon />
+                  {event.dateTime}
+                </p>
+                <p>
+                  <LocationIcon />
+                  {event.place}
+                </p>
+                <p>
+                  <PeopleIcon />
+                  {event.capacityNote}
+                </p>
+                <p>
+                  <TicketIcon />
+                  Entrada libre
+                </p>
+              </div>
+
+              <p className={`reservation-drawer__description${descExpanded ? '' : ' reservation-drawer__description--clamped'}`}>
+                {event.description}{' '}
+                <button type="button" className="reservation-drawer__link" onClick={() => setDescExpanded((v) => !v)}>
+                  {descExpanded ? 'Leer menos' : 'Leer más'}
+                </button>
+              </p>
+            </div>
+
+            <p className="reservation-drawer__note">
+              Este es un evento abierto para el público general: no necesitas registrarte ni reservar cupo, ¡solo
+              preséntate!
+            </p>
+
+            <div className="reservation-drawer__footer">
+              <button type="button" className="btn btn--primary reservation-drawer__submit" onClick={onClose}>
+                Entendido
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === 'form' && event.requiresRegistration && (
           <form className="reservation-drawer__scroll" onSubmit={handleSubmit}>
             {/* ---------- Bloque 1: resumen y ficha del evento ---------- */}
             <div className="reservation-drawer__carousel">

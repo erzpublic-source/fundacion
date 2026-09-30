@@ -67,6 +67,19 @@ export interface AdminEvent {
    * new reservation.
    */
   salesPaused: boolean
+  /**
+   * Only meaningful when kind === 'gratis': a free, open event (e.g. a
+   * community walk-in activity) that doesn't track capacity or ask
+   * attendees to register/reserve a spot beforehand — false is the only
+   * value that makes sense for 'pago'/'hibrido', which always need a
+   * registration step to charge or allocate a slot. When false, `capacity`
+   * is ignored (never compared against `reservedCount`) and the public
+   * reservation flow shows an "evento abierto" note instead of a booking
+   * form.
+   * TODO(Supabase): a `requires_registration` boolean column on `events`,
+   * default true.
+   */
+  requiresRegistration: boolean
   discountCodes: DiscountCode[]
   createdAt: number
 }
@@ -92,18 +105,20 @@ export const STATUS_ORDER: EventStatus[] = ['publicado', 'borrador', 'cupos_agot
  * set — the date can be confirmed before ticket configuration is — same as
  * a missing date, which reads "proximamente" for the same reason even if
  * the event isn't explicitly marked as an announcement; a full event is
- * "cupos_agotados"; a past date is "finalizado"; anything else published,
- * configured, with a set future date and open capacity is "publicado".
+ * "cupos_agotados" (skipped entirely for a `requiresRegistration: false`
+ * open event, since it never tracks capacity); a past date is "finalizado";
+ * anything else published, configured, with a set future date and open
+ * capacity is "publicado".
  * Note `salesPaused` never appears here: pausing sales on an
  * already-configured, launched event doesn't change its computed status —
  * it's surfaced as a secondary badge instead (see EventCard).
  */
 export function getEventStatus(
-  event: Pick<AdminEvent, 'published' | 'capacity' | 'reservedCount' | 'date' | 'isAnnouncement'>,
+  event: Pick<AdminEvent, 'published' | 'capacity' | 'reservedCount' | 'date' | 'isAnnouncement' | 'requiresRegistration'>,
 ): EventStatus {
   if (!event.published) return 'borrador'
   if (event.isAnnouncement || !event.date) return 'proximamente'
-  if (event.reservedCount >= event.capacity) return 'cupos_agotados'
+  if (event.requiresRegistration && event.reservedCount >= event.capacity) return 'cupos_agotados'
 
   const eventDateTime = new Date(event.date)
   eventDateTime.setHours(23, 59, 59, 999)

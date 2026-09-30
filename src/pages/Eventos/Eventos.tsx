@@ -90,9 +90,10 @@ function toDrawerEvent(event: AdminEvent, status: EventStatus): ReservationDrawe
     statusTone: status === 'cupos_agotados' ? 'warning' : 'success',
     dateTime: `${formatDateOnly(event.date)} — ${formatTimeOnly(event.time)}`,
     place: event.place,
-    capacityNote: `Aforo máximo ${event.capacity} personas.`,
+    capacityNote: event.requiresRegistration ? `Aforo máximo ${event.capacity} personas.` : 'Evento abierto, aforo libre.',
     price: event.price ?? 0,
     description: event.description,
+    requiresRegistration: event.requiresRegistration,
   }
 }
 
@@ -194,7 +195,7 @@ export default function Eventos() {
               <p className="eventos-actuales__lead">No hay eventos programados por el momento.</p>
             )}
             {programados.map(({ event, status }) => {
-              const availability = AVAILABILITY_META[getAvailability(event, status)]
+              const availability = event.requiresRegistration ? AVAILABILITY_META[getAvailability(event, status)] : null
               return (
                 <article className="evento-actual" key={event.id}>
                   <div
@@ -204,7 +205,11 @@ export default function Eventos() {
                     style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
                   />
                   <div className="evento-actual__body">
-                    <span className={`evento-actual__tag ${availability.className}`}>{availability.label}</span>
+                    {availability ? (
+                      <span className={`evento-actual__tag ${availability.className}`}>{availability.label}</span>
+                    ) : (
+                      <span className="evento-actual__tag evento-actual__tag--abierto">Evento abierto — sin registro</span>
+                    )}
                     <h3>{event.title}</h3>
                     <p>{event.description}</p>
 
@@ -226,10 +231,14 @@ export default function Eventos() {
                     <button
                       type="button"
                       className="btn btn--primary-solid evento-actual__cta"
-                      disabled={availability.ctaDisabled}
+                      disabled={availability?.ctaDisabled ?? false}
                       onClick={() => setDrawerEvent(toDrawerEvent(event, status))}
                     >
-                      {availability.ctaDisabled ? 'No disponible' : 'Reservar entrada'}
+                      {availability
+                        ? availability.ctaDisabled
+                          ? 'No disponible'
+                          : 'Reservar entrada'
+                        : 'Ver detalles'}
                     </button>
                   </div>
                 </article>

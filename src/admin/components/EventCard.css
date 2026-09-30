@@ -123,6 +123,10 @@
   color: #6b7280;
 }
 
+.event-card__occupancy-label--open {
+  color: var(--color-violeta-esperanza);
+}
+
 .event-card__price {
   margin: 4px 0 0;
   font-size: 14px;

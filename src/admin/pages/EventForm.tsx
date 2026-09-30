@@ -99,6 +99,7 @@ export default function EventForm() {
   const [published, setPublished] = useState(false)
   const [isAnnouncement, setIsAnnouncement] = useState(false)
   const [salesPaused, setSalesPaused] = useState(false)
+  const [sinRegistro, setSinRegistro] = useState(false)
   const [discountCodes, setDiscountCodes] = useState<DiscountCode[]>([])
   const [newCode, setNewCode] = useState({ code: '', kind: 'percent' as DiscountKind, value: '', maxUses: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -112,6 +113,10 @@ export default function EventForm() {
   // "Pausar ventas" only makes sense on an event that's actually live and
   // sellable: published, and not merely an announcement.
   const pausarVentasLocked = !published || isAnnouncement
+  // "Sin registro" only applies to Gratis events — a paid or híbrido event
+  // always needs a registration step to charge or allocate a slot. When on,
+  // "Cupo máximo" stops applying (nothing to track without registration).
+  const capacityLocked = configLocked || (kind === 'gratis' && sinRegistro)
 
   useEffect(() => {
     if (!isEditing) return
@@ -131,6 +136,7 @@ export default function EventForm() {
     setPublished(existing.published)
     setIsAnnouncement(existing.isAnnouncement)
     setSalesPaused(existing.salesPaused)
+    setSinRegistro(!existing.requiresRegistration)
     setDiscountCodes(existing.discountCodes)
   }, [isEditing, existing])
 
@@ -167,8 +173,10 @@ export default function EventForm() {
     if (place.trim() === '') next.place = 'El lugar es obligatorio.'
 
     if (!configLocked) {
-      const capacityNum = Number(capacity)
-      if (!capacity || capacityNum <= 0) next.capacity = 'El cupo debe ser mayor a 0.'
+      if (!capacityLocked) {
+        const capacityNum = Number(capacity)
+        if (!capacity || capacityNum <= 0) next.capacity = 'El cupo debe ser mayor a 0.'
+      }
 
       if (kind !== 'gratis') {
         const priceNum = Number(price)
@@ -194,11 +202,13 @@ export default function EventForm() {
       imageUrl,
       kind,
       price: configLocked || kind === 'gratis' ? null : Number(price),
-      capacity: Number(capacity),
+      capacity: capacityLocked ? 0 : Number(capacity),
       published,
       isAnnouncement,
       // Pausing sales is meaningless before the event is live and sellable.
       salesPaused: pausarVentasLocked ? false : salesPaused,
+      // Only meaningful for Gratis — see capacityLocked above.
+      requiresRegistration: kind === 'gratis' ? !sinRegistro : true,
       // No featured toggle here by design — featured is managed only from the
       // event list (see GestionEventos), never from this create/edit form.
       featured: existing?.featured ?? false,
@@ -374,6 +384,23 @@ export default function EventForm() {
                       <span className="event-form__switch-knob" />
                     </span>
                   </label>
+
+                  {kind === 'gratis' && (
+                    <label className="event-form__toggle-row">
+                      <span>
+                        <strong>Evento sin registro</strong>
+                        <small>Público general, no requiere inscripción previa</small>
+                      </span>
+                      <span className={`event-form__switch${sinRegistro ? ' event-form__switch--on' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={sinRegistro}
+                          onChange={(e) => setSinRegistro(e.target.checked)}
+                        />
+                        <span className="event-form__switch-knob" />
+                      </span>
+                    </label>
+                  )}
                 </div>
               </section>
 
@@ -401,7 +428,10 @@ export default function EventForm() {
                           key={k.value}
                           type="button"
                           className={`event-form__segment${kind === k.value ? ' event-form__segment--active' : ''}`}
-                          onClick={() => setKind(k.value)}
+                          onClick={() => {
+                            setKind(k.value)
+                            if (k.value !== 'gratis') setSinRegistro(false)
+                          }}
                         >
                           {k.label}
                         </button>
@@ -410,7 +440,7 @@ export default function EventForm() {
                   </div>
 
                   <div className="event-form__row">
-                    <div className="admin-field">
+                    <div className={`admin-field${capacityLocked ? ' admin-field--disabled' : ''}`}>
                       <label htmlFor="event-capacity">Cupo máximo</label>
                       <div className={`admin-field__control${errors.capacity ? ' admin-field__control--error' : ''}`}>
                         <input
@@ -420,9 +450,14 @@ export default function EventForm() {
                           placeholder="100"
                           value={capacity}
                           onChange={(e) => setCapacity(e.target.value)}
+                          disabled={capacityLocked}
                         />
                       </div>
-                      {errors.capacity && <p className="admin-field__error">{errors.capacity}</p>}
+                      {capacityLocked ? (
+                        <p className="event-form__lock-hint">Un evento sin registro no lleva aforo.</p>
+                      ) : (
+                        errors.capacity && <p className="admin-field__error">{errors.capacity}</p>
+                      )}
                     </div>
 
                     {kind !== 'gratis' && (

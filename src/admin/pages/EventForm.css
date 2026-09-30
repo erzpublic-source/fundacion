@@ -99,6 +99,17 @@
   line-height: 18px;
 }
 
+/* A single locked field within an otherwise-enabled fieldset (e.g. "Cupo
+   máximo" when "Evento sin registro" is on) — same greyed-out treatment as
+   a fully locked card, just scoped to one field. */
+.admin-field--disabled {
+  opacity: 0.5;
+}
+
+.admin-field--disabled input {
+  cursor: not-allowed;
+}
+
 /* Same flex-wrap pattern as .event-form__add-code: each field has a
    comfortable minimum width and wraps/shrinks with the available space
    instead of being locked into a rigid grid column that can overflow. */
