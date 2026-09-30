@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
+import { useAdminReservations } from '../../admin/AdminReservationsContext'
 import './ReservationDrawer.css'
 
 const MAX_TICKETS = 4
@@ -107,6 +108,7 @@ function RemoveIcon() {
 }
 
 export interface ReservationDrawerEvent {
+  eventId: string
   images: string[]
   title: string
   statusLabel: string
@@ -124,6 +126,7 @@ interface ReservationDrawerProps {
 }
 
 export default function ReservationDrawer({ event, onClose }: ReservationDrawerProps) {
+  const { createReservation } = useAdminReservations()
   const [activeImage, setActiveImage] = useState(0)
   const [descExpanded, setDescExpanded] = useState(false)
 
@@ -264,10 +267,15 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
     if (!canSubmit) return
 
     setSubmitting(true)
-    // TODO(Supabase): replace this local simulation with the real insert +
-    // receipt upload once the project is connected. For now this only
-    // updates local UI state, nothing is persisted or sent anywhere.
-    await new Promise((resolve) => window.setTimeout(resolve, 900))
+    // TODO(Supabase): createReservation still only writes to the in-memory
+    // admin mock — once connected, this becomes the real insert + receipt
+    // upload to Storage, and amountPerAttendee/email move server-side too.
+    await createReservation({
+      eventId: event.eventId,
+      attendeeNames: [buyerName, ...attendeeNames],
+      email: buyerEmail,
+      amountPerAttendee: quantity > 0 ? Math.round(total / quantity) : 0,
+    })
     setReservationCode(`#RES-${Math.floor(1000 + Math.random() * 9000)}`)
     setSubmitting(false)
     setStep('success')

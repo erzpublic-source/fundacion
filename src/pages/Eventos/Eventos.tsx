@@ -83,6 +83,7 @@ function formatTimeOnly(time: string | null): string {
 
 function toDrawerEvent(event: AdminEvent, status: EventStatus): ReservationDrawerEvent {
   return {
+    eventId: event.id,
     images: event.imageUrl ? [event.imageUrl] : [],
     title: event.title,
     statusLabel: status === 'cupos_agotados' ? 'Cupos agotados' : 'Cupos disponibles',
