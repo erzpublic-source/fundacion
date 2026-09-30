@@ -35,9 +35,6 @@ export default function Footer() {
                 Privacidad
               </button>
             </li>
-            <li>
-              <a href="#terminos">Términos</a>
-            </li>
           </ul>
         </div>
 
