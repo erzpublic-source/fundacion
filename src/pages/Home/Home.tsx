@@ -91,7 +91,7 @@ const IMPACTO = [
     title: 'Encuentros y comunidad',
     text: 'Participa en nuestros encuentros y actividades comunitarias.',
     link: 'Ver eventos',
-    href: '#eventos',
+    href: '/eventos',
     image: impactoEventos,
   },
   {
@@ -101,7 +101,7 @@ const IMPACTO = [
     title: 'Sé parte del cambio',
     text: 'Únete a nuestro equipo y sé parte del cambio.',
     link: 'Ver voluntariado',
-    href: '#voluntariado',
+    href: '/voluntariado',
     image: impactoVoluntariado,
   },
 ]
@@ -281,8 +281,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="donaciones" id="donar">
-          <div className="donaciones__card" id="voluntariado">
+        <section className="donaciones">
+          <div className="donaciones__card">
             <div
               className="donaciones__media"
               role="img"
