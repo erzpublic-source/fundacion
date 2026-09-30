@@ -13,10 +13,13 @@ function CloseIcon() {
 interface LegalModalProps {
   open: boolean
   onClose: () => void
-  onAccept: () => void
+  /** Omit for a read-only modal (e.g. the Footer's "Privacidad" link): shows
+   *  a single "Cerrar" action instead of the Rechazar/Aceptar consent pair. */
+  onAccept?: () => void
   title: string
   updatedLabel?: string
-  note: string
+  /** Only shown alongside the accept/reject actions; ignored when onAccept is omitted. */
+  note?: string
   children: ReactNode
 }
 
@@ -62,15 +65,25 @@ export default function LegalModal({ open, onClose, onAccept, title, updatedLabe
         <div className="legal-modal__body">{children}</div>
 
         <div className="legal-modal__footer">
-          <p>{note}</p>
-          <div className="legal-modal__actions">
-            <button type="button" className="btn btn--secondary" onClick={onClose}>
-              Rechazar
-            </button>
-            <button type="button" className="btn btn--primary" onClick={onAccept}>
-              Aceptar
-            </button>
-          </div>
+          {onAccept ? (
+            <>
+              <p>{note}</p>
+              <div className="legal-modal__actions">
+                <button type="button" className="btn btn--secondary" onClick={onClose}>
+                  Rechazar
+                </button>
+                <button type="button" className="btn btn--primary" onClick={onAccept}>
+                  Aceptar
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="legal-modal__actions">
+              <button type="button" className="btn btn--primary" onClick={onClose}>
+                Cerrar
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

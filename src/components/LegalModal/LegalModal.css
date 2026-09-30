@@ -128,6 +128,13 @@
   gap: 12px;
 }
 
+/* Read-only modal (no onAccept, no note paragraph): the actions row is the
+   footer's only child, so push it to the right instead of letting
+   justify-content: space-between collapse it to the left. */
+.legal-modal__actions:only-child {
+  margin-left: auto;
+}
+
 .legal-modal__actions .btn {
   flex: 1;
   height: 46px;

@@ -1,10 +1,16 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../Navbar/Logo'
+import LegalModal from '../LegalModal/LegalModal'
+import { PRIVACY_POLICY_TITLE, PRIVACY_POLICY_UPDATED_LABEL, PrivacyPolicyContent } from '../../content/privacyPolicy'
 import { homeAnchor } from '../../utils/links'
 import './Footer.css'
 
 export default function Footer() {
+  const [privacyOpen, setPrivacyOpen] = useState(false)
+
   return (
+    <>
     <footer className="footer" id="contacto">
       <div className="footer__content">
         <div className="footer__brand">
@@ -25,7 +31,9 @@ export default function Footer() {
               <Link to="/voluntariado">Voluntariado</Link>
             </li>
             <li>
-              <a href="#privacidad">Privacidad</a>
+              <button type="button" className="footer__link-btn" onClick={() => setPrivacyOpen(true)}>
+                Privacidad
+              </button>
             </li>
             <li>
               <a href="#terminos">Términos</a>
@@ -71,5 +79,15 @@ export default function Footer() {
         <p>© 2026 Fundación Un Día Más. Todos los derechos reservados.</p>
       </div>
     </footer>
+
+    <LegalModal
+      open={privacyOpen}
+      onClose={() => setPrivacyOpen(false)}
+      title={PRIVACY_POLICY_TITLE}
+      updatedLabel={PRIVACY_POLICY_UPDATED_LABEL}
+    >
+      <PrivacyPolicyContent />
+    </LegalModal>
+    </>
   )
 }

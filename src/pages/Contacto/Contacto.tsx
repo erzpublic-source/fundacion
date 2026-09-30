@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import LegalModal from '../../components/LegalModal/LegalModal'
+import { PRIVACY_POLICY_TITLE, PRIVACY_POLICY_UPDATED_LABEL, PrivacyPolicyContent } from '../../content/privacyPolicy'
 import './Contacto.css'
 
 // Set this to your PHP (or other) endpoint once it's deployed on a server
@@ -427,35 +428,11 @@ export default function Contacto() {
           setAceptaPrivacidad(true)
           setPrivacyOpen(false)
         }}
-        title="Políticas de Privacidad"
-        updatedLabel="Última actualización: Febrero 2026"
+        title={PRIVACY_POLICY_TITLE}
+        updatedLabel={PRIVACY_POLICY_UPDATED_LABEL}
         note="Al aceptar, autorizas el tratamiento de tus datos de contacto."
       >
-        <div>
-          <h4>1. Recopilación de datos</h4>
-          <p>
-            Recopilamos el nombre, correo electrónico y el contenido del mensaje que nos compartes a través de
-            este formulario, con el único fin de responder tu consulta o solicitud.
-          </p>
-        </div>
-        <div>
-          <h4>2. Uso de la información</h4>
-          <p>
-            La información suministrada se usa exclusivamente para gestionar tu comunicación con la Fundación Un
-            Día Más. No utilizamos tus datos con fines publicitarios de terceros ni comerciales.
-          </p>
-        </div>
-        <div>
-          <h4>3. Compartir datos con terceros</h4>
-          <p>Nos comprometemos a no vender, alquilar ni transferir tu información personal a terceros.</p>
-        </div>
-        <div>
-          <h4>4. Derechos del usuario</h4>
-          <p>
-            Puedes solicitar el acceso, rectificación o eliminación de tus datos en cualquier momento
-            escribiéndonos directamente a nuestro correo de contacto.
-          </p>
-        </div>
+        <PrivacyPolicyContent />
       </LegalModal>
 
       {submitStatus === 'success' && (

@@ -39,13 +39,27 @@
   gap: 10px;
 }
 
-.footer__col a {
+.footer__col a,
+.footer__link-btn {
   color: #9ca3af;
   font-size: 14px;
 }
 
-.footer__col a:hover {
+.footer__col a:hover,
+.footer__link-btn:hover {
   color: var(--color-violeta-esperanza);
+}
+
+/* Renders identically to the plain <a> links beside it, but as a real
+   <button> since it opens the shared LegalModal instead of navigating. */
+.footer__link-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
 }
 
 .footer__social {
@@ -121,7 +135,8 @@
     font-size: 13px;
   }
 
-  .footer__col a {
+  .footer__col a,
+  .footer__link-btn {
     font-size: 16px;
   }
 
