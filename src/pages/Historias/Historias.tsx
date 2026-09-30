@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import VideoModal from '../../components/VideoModal/VideoModal'
@@ -10,7 +11,6 @@ import historiasCard1Image from '../../assets/images/historias-card1.jpg'
 import historiasCard2Image from '../../assets/images/historias-card2.jpg'
 import historiasAcusticoGuitarra from '../../assets/images/historias-acustico-guitarra.jpg'
 import historiasAcusticoPiano from '../../assets/images/historias-acustico-piano.jpg'
-import { homeAnchor } from '../../utils/links'
 import './Historias.css'
 
 const CHANNEL_URL = 'https://www.youtube.com/@fundacionUnD%C3%ADaM%C3%A1s'
@@ -222,14 +222,14 @@ export default function Historias() {
                 de nuestras líneas de escucha activa.
               </p>
               <div className="historias-donacion__ctas">
-                <a href={homeAnchor('donar')} className="btn btn--support">
+                <Link to="/donar" className="btn btn--support">
                   Quiero donar
                   <ArrowRight />
-                </a>
-                <a href={homeAnchor('voluntariado')} className="btn btn--secondary">
+                </Link>
+                <Link to="/voluntariado" className="btn btn--secondary">
                   Quiero ser voluntario
                   <VolunteerIcon />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

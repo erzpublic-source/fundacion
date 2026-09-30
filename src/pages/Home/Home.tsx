@@ -282,7 +282,7 @@ export default function Home() {
         </section>
 
         <section className="donaciones" id="donar">
-          <div className="donaciones__card">
+          <div className="donaciones__card" id="voluntariado">
             <div
               className="donaciones__media"
               role="img"
@@ -297,14 +297,14 @@ export default function Home() {
                 mantenimiento de nuestras líneas de escucha activa.
               </p>
               <div className="donaciones__ctas">
-                <a href="#donar" className="btn btn--support">
+                <Link to="/donar" className="btn btn--support">
                   Quiero donar
                   <ArrowRight />
-                </a>
-                <a href="#voluntariado" className="btn btn--secondary" id="voluntariado">
+                </Link>
+                <Link to="/voluntariado" className="btn btn--secondary">
                   Quiero ser voluntario
                   <VolunteerIcon />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
