@@ -1,14 +1,13 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import ReservationDrawer from '../../components/ReservationDrawer/ReservationDrawer'
 import type { ReservationDrawerEvent } from '../../components/ReservationDrawer/ReservationDrawer'
+import { useAdminEvents } from '../../admin/AdminEventsContext'
+import type { AdminEvent, EventStatus } from '../../admin/adminEventsTypes'
+import { getEventStatus } from '../../admin/adminEventsTypes'
 import eventosAvatar1 from '../../assets/images/eventos-avatar-1.jpg'
 import eventosAvatar2 from '../../assets/images/eventos-avatar-2.jpg'
-import featuredImage from '../../assets/images/eventos-featured.jpg'
-import escuchaActivaImage from '../../assets/images/eventos-escucha-activa.jpg'
-import aireLibreImage from '../../assets/images/eventos-aire-libre.jpg'
-import circulosApoyoImage from '../../assets/images/eventos-circulos-apoyo.jpg'
 import './Eventos.css'
 
 function CalendarIcon() {
@@ -16,15 +15,6 @@ function CalendarIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <rect x="2" y="3" width="12" height="11" rx="2" />
       <path d="M2 6.5h12M5 1.5v2M11 1.5v2" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function DeviceIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <rect x="1.5" y="2.5" width="13" height="8.5" rx="1.5" />
-      <path d="M5.5 14h5M8 11v3" strokeLinecap="round" />
     </svg>
   )
 }
@@ -55,103 +45,79 @@ const AVAILABILITY_META: Record<Availability, { label: string; className: string
   agotado: { label: 'Entradas agotadas', className: 'evento-actual__tag--agotado', ctaDisabled: true },
 }
 
-interface UpcomingEvent {
-  weekday: string
-  day: string
-  fecha: string
-  hora: string
-  horaConfirmed: boolean
-  title: string
-  sede: string
-  address: string
-  text: string
-  photoLabel: string
-  image: string
-  availability: Availability
-  price: number
-  capacityNote: string
+// A published, non-sold-out event reads "últimas entradas" once fewer than
+// ~15% of its capacity (at least 1 spot) remains — same idea as "cupos
+// agotados" from getEventStatus, just one notch earlier.
+function getAvailability(event: AdminEvent, status: EventStatus): Availability {
+  if (status === 'cupos_agotados') return 'agotado'
+  if (event.capacity <= 0) return 'disponible'
+  const remaining = event.capacity - event.reservedCount
+  const threshold = Math.max(1, Math.ceil(event.capacity * 0.15))
+  return remaining <= threshold ? 'ultimas' : 'disponible'
 }
 
-const UPCOMING_EVENTS: UpcomingEvent[] = [
-  {
-    weekday: 'SÁB',
-    day: '1',
-    fecha: 'Sábado 1 de Febrero',
-    hora: '7:00 am - 10:00 am',
-    horaConfirmed: true,
-    title: 'Talleres de Escucha Activa',
-    sede: 'Sede Central',
-    address: 'Calle de la Calma 123, Bogotá',
-    text: 'Un espacio seguro para aprender técnicas de comunicación empática y fortalecer los vínculos comunitarios a través del diálogo consciente.',
-    photoLabel: 'Foto — Talleres de Escucha Activa',
-    image: escuchaActivaImage,
-    availability: 'disponible',
-    price: 0,
-    capacityNote: 'Cupos limitados por orden de inscripción.',
-  },
-  {
-    weekday: 'DOM',
-    day: '2',
-    fecha: 'Domingo 2 de Febrero',
-    hora: '10:00 am - 12:30 pm',
-    horaConfirmed: true,
-    title: 'Jornadas al Aire Libre',
-    sede: 'Parque del Retiro',
-    address: 'Paseo de Fernán Núñez, Ibagué',
-    text: 'Conectamos con la naturaleza y la comunidad en una mañana de actividades recreativas diseñadas para reducir el estrés y la ansiedad.',
-    photoLabel: 'Foto — Jornadas al Aire Libre',
-    image: aireLibreImage,
-    availability: 'ultimas',
-    price: 0,
-    capacityNote: 'Cupos limitados por orden de inscripción.',
-  },
-  {
-    weekday: 'LUN',
-    day: '3',
-    fecha: 'Lunes 3 de Febrero',
-    hora: '6:00 pm - 7:30 pm',
-    horaConfirmed: true,
-    title: 'Círculos de Apoyo',
-    sede: 'Centro Comunitario',
-    address: 'Av. de la Esperanza 45, Ibagué',
-    text: 'Un encuentro íntimo para compartir experiencias y encontrar consuelo en la compañía de otros que transitan caminos similares.',
-    photoLabel: 'Foto — Círculos de Apoyo',
-    image: circulosApoyoImage,
-    availability: 'agotado',
-    price: 0,
-    capacityNote: 'Grupo pequeño, cupos limitados.',
-  },
-]
-
-const FEATURED_EVENT: ReservationDrawerEvent = {
-  images: [featuredImage],
-  title: 'Lanzamiento Fundación Un Día Más',
-  statusLabel: 'Cupos disponibles',
-  statusTone: 'success',
-  dateTime: 'Sábado 1 de Febrero — 7:00 am',
-  place: 'Sede Central',
-  capacityNote: 'Ubicación por orden de llegada (aforo máximo 100 personas).',
-  price: 25000,
-  description:
-    'Acompáñanos en este gran hito de la Fundación Un Día Más. Compartiremos el propósito detrás de nuestros programas de acompañamiento emocional, presentaremos a nuestro equipo y celebraremos juntos el inicio de esta comunidad que sostiene.',
+function formatWeekdayShort(date: string): string {
+  const parsed = new Date(`${date}T00:00:00`)
+  return new Intl.DateTimeFormat('es-CO', { weekday: 'short' }).format(parsed).replace('.', '').toUpperCase()
 }
 
-function toDrawerEvent(event: UpcomingEvent): ReservationDrawerEvent {
+function formatDayNumber(date: string): string {
+  return String(new Date(`${date}T00:00:00`).getDate())
+}
+
+function formatDateOnly(date: string | null): string {
+  if (!date) return 'Fecha por confirmar'
+  const parsed = new Date(`${date}T00:00:00`)
+  const label = new Intl.DateTimeFormat('es-CO', { weekday: 'long', day: 'numeric', month: 'long' }).format(parsed)
+  return label.charAt(0).toUpperCase() + label.slice(1)
+}
+
+function formatTimeOnly(time: string | null): string {
+  if (!time) return 'Por confirmar'
+  const [hoursStr, minutesStr] = time.split(':')
+  const hours24 = Number(hoursStr)
+  const period = hours24 >= 12 ? 'PM' : 'AM'
+  const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12
+  return `${hours12}:${minutesStr.padStart(2, '0')} ${period}`
+}
+
+function toDrawerEvent(event: AdminEvent, status: EventStatus): ReservationDrawerEvent {
   return {
-    images: [event.image],
+    images: event.imageUrl ? [event.imageUrl] : [],
     title: event.title,
-    statusLabel: AVAILABILITY_META[event.availability].label === 'Últimas entradas' ? 'Últimos cupos' : 'Cupos disponibles',
-    statusTone: event.availability === 'ultimas' ? 'warning' : 'success',
-    dateTime: `${event.fecha} — ${event.horaConfirmed ? event.hora : 'Por confirmar'}`,
-    place: `${event.sede}, ${event.address}`,
-    capacityNote: event.capacityNote,
-    price: event.price,
-    description: event.text,
+    statusLabel: status === 'cupos_agotados' ? 'Cupos agotados' : 'Cupos disponibles',
+    statusTone: status === 'cupos_agotados' ? 'warning' : 'success',
+    dateTime: `${formatDateOnly(event.date)} — ${formatTimeOnly(event.time)}`,
+    place: event.place,
+    capacityNote: `Aforo máximo ${event.capacity} personas.`,
+    price: event.price ?? 0,
+    description: event.description,
   }
 }
 
 export default function Eventos() {
+  const { events } = useAdminEvents()
   const [drawerEvent, setDrawerEvent] = useState<ReservationDrawerEvent | null>(null)
+
+  // Mirrors the admin's own getEventStatus precedence — a borrador never
+  // reaches this page because it's always unpublished; "programados" and
+  // "próximamente" split the rest of the published events the same way the
+  // admin's status filter does.
+  const { featured, programados, proximamente } = useMemo(() => {
+    const withStatus = events.map((event) => ({ event, status: getEventStatus(event) }))
+
+    const featuredEvent = withStatus.find(({ event, status }) => event.featured && status !== 'borrador')?.event ?? null
+
+    const programadosList = withStatus
+      .filter(({ status }) => status === 'publicado' || status === 'cupos_agotados')
+      .sort((a, b) => (a.event.date ?? '').localeCompare(b.event.date ?? ''))
+
+    const proximamenteList = withStatus
+      .filter(({ status }) => status === 'proximamente')
+      .sort((a, b) => (a.event.date ?? '9999-99-99').localeCompare(b.event.date ?? '9999-99-99'))
+
+    return { featured: featuredEvent, programados: programadosList, proximamente: proximamenteList }
+  }, [events])
 
   return (
     <>
@@ -176,43 +142,43 @@ export default function Eventos() {
           </div>
         </section>
 
-        <section className="eventos-featured">
-          <article className="eventos-featured__card">
-            <div className="eventos-featured__body">
-              <span className="eventos-featured__tag">Evento Destacado</span>
-              <h2>Lanzamiento Fundación Un Día Más</h2>
-              <p className="eventos-featured__text">
-                Un encuentro para celebrar el inicio de un camino hacia el bienestar emocional compartido.
-              </p>
+        {featured && (
+          <section className="eventos-featured">
+            <article className="eventos-featured__card">
+              <div className="eventos-featured__body">
+                <span className="eventos-featured__tag">Evento Destacado</span>
+                <h2>{featured.title}</h2>
+                <p className="eventos-featured__text">{featured.description}</p>
 
-              <ul className="eventos-featured__meta">
-                <li>
-                  <CalendarIcon />
-                  Sábado 1 de Febrero | 7:00 am - 10:00 am
-                </li>
-                <li>
-                  <DeviceIcon />
-                  Presencial / Virtual
-                </li>
-                <li>
-                  <LocationIcon />
-                  Sede Central
-                </li>
-              </ul>
+                <ul className="eventos-featured__meta">
+                  <li>
+                    <CalendarIcon />
+                    {formatDateOnly(featured.date)} | {formatTimeOnly(featured.time)}
+                  </li>
+                  <li>
+                    <LocationIcon />
+                    {featured.place}
+                  </li>
+                </ul>
 
-              <button type="button" className="btn btn--primary-solid" onClick={() => setDrawerEvent(FEATURED_EVENT)}>
-                Quiero saber más
-              </button>
-            </div>
+                <button
+                  type="button"
+                  className="btn btn--primary-solid"
+                  onClick={() => setDrawerEvent(toDrawerEvent(featured, getEventStatus(featured)))}
+                >
+                  Quiero saber más
+                </button>
+              </div>
 
-            <div
-              className="eventos-featured__media"
-              role="img"
-              aria-label="Foto — Lanzamiento Fundación Un Día Más"
-              style={{ backgroundImage: `url(${featuredImage})` }}
-            />
-          </article>
-        </section>
+              <div
+                className="eventos-featured__media"
+                role="img"
+                aria-label={`Foto — ${featured.title}`}
+                style={featured.imageUrl ? { backgroundImage: `url(${featured.imageUrl})` } : undefined}
+              />
+            </article>
+          </section>
+        )}
 
         <section className="eventos-actuales">
           <div className="section-heading">
@@ -223,33 +189,36 @@ export default function Eventos() {
           </div>
 
           <div className="eventos-actuales__list">
-            {UPCOMING_EVENTS.map((event) => {
-              const availability = AVAILABILITY_META[event.availability]
+            {programados.length === 0 && (
+              <p className="eventos-actuales__lead">No hay eventos programados por el momento.</p>
+            )}
+            {programados.map(({ event, status }) => {
+              const availability = AVAILABILITY_META[getAvailability(event, status)]
               return (
-                <article className="evento-actual" key={event.title}>
+                <article className="evento-actual" key={event.id}>
                   <div
                     className="evento-actual__media"
                     role="img"
-                    aria-label={event.photoLabel}
-                    style={{ backgroundImage: `url(${event.image})` }}
+                    aria-label={`Foto — ${event.title}`}
+                    style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
                   />
                   <div className="evento-actual__body">
                     <span className={`evento-actual__tag ${availability.className}`}>{availability.label}</span>
                     <h3>{event.title}</h3>
-                    <p>{event.text}</p>
+                    <p>{event.description}</p>
 
                     <dl className="evento-actual__meta">
                       <div>
                         <dt>Lugar</dt>
-                        <dd>{event.sede}</dd>
+                        <dd>{event.place}</dd>
                       </div>
                       <div>
                         <dt>Fecha</dt>
-                        <dd>{event.fecha}</dd>
+                        <dd>{formatDateOnly(event.date)}</dd>
                       </div>
                       <div>
                         <dt>Hora</dt>
-                        <dd>{event.horaConfirmed ? event.hora : 'Por confirmar...'}</dd>
+                        <dd>{formatTimeOnly(event.time)}</dd>
                       </div>
                     </dl>
 
@@ -257,7 +226,7 @@ export default function Eventos() {
                       type="button"
                       className="btn btn--primary-solid evento-actual__cta"
                       disabled={availability.ctaDisabled}
-                      onClick={() => setDrawerEvent(toDrawerEvent(event))}
+                      onClick={() => setDrawerEvent(toDrawerEvent(event, status))}
                     >
                       {availability.ctaDisabled ? 'No disponible' : 'Reservar entrada'}
                     </button>
@@ -275,13 +244,16 @@ export default function Eventos() {
           </div>
 
           <div className="eventos-upcoming__list">
-            {UPCOMING_EVENTS.map((event) => {
-              const displayTime = event.horaConfirmed ? `${event.fecha} | ${event.hora}` : 'Por confirmar...'
+            {proximamente.length === 0 && (
+              <p className="eventos-upcoming__lead">No hay anuncios próximamente por el momento.</p>
+            )}
+            {proximamente.map(({ event }) => {
+              const displayTime = `${formatDateOnly(event.date)} | ${formatTimeOnly(event.time)}`
               return (
-                <article className="evento-item" key={event.title}>
+                <article className="evento-item" key={event.id}>
                   <div className="evento-item__date">
-                    <span className="evento-item__weekday">{event.weekday}</span>
-                    <span className="evento-item__day">{event.day}</span>
+                    <span className="evento-item__weekday">{event.date ? formatWeekdayShort(event.date) : 'PRÓX'}</span>
+                    <span className="evento-item__day">{event.date ? formatDayNumber(event.date) : '—'}</span>
                   </div>
 
                   <p className="evento-item__time evento-item__time--mobile">
@@ -292,8 +264,8 @@ export default function Eventos() {
                   <div
                     className="evento-item__thumb evento-item__thumb--mobile"
                     role="img"
-                    aria-label={event.photoLabel}
-                    style={{ backgroundImage: `url(${event.image})` }}
+                    aria-label={`Foto — ${event.title}`}
+                    style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
                   />
 
                   <div className="evento-item__body">
@@ -303,16 +275,16 @@ export default function Eventos() {
                     </p>
                     <h3>{event.title}</h3>
                     <p className="evento-item__place">
-                      <strong>{event.sede}</strong> {event.address}
+                      <strong>{event.place}</strong>
                     </p>
-                    <p className="evento-item__text">{event.text}</p>
+                    <p className="evento-item__text">{event.description}</p>
                   </div>
 
                   <div
                     className="evento-item__thumb evento-item__thumb--desktop"
                     role="img"
-                    aria-label={event.photoLabel}
-                    style={{ backgroundImage: `url(${event.image})` }}
+                    aria-label={`Foto — ${event.title}`}
+                    style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
                   />
                 </article>
               )
