@@ -1,23 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-
-const SESSION_STORAGE_KEY = 'undiamas_admin_session'
-
-// ---------------------------------------------------------------------------
-// Mock credentials — there is no backend yet, so this stands in for a real
-// user table. Use these to sign in during development/QA:
-//   email:    admin@undiamas.org
-//   password: FundacionUDM2026!
-// To rehearse the "temporary connection error" state, sign in with
-// network-error@test.com (any password) — this is a deliberate test hook,
-// not a real account, and should be removed once Supabase is wired up.
-// ---------------------------------------------------------------------------
-const MOCK_ADMIN_EMAIL = 'admin@undiamas.org'
-const MOCK_ADMIN_PASSWORD = 'FundacionUDM2026!'
-const MOCK_NETWORK_ERROR_EMAIL = 'network-error@test.com'
+import { supabase } from '../lib/supabaseClient'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const MOCK_LATENCY_MS = 900
 
 export interface AdminSession {
   email: string
@@ -37,120 +22,105 @@ export interface AuthResult {
 
 interface AdminAuthContextValue {
   session: AdminSession | null
-  /** True until the persisted session has been read from storage once. */
+  /** True until the real Supabase session has been read once. */
   initializing: boolean
-  // TODO(Supabase): replace this mock with supabase.auth.signInWithPassword({ email, password }).
   signInWithPassword: (email: string, password: string) => Promise<AuthResult>
-  // TODO(Supabase): replace this mock with supabase.auth.resetPasswordForEmail(email, { redirectTo }).
   resetPasswordForEmail: (email: string) => Promise<AuthResult>
-  // TODO(Supabase): replace this mock with supabase.auth.updateUser({ password: newPassword }).
   updateUser: (newPassword: string) => Promise<AuthResult>
   /**
    * Used by the "Cambiar contraseña" form in Configuración, where (unlike
    * the forgot-password flow above) the admin must prove they know the
-   * current password before setting a new one.
-   * TODO(Supabase): Supabase's updateUser() doesn't check the current
-   * password itself — re-verify it first with a throwaway
-   * supabase.auth.signInWithPassword({ email, password: currentPassword })
-   * call, then call updateUser({ password: newPassword }) once that succeeds.
+   * current password before setting a new one. Supabase's updateUser()
+   * doesn't check the current password itself, so this re-verifies it with
+   * a throwaway signInWithPassword call first.
    */
   changePassword: (currentPassword: string, newPassword: string) => Promise<ChangePasswordResult>
-  // TODO(Supabase): replace this mock with supabase.auth.signOut().
   signOut: () => void
 }
 
 const AdminAuthContext = createContext<AdminAuthContextValue | null>(null)
 
-function wait(ms: number) {
-  return new Promise((resolve) => window.setTimeout(resolve, ms))
-}
-
-function readStoredSession(): AdminSession | null {
-  try {
-    const raw = window.localStorage.getItem(SESSION_STORAGE_KEY)
-    if (!raw) return null
-    const parsed = JSON.parse(raw) as AdminSession
-    return parsed?.email ? parsed : null
-  } catch {
-    return null
-  }
+function toAdminSession(email: string | undefined): AdminSession | null {
+  return email ? { email } : null
 }
 
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<AdminSession | null>(null)
   const [initializing, setInitializing] = useState(true)
 
-  // TODO(Supabase): replace with supabase.auth.getSession() + onAuthStateChange
-  // to hydrate/subscribe to the real session instead of reading localStorage.
   useEffect(() => {
-    setSession(readStoredSession())
-    setInitializing(false)
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(toAdminSession(data.session?.user.email))
+      setInitializing(false)
+    })
+
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(toAdminSession(nextSession?.user.email))
+    })
+
+    return () => subscription.subscription.unsubscribe()
   }, [])
 
-  const persistSession = useCallback((next: AdminSession | null) => {
-    setSession(next)
-    if (next) {
-      window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(next))
-    } else {
-      window.localStorage.removeItem(SESSION_STORAGE_KEY)
+  const signInWithPassword = useCallback(async (email: string, password: string): Promise<AuthResult> => {
+    if (!EMAIL_PATTERN.test(email.trim())) {
+      return { error: 'invalid-email' }
+    }
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
+      if (error) return { error: 'invalid-credentials' }
+      return { error: null }
+    } catch {
+      return { error: 'network-error' }
     }
   }, [])
-
-  const signInWithPassword = useCallback(
-    async (email: string, password: string): Promise<AuthResult> => {
-      if (!EMAIL_PATTERN.test(email.trim())) {
-        return { error: 'invalid-email' }
-      }
-
-      await wait(MOCK_LATENCY_MS)
-
-      if (email.trim().toLowerCase() === MOCK_NETWORK_ERROR_EMAIL) {
-        return { error: 'network-error' }
-      }
-
-      const isValid = email.trim().toLowerCase() === MOCK_ADMIN_EMAIL && password === MOCK_ADMIN_PASSWORD
-      if (!isValid) {
-        return { error: 'invalid-credentials' }
-      }
-
-      persistSession({ email: email.trim() })
-      return { error: null }
-    },
-    [persistSession],
-  )
 
   const resetPasswordForEmail = useCallback(async (email: string): Promise<AuthResult> => {
     if (!EMAIL_PATTERN.test(email.trim())) {
       return { error: 'invalid-email' }
     }
 
-    await wait(MOCK_LATENCY_MS)
-
-    if (email.trim().toLowerCase() === MOCK_NETWORK_ERROR_EMAIL) {
+    try {
+      // Deliberately ignore the result — never reveal whether the email is
+      // registered, Supabase itself returns success regardless.
+      await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}admin/nueva-contrasena`,
+      })
+      return { error: null }
+    } catch {
       return { error: 'network-error' }
     }
-
-    // Deliberately succeeds regardless of whether the email is registered —
-    // never reveal account existence through this endpoint.
-    return { error: null }
   }, [])
 
-  const updateUser = useCallback(async (_newPassword: string): Promise<AuthResult> => {
-    await wait(MOCK_LATENCY_MS)
-    return { error: null }
-  }, [])
-
-  const changePassword = useCallback(async (currentPassword: string, _newPassword: string): Promise<ChangePasswordResult> => {
-    await wait(MOCK_LATENCY_MS)
-    if (currentPassword !== MOCK_ADMIN_PASSWORD) {
-      return { error: 'wrong-current-password' }
+  const updateUser = useCallback(async (newPassword: string): Promise<AuthResult> => {
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword })
+      if (error) return { error: 'network-error' }
+      return { error: null }
+    } catch {
+      return { error: 'network-error' }
     }
-    return { error: null }
   }, [])
+
+  const changePassword = useCallback(
+    async (currentPassword: string, newPassword: string): Promise<ChangePasswordResult> => {
+      if (!session) return { error: 'wrong-current-password' }
+
+      const { error: verifyError } = await supabase.auth.signInWithPassword({
+        email: session.email,
+        password: currentPassword,
+      })
+      if (verifyError) return { error: 'wrong-current-password' }
+
+      await supabase.auth.updateUser({ password: newPassword })
+      return { error: null }
+    },
+    [session],
+  )
 
   const signOut = useCallback(() => {
-    persistSession(null)
-  }, [persistSession])
+    supabase.auth.signOut()
+  }, [])
 
   const value = useMemo<AdminAuthContextValue>(
     () => ({ session, initializing, signInWithPassword, resetPasswordForEmail, updateUser, changePassword, signOut }),
