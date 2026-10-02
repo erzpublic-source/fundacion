@@ -471,6 +471,7 @@
 
 .reservation-drawer__note {
   margin: 0;
+  padding: 16px 24px;
   font-size: 12px;
   line-height: 18px;
   color: #9b93a3;
