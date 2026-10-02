@@ -82,18 +82,30 @@ function formatTimeOnly(time: string | null): string {
 }
 
 function toDrawerEvent(event: AdminEvent, status: EventStatus): ReservationDrawerEvent {
+  // "Próximamente" means the event is only announced — tickets/registration
+  // haven't actually launched yet, regardless of what requiresRegistration
+  // says, so the drawer must never open a purchase form for it (that's
+  // reserved for 'publicado'/'cupos_agotados').
+  const registrationOpen = event.requiresRegistration && status !== 'proximamente'
+
+  let infoNote = 'Este es un evento abierto para el público general: no necesitas registrarte ni reservar cupo, ¡solo preséntate!'
+  if (status === 'proximamente') {
+    infoNote = 'Este evento todavía no abre registro ni venta de entradas — vuelve pronto o síguenos para enterarte en cuanto esté disponible.'
+  }
+
   return {
     eventId: event.id,
     images: event.imageUrl ? [event.imageUrl] : [],
     title: event.title,
-    statusLabel: status === 'cupos_agotados' ? 'Cupos agotados' : 'Cupos disponibles',
-    statusTone: status === 'cupos_agotados' ? 'warning' : 'success',
+    statusLabel: status === 'proximamente' ? 'Próximamente' : status === 'cupos_agotados' ? 'Cupos agotados' : 'Cupos disponibles',
+    statusTone: status === 'publicado' ? 'success' : 'warning',
     dateTime: `${formatDateOnly(event.date)} — ${formatTimeOnly(event.time)}`,
     place: event.place,
     capacityNote: event.requiresRegistration ? `Aforo máximo ${event.capacity} personas.` : 'Evento abierto, aforo libre.',
     price: event.price ?? 0,
     description: event.description,
-    requiresRegistration: event.requiresRegistration,
+    requiresRegistration: registrationOpen,
+    infoNote,
   }
 }
 

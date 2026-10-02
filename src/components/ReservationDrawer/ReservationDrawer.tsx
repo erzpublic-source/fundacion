@@ -118,10 +118,16 @@ export interface ReservationDrawerEvent {
   capacityNote: string
   price: number
   description: string
-  /** False for a free, open event with no capacity to track — renders the
-   *  drawer as event info only, skipping the buyer/attendee/payment form
-   *  entirely since there's nothing to reserve. */
+  /**
+   * False whenever there's nothing to actually reserve right now — either a
+   * free, open event with no capacity to track, or an announced ("Próximamente")
+   * event whose registration/ticket sales haven't launched yet. Either way
+   * the drawer renders as event info only, skipping the buyer/attendee/
+   * payment form entirely, and shows `infoNote` instead.
+   */
   requiresRegistration: boolean
+  /** Shown in info-only mode, explaining why there's no form — tailored to which of the two cases above applies. */
+  infoNote: string
 }
 
 interface ReservationDrawerProps {
@@ -355,10 +361,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
               </p>
             </div>
 
-            <p className="reservation-drawer__note">
-              Este es un evento abierto para el público general: no necesitas registrarte ni reservar cupo, ¡solo
-              preséntate!
-            </p>
+            <p className="reservation-drawer__note">{event.infoNote}</p>
 
             <div className="reservation-drawer__footer">
               <button type="button" className="btn btn--primary reservation-drawer__submit" onClick={onClose}>
