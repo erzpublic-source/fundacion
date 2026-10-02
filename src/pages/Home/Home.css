@@ -198,7 +198,7 @@
 
 .esencia__row p {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
   color: #6b7280;
 }
@@ -251,7 +251,7 @@
   align-self: flex-start;
   padding: 4px 12px;
   border-radius: var(--radius-full);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: var(--font-weight-bold);
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -266,7 +266,7 @@
 
 .impacto__text {
   margin: 0;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 20px;
   color: #6b7280;
 }
@@ -277,7 +277,7 @@
   gap: 4px;
   color: var(--color-azul-confianza);
   font-weight: var(--font-weight-bold);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 /* ---------- Donaciones ---------- */
@@ -316,7 +316,7 @@
 
 .donaciones__text {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
   color: #6b7280;
 }
@@ -357,7 +357,7 @@
 
 .sponsors__logo {
   font-weight: var(--font-weight-bold);
-  font-size: 16px;
+  font-size: 18px;
   color: #c4c9d4;
 }
 
@@ -479,7 +479,7 @@
   }
 
   .esencia__row p {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 27px;
   }
 

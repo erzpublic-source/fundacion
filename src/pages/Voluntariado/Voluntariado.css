@@ -91,7 +91,7 @@
   margin: 0;
   max-width: 680px;
   color: #6b7280;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
 }
 
@@ -132,7 +132,7 @@
 
 .voluntariado-role-card p {
   margin: 0;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 20px;
   color: #6b7280;
 }
@@ -150,7 +150,7 @@
   margin: 0;
   max-width: 620px;
   color: #6b7280;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
 }
 
@@ -181,7 +181,7 @@
 }
 
 .voluntariado-field label {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: var(--font-weight-semibold);
   color: #221920;
 }
@@ -214,7 +214,7 @@
   background: none;
   outline: none;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
   color: #221920;
 }
 
@@ -224,13 +224,13 @@
 
 .voluntariado-field__hint {
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   color: #6b7280;
 }
 
 .voluntariado-field__error {
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: var(--font-weight-semibold);
   color: #e0455a;
 }
@@ -269,7 +269,7 @@
   border-radius: var(--radius-sm);
   background: none;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
   text-align: left;
   color: #221920;
   cursor: pointer;
@@ -296,7 +296,7 @@
   background: none;
   padding: 0;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
   text-align: left;
   color: #9b93a3;
   cursor: pointer;
@@ -308,7 +308,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: 16px;
   color: #221920;
 }
 
@@ -358,7 +358,7 @@
 
 .voluntariado-field__file-status {
   flex-shrink: 0;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: var(--font-weight-semibold);
   color: var(--color-violeta-esperanza);
 }
@@ -378,7 +378,7 @@
 }
 
 .voluntariado-checkbox label {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 18px;
   color: #6b7280;
 }
@@ -401,7 +401,7 @@
 
 .voluntariado-form__footnote {
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 18px;
   color: #9b93a3;
   text-align: center;
@@ -449,7 +449,7 @@
   border-radius: 50%;
   background: #f5eff7;
   color: #6b7280;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1;
   cursor: pointer;
 }
@@ -463,7 +463,7 @@
 
 .form-alert p {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
   color: #6b7280;
 }

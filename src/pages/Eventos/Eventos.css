@@ -107,7 +107,7 @@
   border-radius: var(--radius-full);
   background: var(--color-amarillo-impulso);
   color: #201a1e;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -123,7 +123,7 @@
 
 .eventos-featured__text {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
   color: #6b7280;
 }
@@ -141,7 +141,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: var(--font-weight-semibold);
   color: #4a454f;
 }
@@ -171,7 +171,7 @@
 .eventos-actuales__lead {
   margin: 0;
   color: #6b7280;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
 }
 
@@ -213,7 +213,7 @@
   display: inline-flex;
   padding: 4px 12px;
   border-radius: var(--radius-full);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -248,7 +248,7 @@
 
 .evento-actual__body p {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
   color: #6b7280;
 }
@@ -261,7 +261,7 @@
   margin-top: 4px;
   height: 42px;
   padding: 0 20px;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 /* ---------- Upcoming events ---------- */
@@ -276,7 +276,7 @@
 .eventos-upcoming__lead {
   margin: 0;
   color: #6b7280;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
 }
 
@@ -323,14 +323,14 @@
 }
 
 .evento-item__weekday {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: var(--font-weight-bold);
   letter-spacing: 1px;
   color: var(--color-violeta-esperanza);
 }
 
 .evento-item__day {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: var(--font-weight-bold);
   line-height: 1;
   color: #221920;
@@ -341,7 +341,7 @@
   align-items: center;
   gap: 6px;
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: var(--font-weight-semibold);
   color: #6b7280;
 }
@@ -390,7 +390,7 @@
 
 .evento-item__place {
   margin: 0;
-  font-size: 13px;
+  font-size: 15px;
   color: #4a454f;
 }
 
@@ -400,7 +400,7 @@
 
 .evento-item__text {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
   color: #6b7280;
 }
@@ -497,7 +497,7 @@
 
   .evento-actual__meta dt {
     margin: 0;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: var(--font-weight-bold);
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -506,7 +506,7 @@
 
   .evento-actual__meta dd {
     margin: 0;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: var(--font-weight-semibold);
     color: #221920;
   }

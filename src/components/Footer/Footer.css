@@ -20,7 +20,7 @@
 .footer__brand p {
   margin: 12px 0 0;
   color: #9ca3af;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 20px;
 }
 
@@ -42,7 +42,7 @@
 .footer__col a,
 .footer__link-btn {
   color: #9ca3af;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .footer__col a:hover,
@@ -106,7 +106,7 @@
 .footer__bottom p {
   margin: 0;
   color: #6b7280;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 @media (min-width: 900px) {
