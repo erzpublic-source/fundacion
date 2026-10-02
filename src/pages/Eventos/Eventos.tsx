@@ -98,7 +98,7 @@ function toDrawerEvent(event: AdminEvent, status: EventStatus): ReservationDrawe
 }
 
 export default function Eventos() {
-  const { events } = useAdminEvents()
+  const { events, pendingDeleteIds } = useAdminEvents()
   const [drawerEvent, setDrawerEvent] = useState<ReservationDrawerEvent | null>(null)
 
   // Mirrors the admin's own getEventStatus precedence — a borrador never
@@ -106,20 +106,24 @@ export default function Eventos() {
   // "próximamente" split the rest of the published events the same way the
   // admin's status filter does.
   const { featured, programados, proximamente } = useMemo(() => {
-    const withStatus = events.map((event) => ({ event, status: getEventStatus(event) }))
+    const withStatus = events
+      .filter((event) => !pendingDeleteIds.includes(event.id))
+      .map((event) => ({ event, status: getEventStatus(event) }))
 
     const featuredEvent = withStatus.find(({ event, status }) => event.featured && status !== 'borrador')?.event ?? null
 
+    // The featured event already gets its own "Evento destacado" section —
+    // exclude it here so it doesn't also show up in "Programados"/"Próximamente".
     const programadosList = withStatus
-      .filter(({ status }) => status === 'publicado' || status === 'cupos_agotados')
+      .filter(({ event, status }) => event.id !== featuredEvent?.id && (status === 'publicado' || status === 'cupos_agotados'))
       .sort((a, b) => (a.event.date ?? '').localeCompare(b.event.date ?? ''))
 
     const proximamenteList = withStatus
-      .filter(({ status }) => status === 'proximamente')
+      .filter(({ event, status }) => event.id !== featuredEvent?.id && status === 'proximamente')
       .sort((a, b) => (a.event.date ?? '9999-99-99').localeCompare(b.event.date ?? '9999-99-99'))
 
     return { featured: featuredEvent, programados: programadosList, proximamente: proximamenteList }
-  }, [events])
+  }, [events, pendingDeleteIds])
 
   return (
     <>

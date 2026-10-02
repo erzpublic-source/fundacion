@@ -26,15 +26,15 @@ interface AdminEventsContextValue {
    */
   setFeatured: (id: string, featured: boolean) => Promise<void>
   /**
-   * Marks an event as deleted right away (optimistic — hidden from any
-   * visible list via pendingDeleteIds) without yet deleting it from
-   * Supabase, so a "Deshacer" toast can restore it within its grace window.
-   * The real delete happens in finalizeDelete, once that window closes.
+   * Deletes the event from Supabase immediately (its discount_codes and
+   * reservations go with it, via cascade) and hides it from any visible
+   * list via pendingDeleteIds so a "Deshacer" toast can still offer to
+   * restore it within its grace window.
    */
   deleteEvent: (id: string) => Promise<void>
-  /** Reverts a pending deletion — used by the "Deshacer" toast window. */
+  /** Re-inserts a deleted event (and its discount codes) — used by the "Deshacer" toast window. Can't bring back its reservations, already gone via cascade. */
   undoDelete: (id: string) => void
-  /** Seals a pending deletion for good — called when the toast's window expires or the page unmounts before it does. */
+  /** Seals a pending deletion for good once the toast's window expires or the page unmounts before it does — clears local bookkeeping and the event's Storage image. */
   finalizeDelete: (id: string) => void
   uploadEventImage: (file: File) => Promise<string>
 }
@@ -252,23 +252,56 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
   const deleteEvent = useCallback(async (id: string) => {
     setDeleting(id)
     setPendingDeleteIds((prev) => (prev.includes(id) ? prev : [...prev, id]))
-    setDeleting(null)
+    try {
+      // Deletes for real right away rather than waiting for the "Deshacer"
+      // window to close — deferring it meant closing the tab or navigating
+      // away before that window elapsed left the row alive in Supabase
+      // (so it kept showing on the public site) even though the admin UI
+      // already looked like it was gone. undoDelete now re-inserts the row
+      // instead of just un-hiding it.
+      const { error } = await supabase.from('events').delete().eq('id', id)
+      if (error) throw error
+    } catch (error) {
+      setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
+      throw error
+    } finally {
+      setDeleting(null)
+    }
   }, [])
 
-  const undoDelete = useCallback((id: string) => {
-    setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
-  }, [])
+  const undoDelete = useCallback(
+    async (id: string) => {
+      const event = events.find((e) => e.id === id)
+      setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
+      if (!event) return
+
+      const { error } = await supabase.from('events').insert({ id, ...toEventRow(event) })
+      if (error) {
+        console.error(error)
+        return
+      }
+      if (event.discountCodes.length > 0) {
+        await supabase.from('discount_codes').insert(
+          event.discountCodes.map((code) => ({
+            id: code.id,
+            event_id: id,
+            code: code.code,
+            kind: code.kind,
+            value: code.value,
+            max_uses: code.maxUses,
+            used_count: code.usedCount,
+          })),
+        )
+      }
+    },
+    [events],
+  )
 
   const finalizeDelete = useCallback(
     (id: string) => {
       const imageUrl = events.find((e) => e.id === id)?.imageUrl
       setEvents((prev) => prev.filter((e) => e.id !== id))
       setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
-      // Fire-and-forget: the row (and its discount_codes/reservations, via
-      // cascade) is gone from the UI already; if this fails the row simply
-      // reappears on the next refresh, which is an acceptable edge case for
-      // an admin-only delete.
-      void supabase.from('events').delete().eq('id', id)
       const imagePath = storagePathFromPublicUrl(imageUrl)
       if (imagePath) void supabase.storage.from('event-images').remove([imagePath])
     },
