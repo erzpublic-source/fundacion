@@ -78,7 +78,7 @@ export default function EventForm() {
   const { id } = useParams<{ id: string }>()
   const isEditing = Boolean(id)
   const navigate = useNavigate()
-  const { getEvent, createEvent, updateEvent, uploadEventImage, saving } = useAdminEvents()
+  const { getEvent, createEvent, updateEvent, uploadEventImage, saving, loading } = useAdminEvents()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const existing = useMemo(() => (id ? getEvent(id) : undefined), [id, getEvent])
@@ -119,7 +119,7 @@ export default function EventForm() {
   const capacityLocked = configLocked || (kind === 'gratis' && sinRegistro)
 
   useEffect(() => {
-    if (!isEditing) return
+    if (!isEditing || loading) return
     if (!existing) {
       setNotFound(true)
       return
@@ -138,7 +138,7 @@ export default function EventForm() {
     setSalesPaused(existing.salesPaused)
     setSinRegistro(!existing.requiresRegistration)
     setDiscountCodes(existing.discountCodes)
-  }, [isEditing, existing])
+  }, [isEditing, existing, loading])
 
   function handlePriceChange(event: ChangeEvent<HTMLInputElement>) {
     setPrice(event.target.value.replace(/\D/g, ''))
@@ -222,6 +222,14 @@ export default function EventForm() {
     }
 
     navigate('/admin/eventos')
+  }
+
+  if (isEditing && loading) {
+    return (
+      <AdminLayout>
+        <p>Cargando evento...</p>
+      </AdminLayout>
+    )
   }
 
   if (notFound) {

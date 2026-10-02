@@ -108,10 +108,6 @@ type TabValue = 'todas' | ReservationStatus
 
 type ConfirmAction = { type: 'approve' | 'reject'; reservation: Reservation }
 
-// TODO(Supabase): swap the whole reservations mock (AdminReservationsContext
-// + mockReservationsSeed) for `select`/`update` calls against a real
-// `reservations` table once Supabase is connected — nothing in this
-// component's own logic should need to change, only the context's guts.
 export default function EventoReservas() {
   const { id } = useParams<{ id: string }>()
   const { getEvent } = useAdminEvents()
@@ -121,7 +117,7 @@ export default function EventoReservas() {
     useAdminReservations()
 
   useEffect(() => {
-    if (id) ensureSeeded(id, event?.price ?? 0)
+    if (id) ensureSeeded(id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 

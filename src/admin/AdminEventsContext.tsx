@@ -1,127 +1,239 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { AdminEvent } from './adminEventsTypes'
-import { createSeedEvents } from './mockEventsSeed'
-
-// TODO(Supabase): this cap exists ONLY because the mock store keeps
-// everything in memory for this in-browser demo. Drop it entirely once
-// `events` is a real Supabase table — a production table has no row limit,
-// and the "evict the oldest" behavior below must not be ported over.
-const MAX_MOCK_EVENTS = 50
-
-const MOCK_LATENCY_MS = 700
+import { supabase } from '../lib/supabaseClient'
+import type { AdminEvent, DiscountCode } from './adminEventsTypes'
 
 export type EventInput = Omit<AdminEvent, 'id' | 'createdAt' | 'reservedCount'>
 
 interface AdminEventsContextValue {
   events: AdminEvent[]
+  /** True until the first fetch from Supabase resolves. */
+  loading: boolean
   saving: boolean
   deleting: string | null
   featuring: string | null
   /** Ids currently in their "Deshacer" grace window — hide these from any visible list. */
   pendingDeleteIds: string[]
   getEvent: (id: string) => AdminEvent | undefined
-  // TODO(Supabase): replace with `supabase.from('events').insert(...)`.
   createEvent: (input: EventInput) => Promise<AdminEvent>
-  // TODO(Supabase): replace with `supabase.from('events').update(...).eq('id', id)`.
   updateEvent: (id: string, input: EventInput) => Promise<AdminEvent | null>
-  // TODO(Supabase): replace with `supabase.from('events').update({ published }).eq('id', id)`.
   setPublished: (id: string, published: boolean) => Promise<void>
   /**
    * Sets or clears the featured flag on one event, unsetting any other
-   * currently-featured event in the same call so at most one stays featured.
-   * TODO(Supabase): in production this becomes two updates inside a single
-   * transaction/RPC (clear the old featured row, set the new one), backed by
-   * a partial unique index `UNIQUE (featured) WHERE featured` as a safety net.
+   * currently-featured event first so at most one stays featured — backed
+   * by a partial unique index (`UNIQUE (featured) WHERE featured`) on the
+   * `events` table as a safety net against a race between two admins.
    */
   setFeatured: (id: string, featured: boolean) => Promise<void>
   /**
    * Marks an event as deleted right away (optimistic — hidden from any
-   * visible list via pendingDeleteIds) without yet removing it from the
-   * store, so a "Deshacer" toast can restore it within its grace window.
-   * TODO(Supabase): replace with `supabase.from('events').delete().eq('id', id)`,
-   * called from `finalizeDelete` once the window closes — not from here.
+   * visible list via pendingDeleteIds) without yet deleting it from
+   * Supabase, so a "Deshacer" toast can restore it within its grace window.
+   * The real delete happens in finalizeDelete, once that window closes.
    */
   deleteEvent: (id: string) => Promise<void>
   /** Reverts a pending deletion — used by the "Deshacer" toast window. */
   undoDelete: (id: string) => void
   /** Seals a pending deletion for good — called when the toast's window expires or the page unmounts before it does. */
   finalizeDelete: (id: string) => void
-  // TODO(Supabase): replace with an upload to Storage (bucket "event-images")
-  // followed by `getPublicUrl`; this mock just returns a local object URL.
   uploadEventImage: (file: File) => Promise<string>
 }
 
 const AdminEventsContext = createContext<AdminEventsContextValue | null>(null)
 
-function wait(ms: number) {
-  return new Promise((resolve) => window.setTimeout(resolve, ms))
+interface EventRow {
+  id: string
+  title: string
+  description: string
+  event_date: string | null
+  event_time: string | null
+  place: string
+  image_url: string | null
+  kind: AdminEvent['kind']
+  price: number | null
+  capacity: number
+  published: boolean
+  featured: boolean
+  is_announcement: boolean
+  sales_paused: boolean
+  requires_registration: boolean
+  created_at: string
+  discount_codes: DiscountCodeRow[] | null
 }
 
-function makeId(): string {
-  return `evt-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
+interface DiscountCodeRow {
+  id: string
+  code: string
+  kind: DiscountCode['kind']
+  value: number
+  max_uses: number
+  used_count: number
+}
+
+function toDiscountCode(row: DiscountCodeRow): DiscountCode {
+  return { id: row.id, code: row.code, kind: row.kind, value: row.value, maxUses: row.max_uses, usedCount: row.used_count }
+}
+
+function toAdminEvent(row: EventRow, reservedCount: number): AdminEvent {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    date: row.event_date,
+    time: row.event_time ? row.event_time.slice(0, 5) : null,
+    place: row.place,
+    imageUrl: row.image_url,
+    kind: row.kind,
+    price: row.price,
+    capacity: row.capacity,
+    reservedCount,
+    published: row.published,
+    featured: row.featured,
+    isAnnouncement: row.is_announcement,
+    salesPaused: row.sales_paused,
+    requiresRegistration: row.requires_registration,
+    discountCodes: (row.discount_codes ?? []).map(toDiscountCode),
+    createdAt: new Date(row.created_at).getTime(),
+  }
+}
+
+function toEventRow(input: EventInput) {
+  return {
+    title: input.title,
+    description: input.description,
+    event_date: input.date,
+    event_time: input.time,
+    place: input.place,
+    image_url: input.imageUrl,
+    kind: input.kind,
+    price: input.price,
+    capacity: input.capacity,
+    published: input.published,
+    featured: input.featured,
+    is_announcement: input.isAnnouncement,
+    sales_paused: input.salesPaused,
+    requires_registration: input.requiresRegistration,
+  }
+}
+
+async function fetchEvents(): Promise<AdminEvent[]> {
+  const [eventsResult, reservationsResult] = await Promise.all([
+    supabase.from('events').select('*, discount_codes(*)').order('created_at', { ascending: false }),
+    supabase.from('reservations').select('event_id').neq('status', 'rechazado'),
+  ])
+
+  if (eventsResult.error) throw eventsResult.error
+  if (reservationsResult.error) throw reservationsResult.error
+
+  const reservedCounts = new Map<string, number>()
+  for (const row of reservationsResult.data ?? []) {
+    reservedCounts.set(row.event_id, (reservedCounts.get(row.event_id) ?? 0) + 1)
+  }
+
+  return (eventsResult.data as EventRow[]).map((row) => toAdminEvent(row, reservedCounts.get(row.id) ?? 0))
+}
+
+async function replaceDiscountCodes(eventId: string, codes: DiscountCode[]) {
+  const { error: deleteError } = await supabase.from('discount_codes').delete().eq('event_id', eventId)
+  if (deleteError) throw deleteError
+  if (codes.length === 0) return
+
+  const { error: insertError } = await supabase.from('discount_codes').insert(
+    codes.map((code) => ({
+      event_id: eventId,
+      code: code.code,
+      kind: code.kind,
+      value: code.value,
+      max_uses: code.maxUses,
+      used_count: code.usedCount,
+    })),
+  )
+  if (insertError) throw insertError
 }
 
 export function AdminEventsProvider({ children }: { children: ReactNode }) {
-  const [events, setEvents] = useState<AdminEvent[]>(() => createSeedEvents())
+  const [events, setEvents] = useState<AdminEvent[]>([])
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [featuring, setFeaturing] = useState<string | null>(null)
   const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([])
 
+  useEffect(() => {
+    let cancelled = false
+    fetchEvents()
+      .then((next) => {
+        if (!cancelled) setEvents(next)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   const getEvent = useCallback((id: string) => events.find((e) => e.id === id), [events])
 
   const createEvent = useCallback(async (input: EventInput): Promise<AdminEvent> => {
     setSaving(true)
-    await wait(MOCK_LATENCY_MS)
+    try {
+      const { data, error } = await supabase.from('events').insert(toEventRow(input)).select().single()
+      if (error) throw error
 
-    const newEvent: AdminEvent = { ...input, id: makeId(), reservedCount: 0, createdAt: Date.now() }
+      if (input.discountCodes.length > 0) {
+        await replaceDiscountCodes(data.id, input.discountCodes)
+      }
 
-    setEvents((prev) => {
-      // FIFO eviction — see the TODO(Supabase) above MAX_MOCK_EVENTS.
-      const withNew = [...prev, newEvent]
-      if (withNew.length <= MAX_MOCK_EVENTS) return withNew
-      const oldestFirst = [...withNew].sort((a, b) => a.createdAt - b.createdAt)
-      const toDrop = new Set(oldestFirst.slice(0, withNew.length - MAX_MOCK_EVENTS).map((e) => e.id))
-      return withNew.filter((e) => !toDrop.has(e.id))
-    })
-
-    setSaving(false)
-    return newEvent
+      const newEvent: AdminEvent = { ...input, id: data.id, reservedCount: 0, createdAt: new Date(data.created_at).getTime() }
+      setEvents((prev) => [newEvent, ...prev])
+      return newEvent
+    } finally {
+      setSaving(false)
+    }
   }, [])
 
   const updateEvent = useCallback(async (id: string, input: EventInput): Promise<AdminEvent | null> => {
     setSaving(true)
-    await wait(MOCK_LATENCY_MS)
+    try {
+      const { data, error } = await supabase.from('events').update(toEventRow(input)).eq('id', id).select().single()
+      if (error) throw error
 
-    let updated: AdminEvent | null = null
-    setEvents((prev) =>
-      prev.map((e) => {
-        if (e.id !== id) return e
-        updated = { ...e, ...input }
-        return updated
-      }),
-    )
+      await replaceDiscountCodes(id, input.discountCodes)
 
-    setSaving(false)
-    return updated
-  }, [])
+      const existing = events.find((e) => e.id === id)
+      const updated: AdminEvent = { ...input, id, reservedCount: existing?.reservedCount ?? 0, createdAt: new Date(data.created_at).getTime() }
+      setEvents((prev) => prev.map((e) => (e.id === id ? updated : e)))
+      return updated
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    } finally {
+      setSaving(false)
+    }
+  }, [events])
 
   const setPublished = useCallback(async (id: string, published: boolean) => {
-    await wait(300)
+    const { error } = await supabase.from('events').update({ published }).eq('id', id)
+    if (error) throw error
     setEvents((prev) => prev.map((e) => (e.id === id ? { ...e, published } : e)))
   }, [])
 
   const setFeatured = useCallback(async (id: string, featured: boolean) => {
     setFeaturing(id)
-    await wait(MOCK_LATENCY_MS)
-    setEvents((prev) => prev.map((e) => ({ ...e, featured: e.id === id ? featured : featured ? false : e.featured })))
-    setFeaturing(null)
+    try {
+      if (featured) {
+        const { error: clearError } = await supabase.from('events').update({ featured: false }).eq('featured', true)
+        if (clearError) throw clearError
+      }
+      const { error } = await supabase.from('events').update({ featured }).eq('id', id)
+      if (error) throw error
+      setEvents((prev) => prev.map((e) => ({ ...e, featured: e.id === id ? featured : featured ? false : e.featured })))
+    } finally {
+      setFeaturing(null)
+    }
   }, [])
 
   const deleteEvent = useCallback(async (id: string) => {
     setDeleting(id)
-    await wait(MOCK_LATENCY_MS)
     setPendingDeleteIds((prev) => (prev.includes(id) ? prev : [...prev, id]))
     setDeleting(null)
   }, [])
@@ -133,16 +245,25 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
   const finalizeDelete = useCallback((id: string) => {
     setEvents((prev) => prev.filter((e) => e.id !== id))
     setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
+    // Fire-and-forget: the row (and its discount_codes/reservations, via
+    // cascade) is gone from the UI already; if this fails the row simply
+    // reappears on the next refresh, which is an acceptable edge case for
+    // an admin-only delete.
+    void supabase.from('events').delete().eq('id', id)
   }, [])
 
   const uploadEventImage = useCallback(async (file: File): Promise<string> => {
-    await wait(900)
-    return URL.createObjectURL(file)
+    const path = `${Date.now()}-${file.name}`
+    const { error } = await supabase.storage.from('event-images').upload(path, file)
+    if (error) throw error
+    const { data } = supabase.storage.from('event-images').getPublicUrl(path)
+    return data.publicUrl
   }, [])
 
   const value = useMemo<AdminEventsContextValue>(
     () => ({
       events,
+      loading,
       saving,
       deleting,
       featuring,
@@ -159,6 +280,7 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
     }),
     [
       events,
+      loading,
       saving,
       deleting,
       featuring,
