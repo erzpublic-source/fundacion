@@ -107,9 +107,10 @@ export default function EventForm() {
 
   // "Configuración de entradas" (and, when applicable, "Códigos de
   // descuento") stays locked/disabled until the event is actually
-  // published. "Evento próximo" alone does NOT unlock it — it's just an
-  // announcement, and an announcement doesn't talk about pricing yet.
-  const configLocked = !published
+  // published AND no longer a mere announcement — "Evento próximo" alone
+  // doesn't talk about pricing yet, so it must keep this locked even once
+  // the event is published.
+  const configLocked = !published || isAnnouncement
   // "Pausar ventas" only makes sense on an event that's actually live and
   // sellable: published, and not merely an announcement.
   const pausarVentasLocked = !published || isAnnouncement
