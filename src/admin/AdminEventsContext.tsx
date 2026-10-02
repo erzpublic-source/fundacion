@@ -173,15 +173,39 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false
-    fetchEvents()
-      .then((next) => {
-        if (!cancelled) setEvents(next)
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
+
+    function load(markLoading: boolean) {
+      if (markLoading) setLoading(true)
+      fetchEvents()
+        .then((next) => {
+          if (!cancelled) setEvents(next)
+        })
+        .finally(() => {
+          if (!cancelled && markLoading) setLoading(false)
+        })
+    }
+
+    load(true)
+
+    // The browser's back/forward cache can restore this page from a frozen
+    // snapshot (no JS re-runs, so the one-time fetch above never happens
+    // again) after navigating away and back — e.g. right after editing an
+    // event, its new title/image wouldn't show up until a real reload.
+    // Refetch whenever that happens, or whenever the tab regains focus
+    // after being hidden, so the list can't go stale silently.
+    function handlePageShow(event: PageTransitionEvent) {
+      if (event.persisted) load(false)
+    }
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'visible') load(false)
+    }
+    window.addEventListener('pageshow', handlePageShow)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     return () => {
       cancelled = true
+      window.removeEventListener('pageshow', handlePageShow)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [])
 
