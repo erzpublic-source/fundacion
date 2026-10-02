@@ -195,6 +195,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   background: rgba(34, 25, 32, 0.5);
   color: #fff;
   font-size: 13px;
@@ -204,6 +205,34 @@
 
 .event-form__file-input {
   display: none;
+}
+
+/* ---------- Image upload spinner ---------- */
+.event-form__spinner {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(103, 81, 141, 0.25);
+  border-top-color: var(--color-violeta-esperanza);
+  animation: event-form-spin 0.7s linear infinite;
+}
+
+.event-form__dropzone-overlay .event-form__spinner {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+}
+
+@keyframes event-form-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-form__spinner {
+    animation: none;
+  }
 }
 
 /* ---------- Segmented control ---------- */

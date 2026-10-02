@@ -272,12 +272,17 @@ export default function EventForm() {
                 />
                 {!imageUrl && (
                   <span className="event-form__dropzone-content">
-                    <UploadIcon />
+                    {uploadingImage ? <span className="event-form__spinner" aria-hidden="true" /> : <UploadIcon />}
                     <strong>{uploadingImage ? 'Subiendo imagen...' : 'Subir imagen principal'}</strong>
                     <span>Formatos recomendados: JPG, PNG (16:9, máx. 5MB)</span>
                   </span>
                 )}
-                {imageUrl && uploadingImage && <span className="event-form__dropzone-overlay">Subiendo...</span>}
+                {imageUrl && uploadingImage && (
+                  <span className="event-form__dropzone-overlay">
+                    <span className="event-form__spinner" aria-hidden="true" />
+                    Subiendo...
+                  </span>
+                )}
               </button>
 
               <div className="admin-field">
