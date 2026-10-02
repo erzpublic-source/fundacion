@@ -116,6 +116,18 @@ function toEventRow(input: EventInput) {
   }
 }
 
+// Supabase public Storage URLs look like
+// `.../storage/v1/object/public/event-images/<path>` — extract <path> so it
+// can be passed back to storage.remove(). Returns null for anything that
+// isn't one of our own event-images URLs (no image, or an old mock
+// `blob:`/object URL from before this migration).
+function storagePathFromPublicUrl(url: string | null | undefined): string | null {
+  if (!url) return null
+  const marker = '/object/public/event-images/'
+  const index = url.indexOf(marker)
+  return index === -1 ? null : url.slice(index + marker.length)
+}
+
 async function fetchEvents(): Promise<AdminEvent[]> {
   const [eventsResult, reservationsResult] = await Promise.all([
     supabase.from('events').select('*, discount_codes(*)').order('created_at', { ascending: false }),
@@ -242,15 +254,21 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
     setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
   }, [])
 
-  const finalizeDelete = useCallback((id: string) => {
-    setEvents((prev) => prev.filter((e) => e.id !== id))
-    setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
-    // Fire-and-forget: the row (and its discount_codes/reservations, via
-    // cascade) is gone from the UI already; if this fails the row simply
-    // reappears on the next refresh, which is an acceptable edge case for
-    // an admin-only delete.
-    void supabase.from('events').delete().eq('id', id)
-  }, [])
+  const finalizeDelete = useCallback(
+    (id: string) => {
+      const imageUrl = events.find((e) => e.id === id)?.imageUrl
+      setEvents((prev) => prev.filter((e) => e.id !== id))
+      setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
+      // Fire-and-forget: the row (and its discount_codes/reservations, via
+      // cascade) is gone from the UI already; if this fails the row simply
+      // reappears on the next refresh, which is an acceptable edge case for
+      // an admin-only delete.
+      void supabase.from('events').delete().eq('id', id)
+      const imagePath = storagePathFromPublicUrl(imageUrl)
+      if (imagePath) void supabase.storage.from('event-images').remove([imagePath])
+    },
+    [events],
+  )
 
   const uploadEventImage = useCallback(async (file: File): Promise<string> => {
     const path = `${Date.now()}-${file.name}`
