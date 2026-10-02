@@ -214,6 +214,11 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
       await replaceDiscountCodes(id, input.discountCodes)
 
       const existing = events.find((e) => e.id === id)
+      if (existing && existing.imageUrl && existing.imageUrl !== input.imageUrl) {
+        const oldImagePath = storagePathFromPublicUrl(existing.imageUrl)
+        if (oldImagePath) void supabase.storage.from('event-images').remove([oldImagePath])
+      }
+
       const updated: AdminEvent = { ...input, id, reservedCount: existing?.reservedCount ?? 0, createdAt: new Date(data.created_at).getTime() }
       setEvents((prev) => prev.map((e) => (e.id === id ? updated : e)))
       return updated
