@@ -196,6 +196,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
   const [receiptPreview, setReceiptPreview] = useState<string | null>(null)
   const [receiptError, setReceiptError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const mouseDownOnBackdropRef = useRef(false)
 
   const [submitting, setSubmitting] = useState(false)
   const [reservationCode, setReservationCode] = useState('')
@@ -347,14 +348,24 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
   }
 
   return (
-    <div className="reservation-drawer-backdrop" onClick={onClose}>
-      <aside
-        className="reservation-drawer"
-        role="dialog"
-        aria-modal="true"
-        aria-label={event.title}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div
+      className="reservation-drawer-backdrop"
+      onMouseDown={(e) => {
+        mouseDownOnBackdropRef.current = e.target === e.currentTarget
+      }}
+      onClick={(e) => {
+        // Closing on a plain click on the backdrop is correct, but relying
+        // on that alone also closes the drawer when selecting text (e.g. to
+        // copy it) with a drag that starts inside the panel and ends — on
+        // mouseup — over the backdrop: the browser still fires a single
+        // 'click' there, whose target becomes this backdrop once the drag's
+        // start and end points don't share a more specific common ancestor.
+        // Requiring the mousedown to *also* have started on the backdrop
+        // itself rules that out without giving up click-outside-to-close.
+        if (mouseDownOnBackdropRef.current && e.target === e.currentTarget) onClose()
+      }}
+    >
+      <aside role="dialog" aria-modal="true" aria-label={event.title} className="reservation-drawer">
         <button type="button" className="reservation-drawer__close" onClick={onClose} aria-label="Cerrar">
           <CloseIcon />
         </button>
