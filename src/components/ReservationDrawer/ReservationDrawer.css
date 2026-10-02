@@ -230,6 +230,17 @@
   outline: none;
 }
 
+.reservation-drawer__field input[aria-invalid='true'] {
+  border-color: #e0455a;
+}
+
+.reservation-drawer__field-error {
+  margin: 0;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: #e0455a;
+}
+
 .reservation-drawer__field input:focus {
   border-color: var(--color-violeta-esperanza);
 }

@@ -18,6 +18,42 @@ const PAYMENT_ACCOUNTS = {
   breb: { label: 'Bre-B', account: '@undiamas.fundacion', holder: 'Fundación Un Día Más' },
 } as const
 
+const PHONE_PATTERN = /^\d{10}$/
+
+// Accidentally closing the drawer (backdrop click, Escape, the X button)
+// shouldn't force the buyer to retype their basic contact info if they
+// immediately reopen it — but this is still personal data, so it's kept in
+// memory only, never persisted to storage, and for a short window only:
+// DRAFT_TTL_MS after closing, it's dropped for good rather than lingering.
+const DRAFT_TTL_MS = 10_000
+
+interface ReservationDraft {
+  eventId: string
+  buyerName: string
+  buyerEmail: string
+  buyerPhone: string
+}
+
+let draftCache: ReservationDraft | null = null
+let draftTimer: number | undefined
+
+function stashDraft(draft: ReservationDraft) {
+  draftCache = draft
+  window.clearTimeout(draftTimer)
+  draftTimer = window.setTimeout(() => {
+    draftCache = null
+  }, DRAFT_TTL_MS)
+}
+
+/** Reads and immediately clears the cached draft — restoring it is a one-time thing. */
+function consumeDraft(eventId: string): ReservationDraft | null {
+  if (!draftCache || draftCache.eventId !== eventId) return null
+  const found = draftCache
+  draftCache = null
+  window.clearTimeout(draftTimer)
+  return found
+}
+
 type PaymentMethod = keyof typeof PAYMENT_ACCOUNTS
 
 function formatCOP(value: number): string {
@@ -140,10 +176,12 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
   const [activeImage, setActiveImage] = useState(0)
   const [descExpanded, setDescExpanded] = useState(false)
 
+  const [draft] = useState(() => consumeDraft(event.eventId))
   const [quantity, setQuantity] = useState(1)
-  const [buyerName, setBuyerName] = useState('')
-  const [buyerEmail, setBuyerEmail] = useState('')
-  const [buyerPhone, setBuyerPhone] = useState('')
+  const [buyerName, setBuyerName] = useState(draft?.buyerName ?? '')
+  const [buyerEmail, setBuyerEmail] = useState(draft?.buyerEmail ?? '')
+  const [buyerPhone, setBuyerPhone] = useState(draft?.buyerPhone ?? '')
+  const [phoneTouched, setPhoneTouched] = useState(false)
   const [attendeeNames, setAttendeeNames] = useState<string[]>([])
 
   const [discountInput, setDiscountInput] = useState('')
@@ -181,6 +219,23 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
       if (receiptPreview) URL.revokeObjectURL(receiptPreview)
     }
   }, [receiptPreview])
+
+  // Stashes the buyer's basic contact info (not quantity, attendees, payment
+  // or receipt — just enough to avoid retyping) when the drawer unmounts
+  // before a reservation was actually submitted, so accidentally closing it
+  // and reopening right away doesn't wipe what was already filled in.
+  const latestFormRef = useRef({ buyerName, buyerEmail, buyerPhone, step })
+  latestFormRef.current = { buyerName, buyerEmail, buyerPhone, step }
+  useEffect(() => {
+    return () => {
+      const { buyerName, buyerEmail, buyerPhone, step } = latestFormRef.current
+      const hasData = buyerName.trim() || buyerEmail.trim() || buyerPhone.trim()
+      if (step === 'form' && hasData) {
+        stashDraft({ eventId: event.eventId, buyerName, buyerEmail, buyerPhone })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const subtotal = quantity * event.price
 
@@ -267,7 +322,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
     }
   }
 
-  const buyerValid = buyerName.trim() !== '' && buyerEmail.trim() !== '' && buyerPhone.trim() !== ''
+  const buyerValid = buyerName.trim() !== '' && buyerEmail.trim() !== '' && PHONE_PATTERN.test(buyerPhone)
   const attendeesValid = attendeeNames.every((name) => name.trim() !== '')
   const receiptValid = isFree || receipt !== null
   const canSubmit = buyerValid && attendeesValid && receiptValid && !submitting
@@ -469,7 +524,20 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
 
               <div className="reservation-drawer__field">
                 <label htmlFor="buyer-phone">Teléfono / WhatsApp</label>
-                <input id="buyer-phone" type="tel" value={buyerPhone} onChange={(e) => setBuyerPhone(e.target.value)} required />
+                <input
+                  id="buyer-phone"
+                  type="tel"
+                  inputMode="numeric"
+                  maxLength={10}
+                  value={buyerPhone}
+                  onChange={(e) => setBuyerPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                  onBlur={() => setPhoneTouched(true)}
+                  aria-invalid={phoneTouched && !PHONE_PATTERN.test(buyerPhone)}
+                  required
+                />
+                {phoneTouched && !PHONE_PATTERN.test(buyerPhone) && (
+                  <p className="reservation-drawer__field-error">Ingresa un número de 10 dígitos.</p>
+                )}
               </div>
 
               {attendeeNames.map((name, i) => (
