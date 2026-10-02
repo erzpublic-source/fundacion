@@ -666,7 +666,8 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
 
                 <p className="reservation-drawer__note">
                   Una vez envíes tu solicitud, validaremos tu comprobante y recibirás la confirmación con tu código de
-                  reserva.
+                  reserva en máximo 24 horas, de igual manera puedes escribirnos a nuestro WhatsApp 300 000 0000 en
+                  caso de dudas.
                 </p>
               </div>
             )}
