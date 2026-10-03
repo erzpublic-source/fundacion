@@ -217,7 +217,7 @@ export default function GestionEventos() {
         <ConfirmDialog
           tone="danger"
           title="¿Eliminar este evento?"
-          description={`"${pendingDelete.title}" se eliminará junto con su configuración. Esta acción no se puede revertir.`}
+          description={`"${pendingDelete.title}" se eliminará junto con su configuración, sus reservas y todos los comprobantes de pago asociados. Esta acción no se puede revertir.`}
           confirmLabel="Eliminar"
           loading={deleting === pendingDelete.id}
           onConfirm={handleConfirmDelete}
