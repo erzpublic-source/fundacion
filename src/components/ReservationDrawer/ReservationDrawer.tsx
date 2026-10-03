@@ -333,14 +333,12 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
     if (!canSubmit) return
 
     setSubmitting(true)
-    // TODO(Supabase): createReservation still only writes to the in-memory
-    // admin mock — once connected, this becomes the real insert + receipt
-    // upload to Storage, and amountPerAttendee/email move server-side too.
     await createReservation({
       eventId: event.eventId,
       attendeeNames: [buyerName, ...attendeeNames],
       email: buyerEmail,
       amountPerAttendee: quantity > 0 ? Math.round(total / quantity) : 0,
+      receiptFile: receipt,
     })
     setReservationCode(`#RES-${Math.floor(1000 + Math.random() * 9000)}`)
     setSubmitting(false)
@@ -721,7 +719,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
               Cerrar
             </button>
             <p className="reservation-drawer__success-help">
-              ¿Problemas con el reporte? Escríbenos a info@fundacionundiamas.org
+              ¿Problemas con el reporte? Escríbenos a info@fundacionundiamas.org o al WhatsApp 300 000 0000
             </p>
           </div>
         )}

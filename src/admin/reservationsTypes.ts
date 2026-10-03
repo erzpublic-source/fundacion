@@ -1,10 +1,10 @@
 export type ReservationStatus = 'pendiente' | 'aprobado' | 'rechazado'
 
-// TODO(Supabase): mirrors the future `reservations` table (id, event_id,
-// attendee_name, email, amount_paid, receipt_url, status, created_at).
-// `ticketCode` stays null until approved; in production the code isn't a
-// column here — approving inserts a row into a separate `tickets` table
-// keyed by reservation_id, and this field becomes a join/lookup instead.
+// Mirrors the `reservations` table (id, event_id, attendee_name, email,
+// amount_paid, receipt_url, status, created_at).
+// TODO(Supabase): `ticketCode` stays null until approved; a future iteration
+// could move it into a separate `tickets` table keyed by reservation_id
+// instead of a column here, so this field becomes a join/lookup instead.
 export interface Reservation {
   id: string
   eventId: string
@@ -12,6 +12,13 @@ export interface Reservation {
   email: string
   amountPaid: number
   status: ReservationStatus
+  /**
+   * Storage path (not a public URL — the `payment-receipts` bucket is
+   * private) within that bucket, or null for a free reservation that never
+   * required a receipt. Resolve it to a viewable link with
+   * `supabase.storage.from('payment-receipts').createSignedUrl(...)`.
+   */
+  receiptUrl: string | null
   ticketCode: string | null
   createdAt: number
 }

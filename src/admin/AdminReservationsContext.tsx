@@ -26,6 +26,7 @@ interface ReservationRow {
   email: string
   amount_paid: number
   status: Reservation['status']
+  receipt_url: string | null
   ticket_code: string | null
   created_at: string
 }
@@ -38,6 +39,7 @@ function toReservation(row: ReservationRow): Reservation {
     email: row.email,
     amountPaid: row.amount_paid,
     status: row.status,
+    receiptUrl: row.receipt_url,
     ticketCode: row.ticket_code,
     createdAt: new Date(row.created_at).getTime(),
   }
@@ -54,6 +56,8 @@ export interface CreateReservationInput {
   email: string
   /** Amount paid per ticket (total already split across attendeeNames.length). */
   amountPerAttendee: number
+  /** The buyer's uploaded payment proof, or null for a free reservation that never required one. */
+  receiptFile: File | null
 }
 
 export function AdminReservationsProvider({ children }: { children: ReactNode }) {
@@ -88,27 +92,40 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
 
   const reservationsFor = useCallback((eventId: string) => byEvent[eventId] ?? [], [byEvent])
 
-  const createReservation = useCallback(async ({ eventId, attendeeNames, email, amountPerAttendee }: CreateReservationInput) => {
-    setCreating(true)
-    try {
-      // No .select() here on purpose: this runs from the public booking flow
-      // (anonymous visitor), and the `reservations` read policy only allows
-      // an authenticated admin — PostgREST would just hand back an empty
-      // result for the insert's own representation, which nothing here uses.
-      const { error } = await supabase.from('reservations').insert(
-        attendeeNames.map((attendeeName) => ({
-          event_id: eventId,
-          attendee_name: attendeeName,
-          email,
-          amount_paid: amountPerAttendee,
-          status: 'pendiente',
-        })),
-      )
-      if (error) throw error
-    } finally {
-      setCreating(false)
-    }
-  }, [])
+  const createReservation = useCallback(
+    async ({ eventId, attendeeNames, email, amountPerAttendee, receiptFile }: CreateReservationInput) => {
+      setCreating(true)
+      try {
+        let receiptPath: string | null = null
+        if (receiptFile) {
+          const path = `${eventId}/${Date.now()}-${receiptFile.name}`
+          const { error: uploadError } = await supabase.storage.from('payment-receipts').upload(path, receiptFile)
+          if (uploadError) throw uploadError
+          receiptPath = path
+        }
+
+        // No .select() here on purpose: this runs from the public booking
+        // flow (anonymous visitor), and the `reservations` read policy only
+        // allows an authenticated admin — PostgREST would just hand back an
+        // empty result for the insert's own representation, which nothing
+        // here uses.
+        const { error } = await supabase.from('reservations').insert(
+          attendeeNames.map((attendeeName) => ({
+            event_id: eventId,
+            attendee_name: attendeeName,
+            email,
+            amount_paid: amountPerAttendee,
+            status: 'pendiente',
+            receipt_url: receiptPath,
+          })),
+        )
+        if (error) throw error
+      } finally {
+        setCreating(false)
+      }
+    },
+    [],
+  )
 
   const approveReservation = useCallback(async (eventId: string, id: string): Promise<string> => {
     setApproving(id)

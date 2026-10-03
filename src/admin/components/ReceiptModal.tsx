@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+import { supabase } from '../../lib/supabaseClient'
 import type { Reservation } from '../reservationsTypes'
 import { RESERVATION_STATUS_META, formatReservationAmount } from '../reservationsTypes'
 import './ReceiptModal.css'
@@ -10,10 +12,11 @@ function CloseIcon() {
   )
 }
 
-function CheckBadgeIcon() {
+function DocumentIcon() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-      <path d="M4 12.5l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d="M7 3h7l5 5v13H7V3Z" strokeLinejoin="round" />
+      <path d="M14 3v5h5" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -22,6 +25,8 @@ function formatReceiptDate(timestamp: number): string {
   return new Intl.DateTimeFormat('es-CO', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(timestamp))
 }
 
+const SIGNED_URL_TTL_SECONDS = 300
+
 interface ReceiptModalProps {
   reservation: Reservation
   onClose: () => void
@@ -29,12 +34,42 @@ interface ReceiptModalProps {
   onRequestReject: (reservation: Reservation) => void
 }
 
-// TODO(Supabase): the "mock receipt" below stands in for the real uploaded
-// file — once Storage is wired up this reads reservation.receiptUrl (an
-// image/PDF) instead of rendering a synthesized summary.
 export default function ReceiptModal({ reservation, onClose, onRequestApprove, onRequestReject }: ReceiptModalProps) {
   const statusMeta = RESERVATION_STATUS_META[reservation.status]
-  const transactionId = `TRN-${reservation.id.slice(-8).toUpperCase()}`
+
+  const [loadingReceipt, setLoadingReceipt] = useState(Boolean(reservation.receiptUrl))
+  const [signedUrl, setSignedUrl] = useState<string | null>(null)
+  const [loadError, setLoadError] = useState(false)
+
+  useEffect(() => {
+    if (!reservation.receiptUrl) {
+      setLoadingReceipt(false)
+      return
+    }
+
+    let cancelled = false
+    setLoadingReceipt(true)
+    setLoadError(false)
+
+    supabase.storage
+      .from('payment-receipts')
+      .createSignedUrl(reservation.receiptUrl, SIGNED_URL_TTL_SECONDS)
+      .then(({ data, error }) => {
+        if (cancelled) return
+        if (error || !data) {
+          setLoadError(true)
+        } else {
+          setSignedUrl(data.signedUrl)
+        }
+        setLoadingReceipt(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [reservation.receiptUrl])
+
+  const isPdf = reservation.receiptUrl?.toLowerCase().endsWith('.pdf') ?? false
 
   return (
     <div className="receipt-modal-backdrop" role="presentation" onClick={onClose}>
@@ -60,31 +95,36 @@ export default function ReceiptModal({ reservation, onClose, onRequestApprove, o
           <span className={`status-pill ${statusMeta.className}`}>{statusMeta.label}</span>
         </div>
 
+        <dl className="receipt-modal__summary">
+          <dt>Monto</dt>
+          <dd>{formatReservationAmount(reservation.amountPaid)}</dd>
+          <dt>Fecha de la reserva</dt>
+          <dd>{formatReceiptDate(reservation.createdAt)}</dd>
+        </dl>
+
         <div className="receipt-modal__viewer">
           <span className="receipt-modal__viewer-tag">Comprobante adjunto</span>
 
-          <div className="receipt-modal__mock-receipt">
-            <span className="receipt-modal__mock-badge">
-              <CheckBadgeIcon />
-            </span>
-            <p className="receipt-modal__mock-status">Transferencia exitosa</p>
+          {!reservation.receiptUrl && (
+            <p className="receipt-modal__empty">Esta reserva no tiene comprobante adjunto (evento gratuito).</p>
+          )}
 
-            <div className="receipt-modal__mock-amount">
-              <span>Monto enviado</span>
-              <strong>{formatReservationAmount(reservation.amountPaid)}</strong>
-            </div>
+          {reservation.receiptUrl && loadingReceipt && <p className="receipt-modal__empty">Cargando comprobante...</p>}
 
-            <dl className="receipt-modal__mock-fields">
-              <dt>Destinatario</dt>
-              <dd>Fundación Un Día Más</dd>
-              <dt>Fecha y hora</dt>
-              <dd>{formatReceiptDate(reservation.createdAt)}</dd>
-              <dt>ID de transacción</dt>
-              <dd>{transactionId}</dd>
-              <dt>Método de pago</dt>
-              <dd>Transferencia bancaria</dd>
-            </dl>
-          </div>
+          {reservation.receiptUrl && !loadingReceipt && loadError && (
+            <p className="receipt-modal__empty">No pudimos cargar el comprobante. Intenta de nuevo.</p>
+          )}
+
+          {signedUrl && !loadingReceipt && !loadError && isPdf && (
+            <a href={signedUrl} target="_blank" rel="noopener noreferrer" className="receipt-modal__pdf-link">
+              <DocumentIcon />
+              Abrir comprobante (PDF)
+            </a>
+          )}
+
+          {signedUrl && !loadingReceipt && !loadError && !isPdf && (
+            <img src={signedUrl} alt="Comprobante de pago" className="receipt-modal__image" />
+          )}
         </div>
 
         <div className="receipt-modal__actions">
