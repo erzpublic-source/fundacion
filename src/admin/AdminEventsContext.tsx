@@ -277,6 +277,16 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
     setDeleting(id)
     setPendingDeleteIds((prev) => (prev.includes(id) ? prev : [...prev, id]))
     try {
+      // Reservations (and their receipt files in Storage) cascade-delete
+      // with the event row — fetch their paths first, since after the
+      // delete below there's no way to look them up anymore, to clean them
+      // out of payment-receipts too instead of leaving them orphaned.
+      const { data: reservationRows } = await supabase
+        .from('reservations')
+        .select('receipt_url')
+        .eq('event_id', id)
+        .not('receipt_url', 'is', null)
+
       // Deletes for real right away rather than waiting for the "Deshacer"
       // window to close — deferring it meant closing the tab or navigating
       // away before that window elapsed left the row alive in Supabase
@@ -285,6 +295,11 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
       // instead of just un-hiding it.
       const { error } = await supabase.from('events').delete().eq('id', id)
       if (error) throw error
+
+      const receiptPaths = (reservationRows ?? [])
+        .map((r) => r.receipt_url)
+        .filter((path): path is string => Boolean(path))
+      if (receiptPaths.length > 0) void supabase.storage.from('payment-receipts').remove(receiptPaths)
     } catch (error) {
       setPendingDeleteIds((prev) => prev.filter((pendingId) => pendingId !== id))
       throw error
