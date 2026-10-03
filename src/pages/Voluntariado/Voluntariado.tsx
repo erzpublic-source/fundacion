@@ -256,6 +256,9 @@ export default function Voluntariado() {
 
   function handleCelularChange(event: ChangeEvent<HTMLInputElement>) {
     const digitsOnly = event.target.value.replace(/\D/g, '').slice(0, CELULAR_LENGTH)
+    // Colombian mobile numbers always start with 3 — reject an edit that
+    // would leave a different leading digit instead of silently keeping it.
+    if (digitsOnly.length > 0 && digitsOnly[0] !== '3') return
     updateField('celular', digitsOnly)
   }
 

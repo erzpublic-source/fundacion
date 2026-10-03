@@ -18,7 +18,7 @@ const PAYMENT_ACCOUNTS = {
   breb: { label: 'Bre-B', account: '@undiamas.fundacion', holder: 'Fundación Un Día Más' },
 } as const
 
-const PHONE_PATTERN = /^\d{10}$/
+const PHONE_PATTERN = /^3\d{9}$/
 
 // Accidentally closing the drawer (backdrop click, Escape, the X button)
 // shouldn't force the buyer to retype their basic contact info if they
@@ -541,7 +541,13 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                   inputMode="numeric"
                   maxLength={10}
                   value={buyerPhone}
-                  onChange={(e) => setBuyerPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, '').slice(0, 10)
+                    // Colombian mobile numbers always start with 3 — reject
+                    // an edit that would leave a different leading digit.
+                    if (digits.length > 0 && digits[0] !== '3') return
+                    setBuyerPhone(digits)
+                  }}
                   onBlur={() => setPhoneTouched(true)}
                   aria-invalid={phoneTouched && !PHONE_PATTERN.test(buyerPhone)}
                   required
