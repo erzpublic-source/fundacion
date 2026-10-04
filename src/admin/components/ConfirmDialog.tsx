@@ -32,6 +32,8 @@ interface ConfirmDialogProps {
   title: string
   description: string
   confirmLabel?: string
+  /** Label for the secondary button (onClose) — defaults to "Cerrar", override for flows where it means something more specific (e.g. "Continuar sesión"). */
+  cancelLabel?: string
   loading?: boolean
   /** Overrides the tone's default icon — used by the featured-toggle flows (star vs. exclamation), both amber-toned but with different glyphs. */
   icon?: ReactNode
@@ -48,6 +50,7 @@ export default function ConfirmDialog({
   title,
   description,
   confirmLabel = 'Confirmar',
+  cancelLabel = 'Cerrar',
   loading = false,
   icon,
   onConfirm,
@@ -77,7 +80,7 @@ export default function ConfirmDialog({
           {loading ? 'Procesando...' : confirmLabel}
         </button>
         <button type="button" className="btn btn--secondary confirm-dialog__cancel" onClick={onClose} disabled={loading}>
-          Cerrar
+          {cancelLabel}
         </button>
       </div>
     </div>

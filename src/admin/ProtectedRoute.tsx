@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAdminAuth } from './AdminAuthContext'
+import SessionIdleGuard from './components/SessionIdleGuard'
 
 export default function ProtectedRoute({ children }: { children: ReactNode }) {
   const { session, initializing } = useAdminAuth()
@@ -14,5 +15,10 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
     return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />
   }
 
-  return <>{children}</>
+  return (
+    <>
+      <SessionIdleGuard />
+      {children}
+    </>
+  )
 }
