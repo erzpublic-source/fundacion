@@ -4,6 +4,8 @@ import type { ReactNode } from 'react'
 import Logo from './Logo'
 import './Navbar.css'
 
+const WHATSAPP_SOS_URL = 'https://wa.me/573005871770'
+
 const NAV_LINKS = [
   { label: 'Inicio', href: '/' },
   { label: 'Historias', href: '/historias' },
@@ -224,7 +226,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <a href="#sos" className="navbar__sos">
+          <a href={WHATSAPP_SOS_URL} target="_blank" rel="noopener noreferrer" className="navbar__sos">
             <SosIcon />
             SOS Te escucho
             <ChevronIcon />
@@ -237,7 +239,7 @@ export default function Navbar() {
           <Logo />
         </Link>
 
-        <a href="#sos" className="navbar__sos">
+        <a href={WHATSAPP_SOS_URL} target="_blank" rel="noopener noreferrer" className="navbar__sos">
           <SosIcon />
           SOS Te escucho
           <ChevronIcon />
