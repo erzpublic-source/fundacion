@@ -41,6 +41,9 @@ const EVENT_KINDS: { value: EventKind; label: string }[] = [
   { value: 'hibrido', label: 'Híbrido' },
 ]
 
+const MAX_IMAGE_SIZE_BYTES = 4 * 1024 * 1024
+const MAX_IMAGE_SIZE_LABEL = '4MB'
+
 function formatThousands(digits: string): string {
   if (!digits) return ''
   return Number(digits).toLocaleString('es-CO')
@@ -90,6 +93,7 @@ export default function EventForm() {
   const [place, setPlace] = useState('')
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [uploadingImage, setUploadingImage] = useState(false)
+  const [imageError, setImageError] = useState<string | null>(null)
   const [kind, setKind] = useState<EventKind>('pago')
   const [price, setPrice] = useState('')
   const [capacity, setCapacity] = useState('100')
@@ -148,10 +152,32 @@ export default function EventForm() {
   async function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (!file) return
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setImageError(
+        `La imagen supera el máximo de ${MAX_IMAGE_SIZE_LABEL}. Formatos recomendados: JPG, PNG (16:9) — optimiza o comprime la imagen e inténtalo de nuevo.`,
+      )
+      if (fileInputRef.current) fileInputRef.current.value = ''
+      return
+    }
+
+    setImageError(null)
     setUploadingImage(true)
-    const url = await uploadEventImage(file)
-    setImageUrl(url)
-    setUploadingImage(false)
+    try {
+      const url = await uploadEventImage(file)
+      setImageUrl(url)
+    } catch {
+      setImageError('No se pudo subir la imagen. Verifica tu conexión e inténtalo de nuevo.')
+    } finally {
+      setUploadingImage(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
+  function handleRemoveImage() {
+    setImageUrl(null)
+    setImageError(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   function handleAddCode() {
@@ -258,12 +284,7 @@ export default function EventForm() {
             <section className="event-form__card">
               <h2>Información general</h2>
 
-              <button
-                type="button"
-                className="event-form__dropzone"
-                onClick={() => fileInputRef.current?.click()}
-                style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
-              >
+              <div className="event-form__dropzone" style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -271,20 +292,38 @@ export default function EventForm() {
                   className="event-form__file-input"
                   onChange={handleImageChange}
                 />
-                {!imageUrl && (
-                  <span className="event-form__dropzone-content">
-                    {uploadingImage ? <span className="event-form__spinner" aria-hidden="true" /> : <UploadIcon />}
-                    <strong>{uploadingImage ? 'Subiendo imagen...' : 'Subir imagen principal'}</strong>
-                    <span>Formatos recomendados: JPG, PNG (16:9, máx. 5MB)</span>
-                  </span>
+                <button
+                  type="button"
+                  className="event-form__dropzone-trigger"
+                  onClick={() => fileInputRef.current?.click()}
+                  aria-label={imageUrl ? 'Cambiar imagen' : 'Subir imagen principal'}
+                >
+                  {!imageUrl && (
+                    <span className="event-form__dropzone-content">
+                      {uploadingImage ? <span className="event-form__spinner" aria-hidden="true" /> : <UploadIcon />}
+                      <strong>{uploadingImage ? 'Subiendo imagen...' : 'Subir imagen principal'}</strong>
+                      <span>Formatos recomendados: JPG, PNG (16:9, máx. {MAX_IMAGE_SIZE_LABEL})</span>
+                    </span>
+                  )}
+                  {imageUrl && uploadingImage && (
+                    <span className="event-form__dropzone-overlay">
+                      <span className="event-form__spinner" aria-hidden="true" />
+                      Subiendo...
+                    </span>
+                  )}
+                </button>
+                {imageUrl && !uploadingImage && (
+                  <button
+                    type="button"
+                    className="event-form__dropzone-remove"
+                    onClick={handleRemoveImage}
+                    aria-label="Quitar imagen"
+                  >
+                    <TrashIcon />
+                  </button>
                 )}
-                {imageUrl && uploadingImage && (
-                  <span className="event-form__dropzone-overlay">
-                    <span className="event-form__spinner" aria-hidden="true" />
-                    Subiendo...
-                  </span>
-                )}
-              </button>
+              </div>
+              {imageError && <p className="admin-field__error">{imageError}</p>}
 
               <div className="admin-field">
                 <label htmlFor="event-title">Título del evento</label>

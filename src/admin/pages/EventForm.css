@@ -170,6 +170,38 @@
   font-family: inherit;
 }
 
+.event-form__dropzone-trigger {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 112px;
+  cursor: pointer;
+}
+
+.event-form__dropzone-remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(34, 25, 32, 0.65);
+  color: #fff;
+  cursor: pointer;
+}
+
+.event-form__dropzone-remove:hover {
+  background: #e0455a;
+}
+
 .event-form__dropzone-content {
   display: flex;
   flex-direction: column;
