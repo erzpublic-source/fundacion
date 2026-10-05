@@ -123,12 +123,12 @@ const SCHEDULE = [
 ]
 
 const DIGITAL_CHANNELS = [
-  { icon: <PhoneIcon />, label: 'Teléfono Principal', value: '+57 300 587 1770', href: 'tel:+573005871770' },
+  { icon: <PhoneIcon />, label: 'Teléfono Principal', value: '+57 302 587 1770', href: 'tel:+573025871770' },
   {
     icon: <WhatsappIcon />,
     label: 'WhatsApp Institucional',
-    value: '+57 300 587 1770',
-    href: 'https://wa.me/573005871770',
+    value: '+57 302 587 1770',
+    href: 'https://wa.me/573025871770',
     external: true,
   },
   { icon: <MailIcon />, label: 'Correo Electrónico', value: 'contacto@fundacionundiamas.org' },

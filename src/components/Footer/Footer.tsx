@@ -45,7 +45,7 @@ export default function Footer() {
               <a href="mailto:dirfundamascol@gmail.com">dirfundamascol@gmail.com</a>
             </li>
             <li>
-              <a href="tel:+573005871770">+57 300 587 1770</a>
+              <a href="tel:+573025871770">+57 302 587 1770</a>
             </li>
           </ul>
         </div>
