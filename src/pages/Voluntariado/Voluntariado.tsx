@@ -204,7 +204,7 @@ const CELULAR_LENGTH = 10
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const NOMBRE_LENGTH = 40
-const ESPECIALIDAD_LENGTH = 30
+const ESPECIALIDAD_LENGTH = 40
 // Letters (including accented vowels and ñ) and spaces only — no numbers or symbols.
 const LETTERS_ONLY_PATTERN = /[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g
 
