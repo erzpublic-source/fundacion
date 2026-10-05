@@ -42,10 +42,10 @@ export default function Footer() {
           <p className="footer__heading">Contacto</p>
           <ul>
             <li>
-              <a href="mailto:info@fundacionundiamas.org">info@fundacionundiamas.org</a>
+              <a href="mailto:dirfundamascol@gmail.com">dirfundamascol@gmail.com</a>
             </li>
             <li>
-              <a href="tel:+573000000000">+57 300 000 0000</a>
+              <a href="tel:+573005871770">+57 300 587 1770</a>
             </li>
           </ul>
         </div>
