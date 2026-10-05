@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import Logo from './Logo'
 import './Navbar.css'
 
-const WHATSAPP_SOS_URL = 'https://wa.me/573005871770'
+const WHATSAPP_SOS_URL = 'https://wa.me/573025871770'
 
 const NAV_LINKS = [
   { label: 'Inicio', href: '/' },
