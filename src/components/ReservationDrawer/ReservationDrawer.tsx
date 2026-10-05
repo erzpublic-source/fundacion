@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
+import type ReCAPTCHA from 'react-google-recaptcha'
 import { useAdminReservations } from '../../admin/AdminReservationsContext'
+import RecaptchaField from '../RecaptchaField/RecaptchaField'
 import './ReservationDrawer.css'
 
 const MAX_TICKETS = 4
@@ -184,6 +186,8 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
   const [buyerPhone, setBuyerPhone] = useState(draft?.buyerPhone ?? '')
   const [phoneTouched, setPhoneTouched] = useState(false)
   const [emailTouched, setEmailTouched] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const recaptchaRef = useRef<ReCAPTCHA>(null)
   const [attendeeNames, setAttendeeNames] = useState<string[]>([])
 
   const [discountInput, setDiscountInput] = useState('')
@@ -328,7 +332,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
   const buyerValid = buyerName.trim() !== '' && EMAIL_PATTERN.test(buyerEmail.trim()) && PHONE_PATTERN.test(buyerPhone)
   const attendeesValid = attendeeNames.every((name) => name.trim() !== '')
   const receiptValid = isFree || receipt !== null
-  const canSubmit = buyerValid && attendeesValid && receiptValid && !submitting
+  const canSubmit = buyerValid && attendeesValid && receiptValid && captchaToken !== null && !submitting
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -682,6 +686,11 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                     className="reservation-drawer__file-input"
                   />
                   {receiptError && <p className="reservation-drawer__discount-error">{receiptError}</p>}
+                </div>
+
+                <div className="reservation-drawer__field">
+                  <label>Verificación anti-spam</label>
+                  <RecaptchaField ref={recaptchaRef} onChange={setCaptchaToken} />
                 </div>
 
                 <p className="reservation-drawer__note">

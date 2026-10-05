@@ -1,11 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
+import type ReCAPTCHA from 'react-google-recaptcha'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import LegalModal from '../../components/LegalModal/LegalModal'
+import RecaptchaField from '../../components/RecaptchaField/RecaptchaField'
 import { PRIVACY_POLICY_TITLE, PRIVACY_POLICY_UPDATED_LABEL, PrivacyPolicyContent } from '../../content/privacyPolicy'
 import { useHoneypot } from '../../hooks/useHoneypot'
-import { useMathChallenge } from '../../hooks/useMathChallenge'
 import { HONEYPOT_STYLE } from '../../utils/honeypotStyle'
 import './Contacto.css'
 
@@ -37,15 +38,6 @@ function SubjectIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <rect x="2" y="2" width="12" height="12" rx="2" />
       <path d="M5 6h6M5 9h4" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function ShieldIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M8 1.5 13.5 3.5V7.5c0 4-2.5 6.2-5.5 7-3-.8-5.5-3-5.5-7V3.5L8 1.5Z" strokeLinejoin="round" />
-      <path d="M5.7 8.2l1.6 1.6 3-3.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -172,9 +164,9 @@ export default function Contacto() {
   const [privacyOpen, setPrivacyOpen] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
   const [correoTouched, setCorreoTouched] = useState(false)
-  const [captchaTouched, setCaptchaTouched] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const recaptchaRef = useRef<ReCAPTCHA>(null)
   const honeypot = useHoneypot()
-  const captcha = useMathChallenge()
 
   const isCorreoValid = useMemo(() => EMAIL_PATTERN.test(fields.correo.trim()), [fields.correo])
 
@@ -185,9 +177,9 @@ export default function Contacto() {
       fields.asunto.trim() !== '' &&
       fields.mensaje.trim() !== '' &&
       aceptaPrivacidad &&
-      captcha.isValid
+      captchaToken !== null
     )
-  }, [fields, isCorreoValid, aceptaPrivacidad, captcha.isValid])
+  }, [fields, isCorreoValid, aceptaPrivacidad, captchaToken])
 
   function updateField(key: keyof ContactFields, value: string) {
     setFields((prev) => ({ ...prev, [key]: value }))
@@ -230,9 +222,9 @@ export default function Contacto() {
     setAceptaPrivacidad(false)
     setSubmitStatus('idle')
     setCorreoTouched(false)
-    setCaptchaTouched(false)
+    setCaptchaToken(null)
+    recaptchaRef.current?.reset()
     honeypot.reset()
-    captcha.reset()
   }
 
   return (
@@ -344,23 +336,8 @@ export default function Contacto() {
               </div>
 
               <div className="contacto-field">
-                <label htmlFor="captcha">Verificación anti-spam</label>
-                <div className={`contacto-field__control${captchaTouched && !captcha.isValid ? ' contacto-field__control--error' : ''}`}>
-                  <ShieldIcon />
-                  <input
-                    id="captcha"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder={captcha.question}
-                    value={captcha.answer}
-                    onChange={captcha.onChange}
-                    onBlur={() => setCaptchaTouched(true)}
-                    required
-                  />
-                </div>
-                {captchaTouched && !captcha.isValid && (
-                  <p className="contacto-field__error">Respuesta incorrecta, inténtalo de nuevo.</p>
-                )}
+                <label>Verificación anti-spam</label>
+                <RecaptchaField ref={recaptchaRef} onChange={setCaptchaToken} />
               </div>
 
               <div className="contacto-checkbox">

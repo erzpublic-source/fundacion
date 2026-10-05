@@ -1,12 +1,13 @@
 import { useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, CSSProperties, FormEvent } from 'react'
+import type ReCAPTCHA from 'react-google-recaptcha'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import LegalModal from '../../components/LegalModal/LegalModal'
+import RecaptchaField from '../../components/RecaptchaField/RecaptchaField'
 import { PRIVACY_POLICY_TITLE, PRIVACY_POLICY_UPDATED_LABEL, PrivacyPolicyContent } from '../../content/privacyPolicy'
 import { TERMS_CONDITIONS_TITLE, TERMS_CONDITIONS_UPDATED_LABEL, TermsConditionsContent } from '../../content/termsConditions'
 import { useHoneypot } from '../../hooks/useHoneypot'
-import { useMathChallenge } from '../../hooks/useMathChallenge'
 import { HONEYPOT_STYLE } from '../../utils/honeypotStyle'
 import heroImage from '../../assets/images/voluntariado-hero.jpg'
 import heroImageMobile from '../../assets/images/voluntariado-hero-mobile.jpg'
@@ -92,15 +93,6 @@ function MailIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <rect x="1.5" y="3" width="13" height="10" rx="1.5" />
       <path d="M2 4l6 4.5L14 4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function ShieldIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M8 1.5 13.5 3.5V7.5c0 4-2.5 6.2-5.5 7-3-.8-5.5-3-5.5-7V3.5L8 1.5Z" strokeLinejoin="round" />
-      <path d="M5.7 8.2l1.6 1.6 3-3.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -221,9 +213,9 @@ export default function Voluntariado() {
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
   const [ciudadOpen, setCiudadOpen] = useState(false)
   const [correoTouched, setCorreoTouched] = useState(false)
-  const [captchaTouched, setCaptchaTouched] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const recaptchaRef = useRef<ReCAPTCHA>(null)
   const honeypot = useHoneypot()
-  const captcha = useMathChallenge()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const ciudadBlurTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -251,9 +243,9 @@ export default function Voluntariado() {
       fileError === null &&
       aceptaPrivacidad &&
       aceptaTerminos &&
-      captcha.isValid
+      captchaToken !== null
     )
-  }, [fields, isCiudadValid, isCorreoValid, file, fileError, aceptaPrivacidad, aceptaTerminos, captcha.isValid])
+  }, [fields, isCiudadValid, isCorreoValid, file, fileError, aceptaPrivacidad, aceptaTerminos, captchaToken])
 
   function updateField(key: keyof FormFields, value: string) {
     setFields((prev) => ({ ...prev, [key]: value }))
@@ -369,9 +361,9 @@ export default function Voluntariado() {
     setAceptaPrivacidad(false)
     setAceptaTerminos(false)
     setCorreoTouched(false)
-    setCaptchaTouched(false)
+    setCaptchaToken(null)
+    recaptchaRef.current?.reset()
     honeypot.reset()
-    captcha.reset()
     if (fileInputRef.current) fileInputRef.current.value = ''
     setSubmitStatus('idle')
   }
@@ -632,23 +624,8 @@ export default function Voluntariado() {
             </div>
 
             <div className="voluntariado-field">
-              <label htmlFor="captcha">Verificación anti-spam</label>
-              <div className={`voluntariado-field__control${captchaTouched && !captcha.isValid ? ' voluntariado-field__control--error' : ''}`}>
-                <ShieldIcon />
-                <input
-                  id="captcha"
-                  type="text"
-                  inputMode="numeric"
-                  placeholder={captcha.question}
-                  value={captcha.answer}
-                  onChange={captcha.onChange}
-                  onBlur={() => setCaptchaTouched(true)}
-                  required
-                />
-              </div>
-              {captchaTouched && !captcha.isValid && (
-                <p className="voluntariado-field__error">Respuesta incorrecta, inténtalo de nuevo.</p>
-              )}
+              <label>Verificación anti-spam</label>
+              <RecaptchaField ref={recaptchaRef} onChange={setCaptchaToken} />
             </div>
 
             <div className="voluntariado-checkbox">
