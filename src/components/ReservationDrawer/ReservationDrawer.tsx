@@ -19,6 +19,7 @@ const PAYMENT_ACCOUNTS = {
 } as const
 
 const PHONE_PATTERN = /^3\d{9}$/
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // Accidentally closing the drawer (backdrop click, Escape, the X button)
 // shouldn't force the buyer to retype their basic contact info if they
@@ -182,6 +183,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
   const [buyerEmail, setBuyerEmail] = useState(draft?.buyerEmail ?? '')
   const [buyerPhone, setBuyerPhone] = useState(draft?.buyerPhone ?? '')
   const [phoneTouched, setPhoneTouched] = useState(false)
+  const [emailTouched, setEmailTouched] = useState(false)
   const [attendeeNames, setAttendeeNames] = useState<string[]>([])
 
   const [discountInput, setDiscountInput] = useState('')
@@ -323,7 +325,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
     }
   }
 
-  const buyerValid = buyerName.trim() !== '' && buyerEmail.trim() !== '' && PHONE_PATTERN.test(buyerPhone)
+  const buyerValid = buyerName.trim() !== '' && EMAIL_PATTERN.test(buyerEmail.trim()) && PHONE_PATTERN.test(buyerPhone)
   const attendeesValid = attendeeNames.every((name) => name.trim() !== '')
   const receiptValid = isFree || receipt !== null
   const canSubmit = buyerValid && attendeesValid && receiptValid && !submitting
@@ -527,8 +529,13 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                   type="email"
                   value={buyerEmail}
                   onChange={(e) => setBuyerEmail(e.target.value)}
+                  onBlur={() => setEmailTouched(true)}
+                  aria-invalid={emailTouched && !EMAIL_PATTERN.test(buyerEmail.trim())}
                   required
                 />
+                {emailTouched && !EMAIL_PATTERN.test(buyerEmail.trim()) && (
+                  <p className="reservation-drawer__field-error">Ingresa un correo válido.</p>
+                )}
               </div>
 
               <div className="reservation-drawer__field">
