@@ -394,6 +394,17 @@
   color: #221920;
 }
 
+.contacto-canales__value--link {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.contacto-canales__value--link:hover {
+  color: var(--color-violeta-esperanza);
+  text-decoration: underline;
+}
+
 .contacto-staff__avatar {
   display: flex;
   align-items: center;

@@ -123,8 +123,14 @@ const SCHEDULE = [
 ]
 
 const DIGITAL_CHANNELS = [
-  { icon: <PhoneIcon />, label: 'Teléfono Principal', value: '+57 (601) 234-5678' },
-  { icon: <WhatsappIcon />, label: 'WhatsApp Institucional', value: '+57 300 123 4567' },
+  { icon: <PhoneIcon />, label: 'Teléfono Principal', value: '+57 300 587 1770', href: 'tel:+573005871770' },
+  {
+    icon: <WhatsappIcon />,
+    label: 'WhatsApp Institucional',
+    value: '+57 300 587 1770',
+    href: 'https://wa.me/573005871770',
+    external: true,
+  },
   { icon: <MailIcon />, label: 'Correo Electrónico', value: 'contacto@fundacionundiamas.org' },
   { icon: <GlobeIcon />, label: 'Sitio Web', value: 'www.fundacionundiamas.org' },
 ]
@@ -439,7 +445,17 @@ export default function Contacto() {
                   <span className="contacto-canales__icon">{channel.icon}</span>
                   <div>
                     <span className="contacto-canales__label">{channel.label}</span>
-                    <span className="contacto-canales__value">{channel.value}</span>
+                    {channel.href ? (
+                      <a
+                        className="contacto-canales__value contacto-canales__value--link"
+                        href={channel.href}
+                        {...(channel.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      >
+                        {channel.value}
+                      </a>
+                    ) : (
+                      <span className="contacto-canales__value">{channel.value}</span>
+                    )}
                   </div>
                 </li>
               ))}
