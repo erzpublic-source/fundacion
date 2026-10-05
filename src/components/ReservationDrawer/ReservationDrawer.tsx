@@ -519,7 +519,14 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
 
               <div className="reservation-drawer__field">
                 <label htmlFor="buyer-name">Nombre completo</label>
-                <input id="buyer-name" type="text" value={buyerName} onChange={(e) => setBuyerName(e.target.value)} required />
+                <input
+                  id="buyer-name"
+                  type="text"
+                  maxLength={40}
+                  value={buyerName}
+                  onChange={(e) => setBuyerName(e.target.value)}
+                  required
+                />
               </div>
 
               <div className="reservation-drawer__field">
@@ -527,6 +534,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                 <input
                   id="buyer-email"
                   type="email"
+                  maxLength={30}
                   value={buyerEmail}
                   onChange={(e) => setBuyerEmail(e.target.value)}
                   onBlur={() => setEmailTouched(true)}
@@ -582,6 +590,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                     id="discount-code"
                     type="text"
                     placeholder="Opcional"
+                    maxLength={40}
                     value={discountInput}
                     onChange={(e) => setDiscountInput(e.target.value)}
                   />
