@@ -44,6 +44,9 @@ const EVENT_KINDS: { value: EventKind; label: string }[] = [
 const MAX_IMAGE_SIZE_BYTES = 4 * 1024 * 1024
 const MAX_IMAGE_SIZE_LABEL = '4MB'
 
+const MAX_FIXED_DISCOUNT = 200000
+const MAX_PERCENT_DIGITS = 10
+
 function formatThousands(digits: string): string {
   if (!digits) return ''
   return Number(digits).toLocaleString('es-CO')
@@ -184,6 +187,28 @@ export default function EventForm() {
     setImageUrl(null)
     setImageError(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  function handlePercentValueChange(raw: string) {
+    // Digits and at most one decimal point, with the digit count (not
+    // counting the point itself) capped at MAX_PERCENT_DIGITS.
+    let cleaned = raw.replace(/[^0-9.]/g, '')
+    const firstDot = cleaned.indexOf('.')
+    if (firstDot !== -1) {
+      cleaned = cleaned.slice(0, firstDot + 1) + cleaned.slice(firstDot + 1).replace(/\./g, '')
+    }
+    let digitCount = 0
+    let result = ''
+    for (const char of cleaned) {
+      if (char === '.') {
+        result += char
+        continue
+      }
+      if (digitCount >= MAX_PERCENT_DIGITS) continue
+      result += char
+      digitCount += 1
+    }
+    setNewCode((c) => ({ ...c, value: result }))
   }
 
   function handleAddCode() {
@@ -572,6 +597,7 @@ export default function EventForm() {
                       <input
                         type="text"
                         placeholder="Código"
+                        maxLength={10}
                         value={newCode.code}
                         onChange={(e) => setNewCode((c) => ({ ...c, code: e.target.value }))}
                       />
@@ -587,11 +613,11 @@ export default function EventForm() {
                       </select>
                       {newCode.kind === 'percent' && (
                         <input
-                          type="number"
-                          min={0}
+                          type="text"
+                          inputMode="decimal"
                           placeholder="%"
                           value={newCode.value}
-                          onChange={(e) => setNewCode((c) => ({ ...c, value: e.target.value }))}
+                          onChange={(e) => handlePercentValueChange(e.target.value)}
                         />
                       )}
                       {newCode.kind === 'fixed' && (
@@ -600,7 +626,11 @@ export default function EventForm() {
                           inputMode="numeric"
                           placeholder="10.000"
                           value={formatThousands(newCode.value)}
-                          onChange={(e) => setNewCode((c) => ({ ...c, value: e.target.value.replace(/\D/g, '') }))}
+                          onChange={(e) => {
+                            const digits = e.target.value.replace(/\D/g, '')
+                            const clamped = digits === '' ? '' : String(Math.min(Number(digits), MAX_FIXED_DISCOUNT))
+                            setNewCode((c) => ({ ...c, value: clamped }))
+                          }}
                         />
                       )}
                       <input
