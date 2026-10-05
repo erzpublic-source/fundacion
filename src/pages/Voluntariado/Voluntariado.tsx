@@ -203,6 +203,11 @@ const INITIAL_FIELDS: FormFields = {
 const CELULAR_LENGTH = 10
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const NOMBRE_LENGTH = 40
+const ESPECIALIDAD_LENGTH = 20
+// Letters (including accented vowels and ñ) and spaces only — no numbers or symbols.
+const LETTERS_ONLY_PATTERN = /[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g
+
 type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
 
 export default function Voluntariado() {
@@ -260,6 +265,14 @@ export default function Voluntariado() {
     // would leave a different leading digit instead of silently keeping it.
     if (digitsOnly.length > 0 && digitsOnly[0] !== '3') return
     updateField('celular', digitsOnly)
+  }
+
+  function handleNombreChange(event: ChangeEvent<HTMLInputElement>) {
+    updateField('nombre', event.target.value.replace(LETTERS_ONLY_PATTERN, '').slice(0, NOMBRE_LENGTH))
+  }
+
+  function handleEspecialidadChange(event: ChangeEvent<HTMLInputElement>) {
+    updateField('especialidad', event.target.value.replace(LETTERS_ONLY_PATTERN, '').slice(0, ESPECIALIDAD_LENGTH))
   }
 
   function selectCiudad(city: string) {
@@ -447,7 +460,7 @@ export default function Voluntariado() {
                   type="text"
                   placeholder="Nombre y apellido completo"
                   value={fields.nombre}
-                  onChange={(e) => updateField('nombre', e.target.value)}
+                  onChange={handleNombreChange}
                   required
                 />
               </div>
@@ -460,9 +473,9 @@ export default function Voluntariado() {
                 <input
                   id="especialidad"
                   type="text"
-                  placeholder="Ej: Psicología Clínica, Cognitivo-Conductual"
+                  placeholder="Ej: Psicología Clínica"
                   value={fields.especialidad}
-                  onChange={(e) => updateField('especialidad', e.target.value)}
+                  onChange={handleEspecialidadChange}
                   required
                 />
               </div>
