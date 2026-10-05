@@ -107,6 +107,25 @@
   color: #4a454f;
 }
 
+.legal-modal__body ul {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.legal-modal__body li {
+  font-size: 16px;
+  line-height: 22px;
+  color: #4a454f;
+}
+
+.legal-modal__body a {
+  color: var(--color-violeta-esperanza);
+  font-weight: var(--font-weight-semibold);
+}
+
 .legal-modal__footer {
   flex-shrink: 0;
   display: flex;
