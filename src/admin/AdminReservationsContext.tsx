@@ -98,7 +98,12 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
       try {
         let receiptPath: string | null = null
         if (receiptFile) {
-          const path = `${eventId}/${Date.now()}-${receiptFile.name}`
+          // Keep only the extension from the original filename — Storage
+          // keys reject some characters real filenames commonly have
+          // (spaces, accents, parentheses).
+          const extensionMatch = /\.[a-zA-Z0-9]+$/.exec(receiptFile.name)
+          const extension = extensionMatch ? extensionMatch[0] : ''
+          const path = `${eventId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}${extension}`
           const { error: uploadError } = await supabase.storage.from('payment-receipts').upload(path, receiptFile)
           if (uploadError) throw uploadError
           receiptPath = path

@@ -348,7 +348,14 @@ export function AdminEventsProvider({ children }: { children: ReactNode }) {
   )
 
   const uploadEventImage = useCallback(async (file: File): Promise<string> => {
-    const path = `${Date.now()}-${file.name}`
+    // Supabase Storage keys reject some characters real-world filenames
+    // commonly have (spaces, accents, parentheses — "Foto evento (1).jpg").
+    // Keep only the extension from the original name and generate the rest,
+    // so nothing about the admin's local filename can break the upload.
+    const extensionMatch = /\.[a-zA-Z0-9]+$/.exec(file.name)
+    const extension = extensionMatch ? extensionMatch[0] : ''
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${extension}`
+
     const { error } = await supabase.storage.from('event-images').upload(path, file)
     if (error) throw error
     const { data } = supabase.storage.from('event-images').getPublicUrl(path)

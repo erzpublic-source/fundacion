@@ -166,8 +166,14 @@ export default function EventForm() {
     try {
       const url = await uploadEventImage(file)
       setImageUrl(url)
-    } catch {
-      setImageError('No se pudo subir la imagen. Verifica tu conexión e inténtalo de nuevo.')
+    } catch (error) {
+      console.error('uploadEventImage failed:', error)
+      const detail = error instanceof Error ? error.message : null
+      setImageError(
+        detail
+          ? `No se pudo subir la imagen: ${detail}`
+          : 'No se pudo subir la imagen. Verifica tu conexión e inténtalo de nuevo.',
+      )
     } finally {
       setUploadingImage(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
