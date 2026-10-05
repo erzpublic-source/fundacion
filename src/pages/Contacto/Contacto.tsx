@@ -396,10 +396,10 @@ export default function Contacto() {
               </span>
               <h3>Sede Central</h3>
               <p>
-                <strong>Dirección física:</strong> Calle 45 #8-12, Of. 402
+                <strong>Dirección física:</strong> Calle 36 # 7-106
               </p>
               <p>
-                <strong>Ciudad:</strong> Bogotá D.C.
+                <strong>Ciudad:</strong> Ibagué, Tolima
               </p>
               <p>
                 <strong>País:</strong> Colombia
