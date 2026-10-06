@@ -12,13 +12,8 @@ import { HONEYPOT_STYLE } from '../../utils/honeypotStyle'
 import heroImage from '../../assets/images/voluntariado-hero.jpg'
 import heroImageMobile from '../../assets/images/voluntariado-hero-mobile.jpg'
 import { COLOMBIA_CITIES } from '../../data/colombiaCities'
+import { supabase } from '../../lib/supabaseClient'
 import './Voluntariado.css'
-
-// Set this to your PHP endpoint once it's deployed on a server that can run
-// it (GitHub Pages only serves static files, it cannot execute PHP), e.g.
-// 'https://tudominio.com/api/procesar-voluntariado.php'. Until then, the form
-// stays fully usable but submitting surfaces the "error" state below.
-const VOLUNTARIADO_ENDPOINT = ''
 
 const MAX_FILE_SIZE_BYTES = 7 * 1024 * 1024
 
@@ -328,20 +323,22 @@ export default function Voluntariado() {
     setSubmitStatus('loading')
 
     try {
-      if (!VOLUNTARIADO_ENDPOINT) {
-        throw new Error('endpoint-not-configured')
-      }
+      const extensionMatch = /\.[a-zA-Z0-9]+$/.exec(file.name)
+      const extension = extensionMatch ? extensionMatch[0] : '.pdf'
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${extension}`
 
-      const formData = new FormData()
-      formData.append('nombre', fields.nombre)
-      formData.append('especialidad', fields.especialidad)
-      formData.append('ciudad', fields.ciudad)
-      formData.append('celular', fields.celular)
-      formData.append('correo', fields.correo)
-      formData.append('hoja_de_vida', file)
+      const { error: uploadError } = await supabase.storage.from('volunteer-cvs').upload(path, file)
+      if (uploadError) throw uploadError
 
-      const response = await fetch(VOLUNTARIADO_ENDPOINT, { method: 'POST', body: formData })
-      if (!response.ok) throw new Error('request-failed')
+      const { error: insertError } = await supabase.from('volunteer_applications').insert({
+        nombre: fields.nombre.trim(),
+        especialidad: fields.especialidad.trim(),
+        ciudad: fields.ciudad.trim(),
+        celular: fields.celular.trim(),
+        correo: fields.correo.trim(),
+        cv_url: path,
+      })
+      if (insertError) throw insertError
 
       setSubmitStatus('success')
     } catch {
