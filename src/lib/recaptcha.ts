@@ -7,4 +7,9 @@
 // need a backend function, which this static site doesn't have yet. Without
 // that, this stops generic bots that fill out every form they find, but
 // doesn't stop a determined attacker calling the Supabase API directly.
-export const RECAPTCHA_SITE_KEY = '6LfYEuEtAAAAAN5l6MHuWNzKV26i3Po52RlkDoKP'
+//
+// reCAPTCHA keys are registered per domain, and staging/production use
+// separate sites in the Google console, so the key comes from the build's
+// env var — falling back to the production key for local dev.
+export const RECAPTCHA_SITE_KEY =
+  import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LfYEuEtAAAAAN5l6MHuWNzKV26i3Po52RlkDoKP'
