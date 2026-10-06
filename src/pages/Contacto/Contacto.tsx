@@ -8,12 +8,8 @@ import RecaptchaField from '../../components/RecaptchaField/RecaptchaField'
 import { PRIVACY_POLICY_TITLE, PRIVACY_POLICY_UPDATED_LABEL, PrivacyPolicyContent } from '../../content/privacyPolicy'
 import { useHoneypot } from '../../hooks/useHoneypot'
 import { HONEYPOT_STYLE } from '../../utils/honeypotStyle'
+import { supabase } from '../../lib/supabaseClient'
 import './Contacto.css'
-
-// Set this to your PHP (or other) endpoint once it's deployed on a server
-// that can run it (GitHub Pages only serves static files). Until then, the
-// form stays fully usable but submitting surfaces the "error" state below.
-const CONTACTO_ENDPOINT = ''
 
 function UserIcon() {
   return (
@@ -197,14 +193,13 @@ export default function Contacto() {
 
     setSubmitStatus('loading')
     try {
-      if (!CONTACTO_ENDPOINT) throw new Error('endpoint-not-configured')
-
-      const response = await fetch(CONTACTO_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fields),
+      const { error } = await supabase.from('contact_messages').insert({
+        nombre: fields.nombre.trim(),
+        correo: fields.correo.trim(),
+        asunto: fields.asunto.trim(),
+        mensaje: fields.mensaje.trim(),
       })
-      if (!response.ok) throw new Error('request-failed')
+      if (error) throw error
 
       setSubmitStatus('success')
     } catch {
