@@ -60,21 +60,6 @@ create table if not exists public.reservations (
 create index if not exists reservations_event_id_idx on public.reservations (event_id);
 
 -- ---------------------------------------------------------------------------
--- reservedCount: vista con el conteo de reservas activas (no rechazadas) por evento
--- ---------------------------------------------------------------------------
-create or replace view public.events_with_reserved_count as
-select
-  e.*,
-  coalesce(r.reserved_count, 0) as reserved_count
-from public.events e
-left join (
-  select event_id, count(*) as reserved_count
-  from public.reservations
-  where status <> 'rechazado'
-  group by event_id
-) r on r.event_id = e.id;
-
--- ---------------------------------------------------------------------------
 -- Row Level Security
 -- ---------------------------------------------------------------------------
 alter table public.events enable row level security;
