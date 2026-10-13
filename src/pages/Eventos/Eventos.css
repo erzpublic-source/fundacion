@@ -511,6 +511,35 @@
     color: #221920;
   }
 
+  .eventos-actuales__list--grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: var(--grid-max-width);
+  }
+
+  .eventos-actuales__list--grid .evento-actual {
+    flex-direction: column;
+  }
+
+  .eventos-actuales__list--grid .evento-actual__media {
+    flex: none;
+    height: 180px;
+  }
+
+  .eventos-actuales__list--grid .evento-actual__body {
+    padding: 20px 24px;
+  }
+
+  .eventos-actuales .section-heading,
+  .eventos-actuales__lead {
+    transition: max-width 0.2s ease;
+  }
+
+  .eventos-actuales:has(.eventos-actuales__list--grid) .section-heading,
+  .eventos-actuales:has(.eventos-actuales__list--grid) .eventos-actuales__lead {
+    max-width: var(--grid-max-width);
+  }
+
   .eventos-upcoming {
     padding: 88px 72px;
   }
@@ -547,6 +576,47 @@
     flex-shrink: 0;
     width: 220px;
     height: 130px;
+  }
+
+  .eventos-upcoming__list--grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: var(--grid-max-width);
+  }
+
+  .eventos-upcoming__list--grid .evento-item {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+    border-bottom: none;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-01);
+  }
+
+  .eventos-upcoming__list--grid .evento-item__thumb--desktop {
+    order: 0;
+    width: 100%;
+    height: 160px;
+  }
+
+  .eventos-upcoming__list--grid .evento-item__date {
+    order: 1;
+  }
+
+  .eventos-upcoming__list--grid .evento-item__body {
+    order: 2;
+  }
+
+  .eventos-upcoming .section-heading,
+  .eventos-upcoming__lead {
+    transition: max-width 0.2s ease;
+  }
+
+  .eventos-upcoming:has(.eventos-upcoming__list--grid) .section-heading,
+  .eventos-upcoming:has(.eventos-upcoming__list--grid) .eventos-upcoming__lead {
+    max-width: var(--grid-max-width);
   }
 }
 

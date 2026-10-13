@@ -206,7 +206,7 @@ export default function Eventos() {
             </p>
           </div>
 
-          <div className="eventos-actuales__list">
+          <div className={`eventos-actuales__list${programados.length >= 2 ? ' eventos-actuales__list--grid' : ''}`}>
             {programados.length === 0 && (
               <p className="eventos-actuales__lead">No hay eventos programados por el momento.</p>
             )}
@@ -269,7 +269,7 @@ export default function Eventos() {
             <p className="eventos-upcoming__lead">Encuentra un espacio para ti en nuestras próximas actividades.</p>
           </div>
 
-          <div className="eventos-upcoming__list">
+          <div className={`eventos-upcoming__list${proximamente.length >= 2 ? ' eventos-upcoming__list--grid' : ''}`}>
             {proximamente.length === 0 && (
               <p className="eventos-upcoming__lead">No hay anuncios próximamente por el momento.</p>
             )}
