@@ -1,6 +1,7 @@
 .footer {
   background: #fafaf8;
   padding: 48px 16px 32px;
+  box-shadow: 0 -4px 16px rgba(34, 25, 32, 0.06);
 }
 
 @media (max-width: 899px) {
