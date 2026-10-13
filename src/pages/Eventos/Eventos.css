@@ -472,20 +472,18 @@
     text-align: center;
   }
 
-  .evento-actual {
-    flex-direction: row;
-    align-items: stretch;
+  .eventos-actuales__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
   }
 
   .evento-actual__media {
-    flex: 0 0 260px;
-    height: auto;
+    height: 200px;
   }
 
   .evento-actual__body {
-    flex: 1;
-    justify-content: center;
-    padding: 28px 32px;
+    padding: 24px 28px;
   }
 
   .evento-actual__meta {
@@ -535,6 +533,7 @@
   .evento-item__body {
     order: 2;
     flex: 1;
+    max-width: 640px;
   }
 
   .evento-item__time--desktop {
