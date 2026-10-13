@@ -1,4 +1,5 @@
 .admin-header {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6,6 +7,32 @@
   padding: 16px;
   background: #ffffff;
   border-bottom: 1px solid rgba(203, 196, 208, 0.3);
+}
+
+.admin-header__credit {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .admin-header__credit {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    font-size: 13px;
+    color: #9b93a3;
+  }
+
+  .admin-header__credit a {
+    color: #9b93a3;
+    text-decoration: underline;
+  }
+
+  .admin-header__credit a:hover {
+    color: var(--color-violeta-esperanza);
+  }
 }
 
 .admin-header__menu {

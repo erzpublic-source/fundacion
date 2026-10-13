@@ -38,6 +38,13 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
         <MenuIcon />
       </button>
 
+      <p className="admin-header__credit">
+        Powered by{' '}
+        <a href="https://erzlab.com" target="_blank" rel="noopener noreferrer">
+          erzlab.com
+        </a>
+      </p>
+
       <div className="admin-header__user">
         <span className="admin-header__avatar" aria-hidden="true">
           {initials}
