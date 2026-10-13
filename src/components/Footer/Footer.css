@@ -98,6 +98,11 @@
 }
 
 .footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
   max-width: var(--grid-max-width);
   margin: 32px auto 0;
   padding-top: 25px;
@@ -111,7 +116,6 @@
 }
 
 .footer__bottom .footer__credit {
-  margin-top: 6px;
   font-size: 13px;
 }
 
