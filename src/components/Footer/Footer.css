@@ -110,6 +110,20 @@
   font-size: 15px;
 }
 
+.footer__bottom .footer__credit {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.footer__credit a {
+  color: #6b7280;
+  text-decoration: underline;
+}
+
+.footer__credit a:hover {
+  color: var(--color-violeta-esperanza);
+}
+
 @media (min-width: 900px) {
   .footer {
     padding: 64px 72px 48px;

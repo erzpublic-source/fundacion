@@ -103,6 +103,12 @@ export default function Footer() {
 
       <div className="footer__bottom">
         <p>© {new Date().getFullYear()} Fundación Un Día Más. Todos los derechos reservados.</p>
+        <p className="footer__credit">
+          Powered by{' '}
+          <a href="https://erzlab.com" target="_blank" rel="noopener noreferrer">
+            erzlab.com
+          </a>
+        </p>
       </div>
     </footer>
 
