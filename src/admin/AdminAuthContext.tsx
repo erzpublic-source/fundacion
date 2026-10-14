@@ -68,13 +68,9 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
-      if (error) {
-        console.error('signInWithPassword failed:', error.name, error.message, error.status)
-        return { error: 'invalid-credentials' }
-      }
+      if (error) return { error: 'invalid-credentials' }
       return { error: null }
-    } catch (err) {
-      console.error('signInWithPassword threw:', err)
+    } catch {
       return { error: 'network-error' }
     }
   }, [])
