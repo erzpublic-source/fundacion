@@ -85,3 +85,9 @@
 .confirm-dialog__cancel {
   width: 100%;
 }
+
+.confirm-dialog__extra {
+  width: 100%;
+  margin-bottom: 8px;
+  text-align: left;
+}

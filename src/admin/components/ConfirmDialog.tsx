@@ -37,6 +37,10 @@ interface ConfirmDialogProps {
   loading?: boolean
   /** Overrides the tone's default icon — used by the featured-toggle flows (star vs. exclamation), both amber-toned but with different glyphs. */
   icon?: ReactNode
+  /** Extra form content rendered between the description and the buttons (e.g. the rejection-reason picker) — left-aligned, unlike the centered prose above it. */
+  children?: ReactNode
+  /** Disables just the confirm button (independent of `loading`) — e.g. until a required field in `children` is filled in. */
+  confirmDisabled?: boolean
   onConfirm: () => void
   onClose: () => void
 }
@@ -53,6 +57,8 @@ export default function ConfirmDialog({
   cancelLabel = 'Cerrar',
   loading = false,
   icon,
+  children,
+  confirmDisabled = false,
   onConfirm,
   onClose,
 }: ConfirmDialogProps) {
@@ -76,7 +82,14 @@ export default function ConfirmDialog({
         <h3 id="confirm-dialog-title">{title}</h3>
         <p>{description}</p>
 
-        <button type="button" className="btn btn--primary confirm-dialog__confirm" onClick={onConfirm} disabled={loading}>
+        {children && <div className="confirm-dialog__extra">{children}</div>}
+
+        <button
+          type="button"
+          className="btn btn--primary confirm-dialog__confirm"
+          onClick={onConfirm}
+          disabled={loading || confirmDisabled}
+        >
           {loading ? 'Procesando...' : confirmLabel}
         </button>
         <button type="button" className="btn btn--secondary confirm-dialog__cancel" onClick={onClose} disabled={loading}>

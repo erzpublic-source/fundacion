@@ -12,7 +12,7 @@ interface AdminReservationsContextValue {
   reservationsFor: (eventId: string) => Reservation[]
   createReservation: (input: CreateReservationInput) => Promise<void>
   approveReservation: (eventId: string, id: string) => Promise<string>
-  rejectReservation: (eventId: string, id: string) => Promise<void>
+  rejectReservation: (eventId: string, id: string, reason: string) => Promise<void>
   /** Reverts a rejection back to "pendiente" — used by the "Deshacer" toast window; idempotent past that window. */
   undoReject: (eventId: string, id: string) => void
 }
@@ -29,6 +29,7 @@ interface ReservationRow {
   receipt_url: string | null
   ticket_code: string | null
   discount_code: string | null
+  rejection_reason: string | null
   created_at: string
 }
 
@@ -43,6 +44,7 @@ function toReservation(row: ReservationRow): Reservation {
     receiptUrl: row.receipt_url,
     ticketCode: row.ticket_code,
     discountCode: row.discount_code,
+    rejectionReason: row.rejection_reason,
     createdAt: new Date(row.created_at).getTime(),
   }
 }
@@ -153,14 +155,19 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
     }
   }, [])
 
-  const rejectReservation = useCallback(async (eventId: string, id: string) => {
+  const rejectReservation = useCallback(async (eventId: string, id: string, reason: string) => {
     setRejecting(id)
     try {
-      const { error } = await supabase.from('reservations').update({ status: 'rechazado' }).eq('id', id)
+      const { error } = await supabase
+        .from('reservations')
+        .update({ status: 'rechazado', rejection_reason: reason })
+        .eq('id', id)
       if (error) throw error
       setByEvent((prev) => ({
         ...prev,
-        [eventId]: (prev[eventId] ?? []).map((r) => (r.id === id ? { ...r, status: 'rechazado' } : r)),
+        [eventId]: (prev[eventId] ?? []).map((r) =>
+          r.id === id ? { ...r, status: 'rechazado', rejectionReason: reason } : r,
+        ),
       }))
     } finally {
       setRejecting(null)

@@ -108,6 +108,16 @@ type TabValue = 'todas' | ReservationStatus
 
 type ConfirmAction = { type: 'approve' | 'reject'; reservation: Reservation }
 
+const REJECTION_REASONS = [
+  { value: 'comprobante_invalido', label: 'Comprobante no válido' },
+  { value: 'cupo_agotado', label: 'Cupo agotado' },
+  { value: 'otro', label: 'Otro' },
+] as const
+
+type RejectionReasonValue = (typeof REJECTION_REASONS)[number]['value']
+
+const REJECTION_DETAIL_MAX_LENGTH = 400
+
 export default function EventoReservas() {
   const { id } = useParams<{ id: string }>()
   const { getEvent } = useAdminEvents()
@@ -136,6 +146,8 @@ export default function EventoReservas() {
   // is needed here on unmount: the store keeps the rejection sealed on its
   // own since it lives above the router's page-remount boundary (App.tsx).
   const [pendingUndo, setPendingUndo] = useState<{ id: string; name: string } | null>(null)
+  const [rejectReason, setRejectReason] = useState<RejectionReasonValue | ''>('')
+  const [rejectDetail, setRejectDetail] = useState('')
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const copiedTimerRef = useRef<number | null>(null)
   const [copyToastMessage, setCopyToastMessage] = useState<string | null>(null)
@@ -198,6 +210,8 @@ export default function EventoReservas() {
 
   function requestReject(reservation: Reservation) {
     setViewReceipt(null)
+    setRejectReason('')
+    setRejectDetail('')
     setConfirmAction({ type: 'reject', reservation })
   }
 
@@ -208,10 +222,14 @@ export default function EventoReservas() {
     setConfirmAction(null)
   }
 
+  const rejectReasonLabel = REJECTION_REASONS.find((r) => r.value === rejectReason)?.label ?? ''
+  const rejectReasonFinal = rejectReason === 'otro' ? rejectDetail.trim() : rejectReasonLabel
+  const rejectReasonValid = rejectReason !== '' && (rejectReason !== 'otro' || rejectDetail.trim() !== '')
+
   async function handleConfirmReject() {
-    if (!confirmAction || !id) return
+    if (!confirmAction || !id || !rejectReasonValid) return
     const { reservation } = confirmAction
-    await rejectReservation(id, reservation.id)
+    await rejectReservation(id, reservation.id, rejectReasonFinal)
     setConfirmAction(null)
     setPendingUndo({ id: reservation.id, name: reservation.attendeeName })
   }
@@ -471,9 +489,47 @@ export default function EventoReservas() {
           description="Al rechazar, la solicitud será descartada permanentemente. Esta acción no se puede revertir."
           confirmLabel="Confirmar"
           loading={rejecting === confirmAction.reservation.id}
+          confirmDisabled={!rejectReasonValid}
           onConfirm={handleConfirmReject}
           onClose={() => setConfirmAction(null)}
-        />
+        >
+          <div className="reject-reason">
+            <label htmlFor="reject-reason-select" className="reject-reason__label">
+              Motivo del rechazo
+            </label>
+            <select
+              id="reject-reason-select"
+              className="reject-reason__select"
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value as RejectionReasonValue)}
+            >
+              <option value="" disabled>
+                Selecciona un motivo
+              </option>
+              {REJECTION_REASONS.map((r) => (
+                <option key={r.value} value={r.value}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+
+            {rejectReason === 'otro' && (
+              <>
+                <textarea
+                  className="reject-reason__detail"
+                  value={rejectDetail}
+                  maxLength={REJECTION_DETAIL_MAX_LENGTH}
+                  onChange={(e) => setRejectDetail(e.target.value)}
+                  placeholder="Describe el motivo del rechazo..."
+                  rows={3}
+                />
+                <span className="reject-reason__counter">
+                  {rejectDetail.length}/{REJECTION_DETAIL_MAX_LENGTH}
+                </span>
+              </>
+            )}
+          </div>
+        </ConfirmDialog>
       )}
 
       {approvedResult && (
