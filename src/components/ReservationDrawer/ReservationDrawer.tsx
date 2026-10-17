@@ -754,7 +754,8 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
 
             <p className="reservation-drawer__success-note">
               Estamos validando tu {isFree ? 'reserva' : 'pago'} con el equipo de la fundación. Te notificaremos vía
-              correo electrónico con tu código de entrada oficial tan pronto sea aprobado.
+              correo electrónico con tu código de entrada oficial tan pronto sea aprobado.{' '}
+              <strong>Revisa tu bandeja de entrada o la carpeta de spam.</strong>
             </p>
 
             <dl className="reservation-drawer__success-summary">
