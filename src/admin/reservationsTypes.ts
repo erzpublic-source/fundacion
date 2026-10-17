@@ -20,6 +20,8 @@ export interface Reservation {
    */
   receiptUrl: string | null
   ticketCode: string | null
+  /** The discount code applied at checkout, if any. */
+  discountCode: string | null
   createdAt: number
 }
 

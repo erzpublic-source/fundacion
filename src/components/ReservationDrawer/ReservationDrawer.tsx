@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import type ReCAPTCHA from 'react-google-recaptcha'
 import { useAdminReservations } from '../../admin/AdminReservationsContext'
+import { supabase } from '../../lib/supabaseClient'
 import RecaptchaField from '../RecaptchaField/RecaptchaField'
 import './ReservationDrawer.css'
 
@@ -9,10 +10,18 @@ const MAX_TICKETS = 4
 const MAX_RECEIPT_SIZE_BYTES = 5 * 1024 * 1024
 const ACCEPTED_RECEIPT_TYPES = ['image/jpeg', 'image/png', 'application/pdf']
 
-// Mock codes for now — there is no backend validating these yet.
-const DISCOUNT_CODES: Record<string, { type: 'percent' | 'amount'; value: number; message: string }> = {
-  UNDIAMAS: { type: 'percent', value: 100, message: '¡Código aplicado! 100% de descuento.' },
-  APOYO10: { type: 'amount', value: 10000, message: 'Descuento de $10.000 aplicado.' },
+type DiscountKind = 'percent' | 'fixed' | 'free'
+
+interface AppliedDiscount {
+  code: string
+  kind: DiscountKind
+  value: number
+}
+
+function describeDiscount(discount: AppliedDiscount): string {
+  if (discount.kind === 'free') return '¡Código aplicado! 100% de descuento.'
+  if (discount.kind === 'percent') return `¡Código aplicado! ${discount.value}% de descuento.`
+  return `Descuento de ${formatCOP(discount.value)} aplicado.`
 }
 
 const PAYMENT_ACCOUNTS = {
@@ -191,10 +200,9 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
   const [attendeeNames, setAttendeeNames] = useState<string[]>([])
 
   const [discountInput, setDiscountInput] = useState('')
-  const [discountApplied, setDiscountApplied] = useState<{ type: 'percent' | 'amount'; value: number; message: string } | null>(
-    null,
-  )
+  const [discountApplied, setDiscountApplied] = useState<AppliedDiscount | null>(null)
   const [discountError, setDiscountError] = useState<string | null>(null)
+  const [discountChecking, setDiscountChecking] = useState(false)
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('nequi')
   const [copied, setCopied] = useState(false)
@@ -248,7 +256,8 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
 
   const discountAmount = useMemo(() => {
     if (!discountApplied) return 0
-    if (discountApplied.type === 'percent') return Math.round(subtotal * (discountApplied.value / 100))
+    if (discountApplied.kind === 'free') return subtotal
+    if (discountApplied.kind === 'percent') return Math.round(subtotal * (discountApplied.value / 100))
     return Math.min(discountApplied.value, subtotal)
   }, [discountApplied, subtotal])
 
@@ -274,16 +283,29 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
     })
   }
 
-  function applyDiscount() {
+  async function applyDiscount() {
     const code = discountInput.trim().toUpperCase()
-    if (!code) return
-    const found = DISCOUNT_CODES[code]
-    if (found) {
-      setDiscountApplied(found)
-      setDiscountError(null)
-    } else {
+    if (!code || discountChecking) return
+
+    setDiscountChecking(true)
+    try {
+      const { data, error } = await supabase.rpc('validate_discount_code', {
+        p_event_id: event.eventId,
+        p_code: code,
+      })
+      const found = !error && data && data.length > 0 ? data[0] : null
+      if (found) {
+        setDiscountApplied({ code, kind: found.kind as DiscountKind, value: found.value })
+        setDiscountError(null)
+      } else {
+        setDiscountApplied(null)
+        setDiscountError('Código inválido o expirado.')
+      }
+    } catch {
       setDiscountApplied(null)
-      setDiscountError('Código inválido o expirado.')
+      setDiscountError('No pudimos validar el código. Intenta de nuevo.')
+    } finally {
+      setDiscountChecking(false)
     }
   }
 
@@ -345,7 +367,14 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
       email: buyerEmail,
       amountPerAttendee: quantity > 0 ? Math.round(total / quantity) : 0,
       receiptFile: receipt,
+      discountCode: discountApplied?.code ?? null,
     })
+    if (discountApplied) {
+      // Best-effort: the reservation itself already went through, so a
+      // failure here (e.g. the code got exhausted by someone else in the
+      // meantime) shouldn't block the buyer's confirmation.
+      void supabase.rpc('redeem_discount_code', { p_event_id: event.eventId, p_code: discountApplied.code })
+    }
     setReservationCode(`#RES-${Math.floor(1000 + Math.random() * 9000)}`)
     setSubmitting(false)
     setStep('success')
@@ -598,11 +627,11 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                     value={discountInput}
                     onChange={(e) => setDiscountInput(e.target.value)}
                   />
-                  <button type="button" className="btn btn--secondary" onClick={applyDiscount}>
-                    Aplicar
+                  <button type="button" className="btn btn--secondary" onClick={applyDiscount} disabled={discountChecking}>
+                    {discountChecking ? 'Validando...' : 'Aplicar'}
                   </button>
                 </div>
-                {discountApplied && <p className="reservation-drawer__discount-ok">{discountApplied.message}</p>}
+                {discountApplied && <p className="reservation-drawer__discount-ok">{describeDiscount(discountApplied)}</p>}
                 {discountError && <p className="reservation-drawer__discount-error">{discountError}</p>}
               </div>
             </div>
