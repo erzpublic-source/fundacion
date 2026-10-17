@@ -32,6 +32,11 @@ const PAYMENT_ACCOUNTS = {
 const PHONE_PATTERN = /^3\d{9}$/
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+/** Strips digits from a name field — letters, spaces and basic punctuation only. */
+function stripDigits(value: string): string {
+  return value.replace(/[0-9]/g, '')
+}
+
 // Accidentally closing the drawer (backdrop click, Escape, the X button)
 // shouldn't force the buyer to retype their basic contact info if they
 // immediately reopen it — but this is still personal data, so it's kept in
@@ -557,7 +562,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                   type="text"
                   maxLength={40}
                   value={buyerName}
-                  onChange={(e) => setBuyerName(e.target.value)}
+                  onChange={(e) => setBuyerName(stripDigits(e.target.value))}
                   required
                 />
               </div>
@@ -610,7 +615,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                     id={`attendee-${i}`}
                     type="text"
                     value={name}
-                    onChange={(e) => updateAttendeeName(i, e.target.value)}
+                    onChange={(e) => updateAttendeeName(i, stripDigits(e.target.value))}
                     required
                   />
                 </div>
