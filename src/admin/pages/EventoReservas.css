@@ -364,3 +364,44 @@
     justify-content: space-between;
   }
 }
+
+/* ==================== Rejection reason picker (inside ConfirmDialog) ==================== */
+.reject-reason {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reject-reason__label {
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: #221920;
+}
+
+.reject-reason__select {
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  color: #221920;
+}
+
+.reject-reason__detail {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  color: #221920;
+  resize: vertical;
+}
+
+.reject-reason__counter {
+  align-self: flex-end;
+  font-size: 12px;
+  color: #9ca3af;
+}

@@ -22,6 +22,8 @@ export interface Reservation {
   ticketCode: string | null
   /** The discount code applied at checkout, if any. */
   discountCode: string | null
+  /** Set when status is 'rechazado' — the reason the admin picked (or typed) when rejecting. */
+  rejectionReason: string | null
   createdAt: number
 }
 
