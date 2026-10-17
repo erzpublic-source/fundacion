@@ -779,7 +779,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
               Cerrar
             </button>
             <p className="reservation-drawer__success-help">
-              ¿Problemas con el reporte? Escríbenos a info@fundacionundiamas.org o al WhatsApp 300 000 0000
+              ¿Problemas con el reporte? Escríbenos a info@fundacionundiamas.org o al WhatsApp 302 587 1770
             </p>
           </div>
         )}
