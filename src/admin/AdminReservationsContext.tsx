@@ -28,6 +28,7 @@ interface ReservationRow {
   status: Reservation['status']
   receipt_url: string | null
   ticket_code: string | null
+  discount_code: string | null
   created_at: string
 }
 
@@ -41,6 +42,7 @@ function toReservation(row: ReservationRow): Reservation {
     status: row.status,
     receiptUrl: row.receipt_url,
     ticketCode: row.ticket_code,
+    discountCode: row.discount_code,
     createdAt: new Date(row.created_at).getTime(),
   }
 }
@@ -58,6 +60,8 @@ export interface CreateReservationInput {
   amountPerAttendee: number
   /** The buyer's uploaded payment proof, or null for a free reservation that never required one. */
   receiptFile: File | null
+  /** The discount code applied at checkout, if any — stored for reference (e.g. the confirmation email). */
+  discountCode: string | null
 }
 
 export function AdminReservationsProvider({ children }: { children: ReactNode }) {
@@ -93,7 +97,7 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
   const reservationsFor = useCallback((eventId: string) => byEvent[eventId] ?? [], [byEvent])
 
   const createReservation = useCallback(
-    async ({ eventId, attendeeNames, email, amountPerAttendee, receiptFile }: CreateReservationInput) => {
+    async ({ eventId, attendeeNames, email, amountPerAttendee, receiptFile, discountCode }: CreateReservationInput) => {
       setCreating(true)
       try {
         let receiptPath: string | null = null
@@ -122,6 +126,7 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
             amount_paid: amountPerAttendee,
             status: 'pendiente',
             receipt_url: receiptPath,
+            discount_code: discountCode,
           })),
         )
         if (error) throw error
