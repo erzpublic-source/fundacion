@@ -80,7 +80,7 @@
   padding: 0 16px;
   border: 1px solid var(--color-border-input);
   border-radius: var(--radius-full);
-  background: #fbf8fc;
+  background: #fff;
   color: #9b93a3;
   transition: border-color 0.15s ease;
 }
@@ -126,7 +126,7 @@
   padding: 14px 16px;
   border: 1px solid var(--color-border-input);
   border-radius: var(--radius-md);
-  background: #fbf8fc;
+  background: #fff;
   font-family: inherit;
   font-size: 16px;
   color: #221920;
