@@ -373,13 +373,8 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
       amountPerAttendee: quantity > 0 ? Math.round(total / quantity) : 0,
       receiptFile: receipt,
       discountCode: discountApplied?.code ?? null,
+      recaptchaToken: captchaToken ?? '',
     })
-    if (discountApplied) {
-      // Best-effort: the reservation itself already went through, so a
-      // failure here (e.g. the code got exhausted by someone else in the
-      // meantime) shouldn't block the buyer's confirmation.
-      void supabase.rpc('redeem_discount_code', { p_event_id: event.eventId, p_code: discountApplied.code })
-    }
     setReservationCode(`#RES-${Math.floor(1000 + Math.random() * 9000)}`)
     setSubmitting(false)
     setStep('success')

@@ -191,15 +191,20 @@ export default function Contacto() {
       return
     }
 
+    if (!captchaToken) return
+
     setSubmitStatus('loading')
     try {
-      const { error } = await supabase.from('contact_messages').insert({
-        nombre: fields.nombre.trim(),
-        correo: fields.correo.trim(),
-        asunto: fields.asunto.trim(),
-        mensaje: fields.mensaje.trim(),
+      const { data, error } = await supabase.functions.invoke('submit-contact', {
+        body: {
+          nombre: fields.nombre.trim(),
+          correo: fields.correo.trim(),
+          asunto: fields.asunto.trim(),
+          mensaje: fields.mensaje.trim(),
+          recaptchaToken: captchaToken,
+        },
       })
-      if (error) throw error
+      if (error || !data?.ok) throw error ?? new Error('submit-contact failed')
 
       setSubmitStatus('success')
     } catch {

@@ -311,7 +311,7 @@ export default function Voluntariado() {
   }
 
   async function submitForm() {
-    if (!isFormValid || !file) return
+    if (!isFormValid || !file || !captchaToken) return
 
     // A bot filled the decoy field — pretend the submission worked so it
     // doesn't learn anything and retry differently, but never actually send it.
@@ -330,15 +330,18 @@ export default function Voluntariado() {
       const { error: uploadError } = await supabase.storage.from('volunteer-cvs').upload(path, file)
       if (uploadError) throw uploadError
 
-      const { error: insertError } = await supabase.from('volunteer_applications').insert({
-        nombre: fields.nombre.trim(),
-        especialidad: fields.especialidad.trim(),
-        ciudad: fields.ciudad.trim(),
-        celular: fields.celular.trim(),
-        correo: fields.correo.trim(),
-        cv_url: path,
+      const { data, error } = await supabase.functions.invoke('submit-volunteer', {
+        body: {
+          nombre: fields.nombre.trim(),
+          especialidad: fields.especialidad.trim(),
+          ciudad: fields.ciudad.trim(),
+          celular: fields.celular.trim(),
+          correo: fields.correo.trim(),
+          cvUrl: path,
+          recaptchaToken: captchaToken,
+        },
       })
-      if (insertError) throw insertError
+      if (error || !data?.ok) throw error ?? new Error('submit-volunteer failed')
 
       setSubmitStatus('success')
     } catch {
