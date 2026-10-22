@@ -64,6 +64,8 @@ export interface CreateReservationInput {
   receiptFile: File | null
   /** The discount code applied at checkout, if any — stored for reference (e.g. the confirmation email). */
   discountCode: string | null
+  /** reCAPTCHA token from the booking form — verified server-side by the submit-reservation Edge Function. */
+  recaptchaToken: string
 }
 
 export function AdminReservationsProvider({ children }: { children: ReactNode }) {
@@ -99,7 +101,15 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
   const reservationsFor = useCallback((eventId: string) => byEvent[eventId] ?? [], [byEvent])
 
   const createReservation = useCallback(
-    async ({ eventId, attendeeNames, email, amountPerAttendee, receiptFile, discountCode }: CreateReservationInput) => {
+    async ({
+      eventId,
+      attendeeNames,
+      email,
+      amountPerAttendee,
+      receiptFile,
+      discountCode,
+      recaptchaToken,
+    }: CreateReservationInput) => {
       setCreating(true)
       try {
         let receiptPath: string | null = null
@@ -115,23 +125,22 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
           receiptPath = path
         }
 
-        // No .select() here on purpose: this runs from the public booking
-        // flow (anonymous visitor), and the `reservations` read policy only
-        // allows an authenticated admin — PostgREST would just hand back an
-        // empty result for the insert's own representation, which nothing
-        // here uses.
-        const { error } = await supabase.from('reservations').insert(
-          attendeeNames.map((attendeeName) => ({
-            event_id: eventId,
-            attendee_name: attendeeName,
+        // The actual rows are inserted by the submit-reservation Edge
+        // Function (with the service role key), which first verifies the
+        // reCAPTCHA token against Google — the public anon insert policy
+        // was removed, so a direct insert from here would just fail RLS.
+        const { data, error } = await supabase.functions.invoke('submit-reservation', {
+          body: {
+            eventId,
+            attendeeNames,
             email,
-            amount_paid: amountPerAttendee,
-            status: 'pendiente',
-            receipt_url: receiptPath,
-            discount_code: discountCode,
-          })),
-        )
-        if (error) throw error
+            amountPerAttendee,
+            receiptPath,
+            discountCode,
+            recaptchaToken,
+          },
+        })
+        if (error || !data?.ok) throw error ?? new Error('submit-reservation failed')
       } finally {
         setCreating(false)
       }
