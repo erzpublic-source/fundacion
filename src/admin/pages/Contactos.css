@@ -1,0 +1,193 @@
+.contactos-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contactos-page__intro h1 {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: #221920;
+}
+
+.contactos-page__intro p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ---------- Toolbar: tabs + search ---------- */
+.contactos-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contactos-toolbar__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.contactos-toolbar__tab {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid rgba(203, 196, 208, 0.5);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.contactos-toolbar__tab--active {
+  background: #7b2d8e;
+  border-color: transparent;
+  color: #fff;
+}
+
+.contactos-toolbar__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: #9b93a3;
+}
+
+.contactos-toolbar__search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: #221920;
+}
+
+.contactos-toolbar__search input::placeholder {
+  color: #9b93a3;
+}
+
+/* ---------- Table (desktop) / card list (mobile) ---------- */
+.contactos-table {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-01);
+  overflow: hidden;
+}
+
+.contactos-table__head {
+  display: none;
+}
+
+.contactos-table__row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-bottom: 1px solid rgba(203, 196, 208, 0.3);
+}
+
+.contactos-table__row:last-child {
+  border-bottom: none;
+}
+
+.contactos-table__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #221920;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contactos-table__cell::before {
+  content: attr(data-label);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #9b93a3;
+}
+
+.contactos-table__cell strong {
+  font-size: 14px;
+  color: #221920;
+}
+
+.contactos-table__cell--actions {
+  flex-direction: row;
+  gap: 10px;
+}
+
+.contactos-table__cell--actions::before {
+  display: none;
+}
+
+.contactos-table__action {
+  height: 36px;
+  padding: 0 16px;
+  font-size: 12px;
+  background: #fff;
+  border: 1.5px solid #e0455a;
+  color: #e0455a;
+}
+
+.contactos-table__action:hover {
+  background: #fff0f2;
+}
+
+@media (min-width: 900px) {
+  .contactos-toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .contactos-toolbar__search {
+    width: 260px;
+    flex-shrink: 0;
+  }
+
+  .contactos-table__head {
+    display: grid;
+    grid-template-columns: 1.1fr 1.5fr 1fr 0.8fr 1fr 0.9fr 0.9fr 1fr;
+    gap: 12px;
+    padding: 14px 20px;
+    background: #fbf8fc;
+    font-size: 11px;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #9b93a3;
+  }
+
+  .contactos-table__row {
+    display: grid;
+    grid-template-columns: 1.1fr 1.5fr 1fr 0.8fr 1fr 0.9fr 0.9fr 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+
+  .contactos-table__cell::before {
+    display: none;
+  }
+
+  .contactos-table__cell--actions {
+    justify-content: flex-end;
+  }
+}

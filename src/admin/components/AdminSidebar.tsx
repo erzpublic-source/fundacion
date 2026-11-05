@@ -20,6 +20,16 @@ function PlusNavIcon() {
   )
 }
 
+function ContactsNavIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <circle cx="9" cy="8" r="3.2" />
+      <path d="M3.5 19c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5" strokeLinecap="round" />
+      <path d="M16 7.5a2.8 2.8 0 1 1 0 5.6M18 19c0-2.6-1.7-4.6-4-5.3" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 function GearNavIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -53,6 +63,7 @@ function CloseIcon() {
 const NAV_ITEMS = [
   { to: '/admin/eventos', label: 'Eventos', icon: CalendarNavIcon, exact: false },
   { to: '/admin/eventos/nuevo', label: 'Crear evento', icon: PlusNavIcon, exact: true },
+  { to: '/admin/contactos', label: 'Contactos', icon: ContactsNavIcon, exact: true },
   { to: '/admin/configuracion', label: 'Configuración', icon: GearNavIcon, exact: true },
 ]
 

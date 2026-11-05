@@ -10,6 +10,7 @@ import Contacto from './pages/Contacto/Contacto'
 import { AdminAuthProvider } from './admin/AdminAuthContext'
 import { AdminEventsProvider } from './admin/AdminEventsContext'
 import { AdminReservationsProvider } from './admin/AdminReservationsContext'
+import { AdminContactsProvider } from './admin/AdminContactsContext'
 import ProtectedRoute from './admin/ProtectedRoute'
 import AdminLogin from './admin/pages/Login'
 import AdminRecuperarContrasena from './admin/pages/RecuperarContrasena'
@@ -18,6 +19,7 @@ import AdminNuevaContrasena from './admin/pages/NuevaContrasena'
 import GestionEventos from './admin/pages/GestionEventos'
 import EventForm from './admin/pages/EventForm'
 import EventoReservas from './admin/pages/EventoReservas'
+import Contactos from './admin/pages/Contactos'
 import Configuracion from './admin/pages/Configuracion'
 
 // Client-side route changes don't reset scroll position by default, and on a
@@ -62,6 +64,7 @@ function App() {
       <AdminAuthProvider>
         <AdminEventsProvider>
         <AdminReservationsProvider>
+        <AdminContactsProvider>
           <ScrollToTop />
           <PageTransition>
             <Routes>
@@ -111,6 +114,14 @@ function App() {
                 }
               />
               <Route
+                path="/admin/contactos"
+                element={
+                  <ProtectedRoute>
+                    <Contactos />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/configuracion"
                 element={
                   <ProtectedRoute>
@@ -122,6 +133,7 @@ function App() {
               <Route path="*" element={<Home />} />
             </Routes>
           </PageTransition>
+        </AdminContactsProvider>
         </AdminReservationsProvider>
         </AdminEventsProvider>
       </AdminAuthProvider>

@@ -701,3 +701,24 @@
     font-size: 14px;
   }
 }
+
+.reservation-drawer__checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.reservation-drawer__checkbox input {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  accent-color: var(--color-violeta-esperanza);
+}
+
+.reservation-drawer__checkbox label {
+  font-size: 14px;
+  line-height: 18px;
+  color: #6b7280;
+}
