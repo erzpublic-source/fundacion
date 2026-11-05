@@ -28,7 +28,7 @@ function page(title: string, message: string): Response {
 </head>
 <body>
   <div class="card">
-    <div class="header">Fundación Un Día Más</div>
+    <div class="header">Fundaci&oacute;n Un D&iacute;a M&aacute;s</div>
     <div class="body">
       <h1>${title}</h1>
       <p>${message}</p>
@@ -46,12 +46,12 @@ Deno.serve(async (req: Request) => {
   const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY secret')
-    return page('Algo salió mal', 'No pudimos procesar tu solicitud en este momento. Intenta de nuevo más tarde.')
+    return page('Algo sali&oacute; mal', 'No pudimos procesar tu solicitud en este momento. Intenta de nuevo m&aacute;s tarde.')
   }
 
   const token = new URL(req.url).searchParams.get('token')
   if (!token) {
-    return page('Enlace inválido', 'Este enlace de baja no es válido.')
+    return page('Enlace inv&aacute;lido', 'Este enlace de baja no es v&aacute;lido.')
   }
 
   const res = await fetch(
@@ -70,13 +70,16 @@ Deno.serve(async (req: Request) => {
 
   if (!res.ok) {
     console.error('Unsubscribe update failed:', res.status, await res.text())
-    return page('Algo salió mal', 'No pudimos procesar tu solicitud en este momento. Intenta de nuevo más tarde.')
+    return page('Algo sali&oacute; mal', 'No pudimos procesar tu solicitud en este momento. Intenta de nuevo m&aacute;s tarde.')
   }
 
   const updated = (await res.json()) as unknown[]
   if (updated.length === 0) {
-    return page('Enlace inválido', 'Este enlace de baja no es válido o ya expiró.')
+    return page('Enlace inv&aacute;lido', 'Este enlace de baja no es v&aacute;lido o ya expir&oacute;.')
   }
 
-  return page('Listo, te diste de baja', 'No volverás a recibir correos de invitación a eventos de la Fundación Un Día Más.')
+  return page(
+    'Listo, te diste de baja',
+    'No volver&aacute;s a recibir correos de invitaci&oacute;n a eventos de la Fundaci&oacute;n Un D&iacute;a M&aacute;s.',
+  )
 })
