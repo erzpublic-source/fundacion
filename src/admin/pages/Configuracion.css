@@ -37,7 +37,7 @@
 .configuracion__card-heading p {
   margin: 0;
   font-size: 13px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .configuracion__note {
@@ -62,7 +62,7 @@
 }
 
 .admin-field__control--disabled input {
-  color: #9b93a3;
+  color: #4b5563;
   cursor: not-allowed;
 }
 

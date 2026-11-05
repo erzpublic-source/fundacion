@@ -171,7 +171,7 @@
   margin: 0;
   font-size: 15px;
   line-height: 20px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .reservation-drawer__description--clamped {
@@ -347,7 +347,7 @@
   font-family: inherit;
   font-size: 15px;
   font-weight: var(--font-weight-semibold);
-  color: #6b7280;
+  color: #4b5563;
   cursor: pointer;
 }
 
@@ -378,7 +378,7 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .reservation-drawer__account-value {
@@ -389,7 +389,7 @@
 
 .reservation-drawer__account-holder {
   font-size: 14px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .reservation-drawer__copy {
@@ -476,7 +476,7 @@
   border: none;
   border-radius: 50%;
   background: #f5eff7;
-  color: #6b7280;
+  color: #4b5563;
   cursor: pointer;
 }
 
@@ -485,7 +485,7 @@
   padding: 16px 24px;
   font-size: 14px;
   line-height: 18px;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 /* ---------- Footer ---------- */
@@ -541,7 +541,7 @@
   max-width: 340px;
   font-size: 15px;
   line-height: 20px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .reservation-drawer__success-summary {
@@ -565,7 +565,7 @@
 
 .reservation-drawer__success-summary dt {
   font-size: 14px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .reservation-drawer__success-summary dd {
@@ -578,7 +578,7 @@
 .reservation-drawer__success-help {
   margin: 8px 0 0;
   font-size: 14px;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 @media (max-width: 599px) {
@@ -720,5 +720,5 @@
 .reservation-drawer__checkbox label {
   font-size: 14px;
   line-height: 18px;
-  color: #6b7280;
+  color: #4b5563;
 }

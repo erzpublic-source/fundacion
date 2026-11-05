@@ -71,7 +71,7 @@
 .eventos-hero__lead {
   margin: 0;
   max-width: 620px;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 14px;
   line-height: 20px;
 }
@@ -125,7 +125,7 @@
   margin: 0;
   font-size: 16px;
   line-height: 22px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .eventos-featured__meta {
@@ -170,7 +170,7 @@
 
 .eventos-actuales__lead {
   margin: 0;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 16px;
   line-height: 22px;
 }
@@ -250,7 +250,7 @@
   margin: 0;
   font-size: 16px;
   line-height: 22px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .evento-actual__meta {
@@ -275,7 +275,7 @@
 
 .eventos-upcoming__lead {
   margin: 0;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 16px;
   line-height: 22px;
 }
@@ -343,7 +343,7 @@
   margin: 0;
   font-size: 14px;
   font-weight: var(--font-weight-semibold);
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .evento-item__time--mobile {
@@ -402,7 +402,7 @@
   margin: 0;
   font-size: 16px;
   line-height: 22px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 /* ==================== Desktop ==================== */
@@ -501,7 +501,7 @@
     font-weight: var(--font-weight-bold);
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #9b93a3;
+    color: #4b5563;
   }
 
   .evento-actual__meta dd {

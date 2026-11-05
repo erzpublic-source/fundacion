@@ -77,7 +77,7 @@
 
 .receipt-modal__attendee span {
   font-size: 13px;
-  color: #6b7280;
+  color: #4b5563;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -116,7 +116,7 @@
 
 .receipt-modal__summary dt {
   font-size: 12px;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .receipt-modal__summary dd {
@@ -131,7 +131,7 @@
   margin: 0;
   padding: 24px 0;
   font-size: 13px;
-  color: #6b7280;
+  color: #4b5563;
   text-align: center;
 }
 

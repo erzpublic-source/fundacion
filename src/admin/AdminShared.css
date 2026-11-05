@@ -21,7 +21,7 @@
   align-items: center;
   gap: 6px;
   margin-bottom: 14px;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 13px;
   font-weight: var(--font-weight-semibold);
   text-decoration: none;
@@ -54,7 +54,7 @@
 
 .status-pill--borrador {
   background: #f5f4f2;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .status-pill--cupos-agotados {
@@ -100,7 +100,7 @@
 }
 
 .event-card__occupancy-fill--borrador {
-  background: #9b93a3;
+  background: #4b5563;
 }
 
 .event-card__occupancy-fill--cupos_agotados {
@@ -215,7 +215,7 @@
 .admin-empty-state p {
   margin: 0;
   max-width: 360px;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 14px;
   line-height: 20px;
 }

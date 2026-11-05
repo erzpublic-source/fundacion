@@ -15,7 +15,7 @@
 
 .event-form__subtitle {
   margin: 0 0 24px;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 14px;
 }
 
@@ -86,7 +86,7 @@
   padding: 4px 10px;
   border-radius: var(--radius-full);
   background: #f2f0ee;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 11px;
   font-weight: var(--font-weight-semibold);
   white-space: nowrap;
@@ -94,7 +94,7 @@
 
 .event-form__lock-hint {
   margin: 0;
-  color: #9b93a3;
+  color: #4b5563;
   font-size: 12px;
   line-height: 18px;
 }
@@ -217,7 +217,7 @@
 
 .event-form__dropzone-content span {
   font-size: 12px;
-  color: #9b93a3;
+  color: #4b5563;
   font-weight: var(--font-weight-regular);
 }
 
@@ -288,7 +288,7 @@
   border: none;
   border-radius: var(--radius-full);
   background: none;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 13px;
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
@@ -333,7 +333,7 @@
 
 .event-form__codes-list li div:first-child span {
   font-size: 12px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .event-form__codes-list-right {
@@ -341,7 +341,7 @@
   align-items: center;
   gap: 10px;
   font-size: 12px;
-  color: #6b7280;
+  color: #4b5563;
   font-weight: var(--font-weight-semibold);
 }
 
@@ -444,7 +444,7 @@
 
 .event-form__toggle-row small {
   font-size: 12px;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .event-form__switch {
