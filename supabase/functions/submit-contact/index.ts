@@ -13,6 +13,7 @@ interface RequestBody {
   correo: string
   asunto: string
   mensaje: string
+  wantsMailingList: boolean
   recaptchaToken: string
 }
 
@@ -60,7 +61,7 @@ Deno.serve(async (req: Request) => {
     return jsonResponse({ error: 'invalid_body' }, 400)
   }
 
-  const { nombre, correo, asunto, mensaje, recaptchaToken } = body
+  const { nombre, correo, asunto, mensaje, wantsMailingList, recaptchaToken } = body
   if (!nombre?.trim() || !correo?.trim() || !asunto?.trim() || !mensaje?.trim() || !recaptchaToken) {
     return jsonResponse({ error: 'missing_fields' }, 400)
   }
@@ -89,6 +90,32 @@ Deno.serve(async (req: Request) => {
   if (!res.ok) {
     console.error('Insert error:', res.status, await res.text())
     return jsonResponse({ error: 'insert_failed' }, 502)
+  }
+
+  if (wantsMailingList) {
+    // Best-effort: el mensaje de contacto ya quedó registrado, así que un
+    // fallo aquí no debe bloquear al remitente. Upsert on correo, igual
+    // que en submit-reservation, para refrescar/reactivar en vez de
+    // duplicar si la persona ya estaba en la lista.
+    const contactRes = await fetch(`${SUPABASE_URL}/rest/v1/mailing_contacts?on_conflict=correo`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'resolution=merge-duplicates,return=minimal',
+      },
+      body: JSON.stringify({
+        nombre: nombre.trim(),
+        correo: correo.trim(),
+        origen: 'Formulario de Contacto',
+        consent_at: new Date().toISOString(),
+        active: true,
+      }),
+    })
+    if (!contactRes.ok) {
+      console.error('Mailing contact upsert failed:', contactRes.status, await contactRes.text())
+    }
   }
 
   return jsonResponse({ ok: true }, 200)
