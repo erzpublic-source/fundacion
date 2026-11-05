@@ -1,4 +1,5 @@
 import { useAdminAuth } from '../AdminAuthContext'
+import { ADMIN_VERSION } from '../adminVersion'
 import './AdminHeader.css'
 
 // Mock display profile keyed by the mock session email — stands in for a
@@ -42,7 +43,8 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
         Powered by{' '}
         <a href="https://erzlab.com" target="_blank" rel="noopener noreferrer">
           erzlab.com
-        </a>
+        </a>{' '}
+        · {ADMIN_VERSION}
       </p>
 
       <div className="admin-header__user">
