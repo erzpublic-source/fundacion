@@ -43,12 +43,29 @@ function toContact(row: MailingContactRow): MailingContact {
   }
 }
 
+export interface BroadcastInput {
+  title: string
+  message: string
+  imageUrl: string | null
+  ctaUrl: string | null
+  ctaLabel: string | null
+}
+
+export interface BroadcastResult {
+  sent: number
+  failed: number
+  total: number
+}
+
 interface AdminContactsContextValue {
   contacts: MailingContact[]
   loading: boolean
   unsubscribing: string | null
+  sending: boolean
   ensureSeeded: () => void
   unsubscribeContact: (id: string) => Promise<void>
+  uploadMailingImage: (file: File) => Promise<string>
+  sendBroadcast: (input: BroadcastInput) => Promise<BroadcastResult>
 }
 
 const AdminContactsContext = createContext<AdminContactsContextValue | null>(null)
@@ -57,6 +74,7 @@ export function AdminContactsProvider({ children }: { children: ReactNode }) {
   const [contacts, setContacts] = useState<MailingContact[] | null>(null)
   const [loading, setLoading] = useState(false)
   const [unsubscribing, setUnsubscribing] = useState<string | null>(null)
+  const [sending, setSending] = useState(false)
 
   const loadContacts = useCallback(async () => {
     setLoading(true)
@@ -94,9 +112,39 @@ export function AdminContactsProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const uploadMailingImage = useCallback(async (file: File): Promise<string> => {
+    const extensionMatch = /\.[a-zA-Z0-9]+$/.exec(file.name)
+    const extension = extensionMatch ? extensionMatch[0] : ''
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${extension}`
+    const { error } = await supabase.storage.from('mailing-images').upload(path, file)
+    if (error) throw error
+    const { data } = supabase.storage.from('mailing-images').getPublicUrl(path)
+    return data.publicUrl
+  }, [])
+
+  const sendBroadcast = useCallback(async (input: BroadcastInput): Promise<BroadcastResult> => {
+    setSending(true)
+    try {
+      const { data, error } = await supabase.functions.invoke('send-mailing-broadcast', { body: input })
+      if (error || !data?.ok) throw error ?? new Error('send-mailing-broadcast failed')
+      return { sent: data.sent, failed: data.failed, total: data.total }
+    } finally {
+      setSending(false)
+    }
+  }, [])
+
   const value = useMemo<AdminContactsContextValue>(
-    () => ({ contacts: contacts ?? [], loading, unsubscribing, ensureSeeded, unsubscribeContact }),
-    [contacts, loading, unsubscribing, ensureSeeded, unsubscribeContact],
+    () => ({
+      contacts: contacts ?? [],
+      loading,
+      unsubscribing,
+      sending,
+      ensureSeeded,
+      unsubscribeContact,
+      uploadMailingImage,
+      sendBroadcast,
+    }),
+    [contacts, loading, unsubscribing, sending, ensureSeeded, unsubscribeContact, uploadMailingImage, sendBroadcast],
   )
 
   return <AdminContactsContext.Provider value={value}>{children}</AdminContactsContext.Provider>

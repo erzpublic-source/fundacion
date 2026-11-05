@@ -1,0 +1,129 @@
+.broadcast-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: color-mix(in oklab, var(--color-tinta-humana) 55%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.broadcast-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-03);
+}
+
+.broadcast-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.broadcast-modal__header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: #221920;
+}
+
+.broadcast-modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: #f2f0ee;
+  color: #221920;
+  cursor: pointer;
+}
+
+.broadcast-modal__hint {
+  margin: 0;
+  padding: 12px 14px;
+  background: #f5eff7;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: #221920;
+}
+
+.broadcast-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.broadcast-modal__field label {
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: #221920;
+}
+
+.broadcast-modal__field input,
+.broadcast-modal__field textarea {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  color: #221920;
+  resize: vertical;
+}
+
+.broadcast-modal__row {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.broadcast-modal__file-input {
+  display: none;
+}
+
+.broadcast-modal__image-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.broadcast-modal__image-preview img {
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.broadcast-modal__error {
+  margin: 0;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: #e0455a;
+}
+
+.broadcast-modal__submit {
+  width: 100%;
+}
+
+@media (min-width: 560px) {
+  .broadcast-modal__row {
+    flex-direction: row;
+  }
+}
