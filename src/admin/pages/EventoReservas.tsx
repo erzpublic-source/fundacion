@@ -123,8 +123,16 @@ export default function EventoReservas() {
   const { getEvent } = useAdminEvents()
   const event = id ? getEvent(id) : undefined
 
-  const { ensureSeeded, reservationsFor, approving, rejecting, approveReservation, rejectReservation, undoReject } =
-    useAdminReservations()
+  const {
+    ensureSeeded,
+    reservationsFor,
+    approving,
+    rejecting,
+    approveReservation,
+    rejectReservation,
+    undoReject,
+    setCheckedIn,
+  } = useAdminReservations()
 
   useEffect(() => {
     if (id) ensureSeeded(id)
@@ -244,6 +252,15 @@ export default function EventoReservas() {
     setPendingUndo(null)
   }
 
+  async function handleToggleCheckedIn(reservation: Reservation) {
+    if (!id || reservation.status !== 'aprobado') return
+    try {
+      await setCheckedIn(id, reservation.id, !reservation.checkedIn)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   if (id && !event) {
     return (
       <AdminLayout>
@@ -343,6 +360,7 @@ export default function EventoReservas() {
                 <span>Valor pagado</span>
                 <span>Comprobante</span>
                 <span>Estado</span>
+                <span>Ingreso</span>
                 <span>Acciones</span>
               </div>
 
@@ -370,6 +388,22 @@ export default function EventoReservas() {
 
                     <div className="reservas-table__cell" data-label="Estado">
                       <span className={`status-pill ${statusMeta.className}`}>{statusMeta.label}</span>
+                    </div>
+
+                    <div className="reservas-table__cell" data-label="Ingreso">
+                      {r.status === 'aprobado' ? (
+                        <label className="reservas-table__checkin">
+                          <input
+                            type="checkbox"
+                            checked={r.checkedIn}
+                            onChange={() => handleToggleCheckedIn(r)}
+                            aria-label={r.checkedIn ? `Marcar a ${r.attendeeName} como no ingresado` : `Marcar ingreso de ${r.attendeeName}`}
+                          />
+                          <span>{r.checkedIn ? 'Ingresó' : 'Pendiente'}</span>
+                        </label>
+                      ) : (
+                        <span className="reservas-table__no-action">—</span>
+                      )}
                     </div>
 
                     <div className="reservas-table__cell reservas-table__cell--actions" data-label="Acciones">

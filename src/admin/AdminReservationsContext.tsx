@@ -15,6 +15,8 @@ interface AdminReservationsContextValue {
   rejectReservation: (eventId: string, id: string, reason: string) => Promise<void>
   /** Reverts a rejection back to "pendiente" — used by the "Deshacer" toast window; idempotent past that window. */
   undoReject: (eventId: string, id: string) => void
+  /** Manual physical check-in toggle at the event door — only meaningful once status is 'aprobado'. */
+  setCheckedIn: (eventId: string, id: string, checkedIn: boolean) => Promise<void>
 }
 
 const AdminReservationsContext = createContext<AdminReservationsContextValue | null>(null)
@@ -30,6 +32,7 @@ interface ReservationRow {
   ticket_code: string | null
   discount_code: string | null
   rejection_reason: string | null
+  checked_in: boolean
   created_at: string
 }
 
@@ -45,6 +48,7 @@ function toReservation(row: ReservationRow): Reservation {
     ticketCode: row.ticket_code,
     discountCode: row.discount_code,
     rejectionReason: row.rejection_reason,
+    checkedIn: row.checked_in,
     createdAt: new Date(row.created_at).getTime(),
   }
 }
@@ -198,6 +202,18 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
     void supabase.from('reservations').update({ status: 'pendiente' }).eq('id', id)
   }, [])
 
+  const setCheckedIn = useCallback(async (eventId: string, id: string, checkedIn: boolean) => {
+    const { error } = await supabase
+      .from('reservations')
+      .update({ checked_in: checkedIn, checked_in_at: checkedIn ? new Date().toISOString() : null })
+      .eq('id', id)
+    if (error) throw error
+    setByEvent((prev) => ({
+      ...prev,
+      [eventId]: (prev[eventId] ?? []).map((r) => (r.id === id ? { ...r, checkedIn } : r)),
+    }))
+  }, [])
+
   const value = useMemo<AdminReservationsContextValue>(
     () => ({
       approving,
@@ -209,8 +225,20 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
       approveReservation,
       rejectReservation,
       undoReject,
+      setCheckedIn,
     }),
-    [approving, rejecting, creating, ensureSeeded, reservationsFor, createReservation, approveReservation, rejectReservation, undoReject],
+    [
+      approving,
+      rejecting,
+      creating,
+      ensureSeeded,
+      reservationsFor,
+      createReservation,
+      approveReservation,
+      rejectReservation,
+      undoReject,
+      setCheckedIn,
+    ],
   )
 
   return <AdminReservationsContext.Provider value={value}>{children}</AdminReservationsContext.Provider>
