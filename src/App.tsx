@@ -7,6 +7,7 @@ import Donar from './pages/Donar/Donar'
 import Voluntariado from './pages/Voluntariado/Voluntariado'
 import Eventos from './pages/Eventos/Eventos'
 import Contacto from './pages/Contacto/Contacto'
+import Baja from './pages/Baja/Baja'
 import { AdminAuthProvider } from './admin/AdminAuthContext'
 import { AdminEventsProvider } from './admin/AdminEventsContext'
 import { AdminReservationsProvider } from './admin/AdminReservationsContext'
@@ -74,6 +75,7 @@ function App() {
               <Route path="/voluntariado" element={<Voluntariado />} />
               <Route path="/eventos" element={<Eventos />} />
               <Route path="/contacto" element={<Contacto />} />
+              <Route path="/baja" element={<Baja />} />
 
               <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
               <Route path="/admin/login" element={<AdminLogin />} />

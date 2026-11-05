@@ -1,8 +1,15 @@
-// Página pública de baja — el link de "Darte de baja" en los correos de
+// Endpoint público de baja — el link de "Darte de baja" en los correos de
 // invitación apunta directo aquí (GET, sin login). Marca el contacto como
-// inactivo usando el token único de su fila y devuelve una página HTML de
-// confirmación, en vez de un JSON — es para que alguien le dé clic desde
-// su bandeja de entrada, no para que el frontend la llame por fetch.
+// inactivo usando el token único de su fila y luego REDIRIGE al navegador
+// a /baja en el sitio real, que muestra la confirmación con el diseño de
+// marca — Supabase fuerza content-type: text/plain + un CSP "sandbox" en
+// cualquier respuesta HTML servida directo desde una Edge Function (para
+// que no se puedan hospedar páginas completas bajo su dominio), así que
+// intentar renderizar la confirmación aquí mismo no funciona.
+//
+// Secret nuevo que necesita este proyecto (Edge Functions → Secrets):
+//   SITE_URL — la URL base del sitio a donde redirigir, sin barra final
+//     (ej. https://fundacionundiamas.org o https://fundacion-dzu.pages.dev)
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -10,33 +17,11 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
 }
 
-function page(title: string, message: string): Response {
-  const html = `<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${title}</title>
-<style>
-  body { margin:0; font-family: 'Quicksand', Arial, sans-serif; background:#f6f3f8; padding:48px 16px; }
-  .card { max-width:420px; margin:0 auto; background:#fff; border-radius:14px; overflow:hidden; border:1px solid #e4dfe9; text-align:center; }
-  .header { background: linear-gradient(90deg,#6a5390 0%,#d4679a 100%); padding:22px 24px; color:#fff; font-weight:700; font-size:14px; }
-  .body { padding:32px 24px; }
-  h1 { margin:0 0 10px; font-size:19px; color:#221920; }
-  p { margin:0; font-size:14px; line-height:1.55; color:#6b7280; }
-</style>
-</head>
-<body>
-  <div class="card">
-    <div class="header">Fundaci&oacute;n Un D&iacute;a M&aacute;s</div>
-    <div class="body">
-      <h1>${title}</h1>
-      <p>${message}</p>
-    </div>
-  </div>
-</body>
-</html>`
-  return new Response(html, { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'text/html; charset=utf-8' } })
+function redirectTo(siteUrl: string, status: 'ok' | 'invalid' | 'error'): Response {
+  return new Response(null, {
+    status: 302,
+    headers: { ...CORS_HEADERS, Location: `${siteUrl}/baja?status=${status}` },
+  })
 }
 
 Deno.serve(async (req: Request) => {
@@ -44,14 +29,18 @@ Deno.serve(async (req: Request) => {
 
   const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
   const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY secret')
-    return page('Algo sali&oacute; mal', 'No pudimos procesar tu solicitud en este momento. Intenta de nuevo m&aacute;s tarde.')
+  const SITE_URL = Deno.env.get('SITE_URL')
+
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SITE_URL) {
+    console.error('Missing SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY or SITE_URL secret')
+    // No SITE_URL means we can't even redirect — this is the one case that
+    // has to fall back to a plain-text response.
+    return new Response('Server misconfigured', { status: 500, headers: CORS_HEADERS })
   }
 
   const token = new URL(req.url).searchParams.get('token')
   if (!token) {
-    return page('Enlace inv&aacute;lido', 'Este enlace de baja no es v&aacute;lido.')
+    return redirectTo(SITE_URL, 'invalid')
   }
 
   const res = await fetch(
@@ -70,16 +59,13 @@ Deno.serve(async (req: Request) => {
 
   if (!res.ok) {
     console.error('Unsubscribe update failed:', res.status, await res.text())
-    return page('Algo sali&oacute; mal', 'No pudimos procesar tu solicitud en este momento. Intenta de nuevo m&aacute;s tarde.')
+    return redirectTo(SITE_URL, 'error')
   }
 
   const updated = (await res.json()) as unknown[]
   if (updated.length === 0) {
-    return page('Enlace inv&aacute;lido', 'Este enlace de baja no es v&aacute;lido o ya expir&oacute;.')
+    return redirectTo(SITE_URL, 'invalid')
   }
 
-  return page(
-    'Listo, te diste de baja',
-    'No volver&aacute;s a recibir correos de invitaci&oacute;n a eventos de la Fundaci&oacute;n Un D&iacute;a M&aacute;s.',
-  )
+  return redirectTo(SITE_URL, 'ok')
 })
