@@ -24,6 +24,8 @@ export interface Reservation {
   discountCode: string | null
   /** Set when status is 'rechazado' — the reason the admin picked (or typed) when rejecting. */
   rejectionReason: string | null
+  /** Manual physical check-in at the event door — only meaningful once status is 'aprobado'. */
+  checkedIn: boolean
   createdAt: number
 }
 
