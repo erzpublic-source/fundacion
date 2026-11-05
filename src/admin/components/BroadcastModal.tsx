@@ -108,14 +108,17 @@ export default function BroadcastModal({ activeCount, onClose, onSent }: Broadca
               </button>
             </div>
           ) : (
-            <button
-              type="button"
-              className="btn btn--secondary"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploadingImage}
-            >
-              {uploadingImage ? 'Subiendo...' : 'Adjuntar imagen'}
-            </button>
+            <>
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingImage}
+              >
+                {uploadingImage ? 'Subiendo...' : 'Adjuntar imagen'}
+              </button>
+              <p className="broadcast-modal__image-hint">Resolución recomendada: 960 × 320 px (JPG o PNG).</p>
+            </>
           )}
           <input
             ref={fileInputRef}
