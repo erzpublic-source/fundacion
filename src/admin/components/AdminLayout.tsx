@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import AdminSidebar from './AdminSidebar'
 import AdminHeader from './AdminHeader'
-import { isProductionHost } from '../isProductionHost'
+import { isStagingHost } from '../isStagingHost'
 import './AdminLayout.css'
 
 interface AdminLayoutProps {
@@ -17,7 +17,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <div className="admin-layout-shell">
-      {isProductionHost() && <div className="admin-layout__env-banner">PRODUCCIÓN</div>}
+      {isStagingHost() && <div className="admin-layout__env-banner">STAGING</div>}
       <div className="admin-layout">
         <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="admin-layout__main">
