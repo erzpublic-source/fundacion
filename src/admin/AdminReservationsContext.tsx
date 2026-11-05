@@ -58,12 +58,15 @@ export interface CreateReservationInput {
   /** One name per ticket — the buyer counts as the first attendee. */
   attendeeNames: string[]
   email: string
+  phone: string
   /** Amount paid per ticket (total already split across attendeeNames.length). */
   amountPerAttendee: number
   /** The buyer's uploaded payment proof, or null for a free reservation that never required one. */
   receiptFile: File | null
   /** The discount code applied at checkout, if any — stored for reference (e.g. the confirmation email). */
   discountCode: string | null
+  /** Opt-in consent to receive future event invitations — captured into mailing_contacts if true. */
+  wantsMailingList: boolean
   /** reCAPTCHA token from the booking form — verified server-side by the submit-reservation Edge Function. */
   recaptchaToken: string
 }
@@ -105,9 +108,11 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
       eventId,
       attendeeNames,
       email,
+      phone,
       amountPerAttendee,
       receiptFile,
       discountCode,
+      wantsMailingList,
       recaptchaToken,
     }: CreateReservationInput) => {
       setCreating(true)
@@ -134,9 +139,11 @@ export function AdminReservationsProvider({ children }: { children: ReactNode })
             eventId,
             attendeeNames,
             email,
+            phone,
             amountPerAttendee,
             receiptPath,
             discountCode,
+            wantsMailingList,
             recaptchaToken,
           },
         })

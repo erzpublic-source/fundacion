@@ -13,9 +13,11 @@ interface RequestBody {
   eventId: string
   attendeeNames: string[]
   email: string
+  phone: string
   amountPerAttendee: number
   receiptPath: string | null
   discountCode: string | null
+  wantsMailingList: boolean
   recaptchaToken: string
 }
 
@@ -63,7 +65,8 @@ Deno.serve(async (req: Request) => {
     return jsonResponse({ error: 'invalid_body' }, 400)
   }
 
-  const { eventId, attendeeNames, email, amountPerAttendee, receiptPath, discountCode, recaptchaToken } = body
+  const { eventId, attendeeNames, email, phone, amountPerAttendee, receiptPath, discountCode, wantsMailingList, recaptchaToken } =
+    body
   if (!eventId || !Array.isArray(attendeeNames) || attendeeNames.length === 0 || !email?.trim() || !recaptchaToken) {
     return jsonResponse({ error: 'missing_fields' }, 400)
   }
@@ -114,6 +117,35 @@ Deno.serve(async (req: Request) => {
     })
     if (!redeemRes.ok) {
       console.error('Redeem discount code failed:', redeemRes.status, await redeemRes.text())
+    }
+  }
+
+  if (wantsMailingList && attendeeNames[0]) {
+    // Best-effort, same reasoning as the discount redemption above — the
+    // reservation already went through either way. Upsert on correo so
+    // reserving again (or at a different event) just refreshes the
+    // existing contact instead of creating a duplicate, and re-activates
+    // it if they'd previously unsubscribed — a fresh checkbox tick here is
+    // fresh consent.
+    const contactRes = await fetch(`${SUPABASE_URL}/rest/v1/mailing_contacts?on_conflict=correo`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'resolution=merge-duplicates,return=minimal',
+      },
+      body: JSON.stringify({
+        nombre: attendeeNames[0],
+        correo: email.trim(),
+        whatsapp: phone?.trim() || null,
+        origen: 'Reserva de evento',
+        consent_at: new Date().toISOString(),
+        active: true,
+      }),
+    })
+    if (!contactRes.ok) {
+      console.error('Mailing contact upsert failed:', contactRes.status, await contactRes.text())
     }
   }
 

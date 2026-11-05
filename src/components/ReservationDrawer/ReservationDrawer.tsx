@@ -203,6 +203,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const recaptchaRef = useRef<ReCAPTCHA>(null)
   const [attendeeNames, setAttendeeNames] = useState<string[]>([])
+  const [wantsMailingList, setWantsMailingList] = useState(false)
 
   const [discountInput, setDiscountInput] = useState('')
   const [discountApplied, setDiscountApplied] = useState<AppliedDiscount | null>(null)
@@ -370,9 +371,11 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
       eventId: event.eventId,
       attendeeNames: [buyerName, ...attendeeNames],
       email: buyerEmail,
+      phone: buyerPhone,
       amountPerAttendee: quantity > 0 ? Math.round(total / quantity) : 0,
       receiptFile: receipt,
       discountCode: discountApplied?.code ?? null,
+      wantsMailingList,
       recaptchaToken: captchaToken ?? '',
     })
     setReservationCode(`#RES-${Math.floor(1000 + Math.random() * 9000)}`)
@@ -720,6 +723,16 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
             )}
 
             <div className="reservation-drawer__section">
+              <div className="reservation-drawer__checkbox">
+                <input
+                  id="wants-mailing-list"
+                  type="checkbox"
+                  checked={wantsMailingList}
+                  onChange={(e) => setWantsMailingList(e.target.checked)}
+                />
+                <label htmlFor="wants-mailing-list">Quiero recibir información de futuros eventos de la Fundación.</label>
+              </div>
+
               <div className="reservation-drawer__field">
                 <label>Verificación anti-spam</label>
                 <RecaptchaField ref={recaptchaRef} onChange={setCaptchaToken} />
