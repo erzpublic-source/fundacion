@@ -113,8 +113,9 @@
 
 .broadcast-modal__image-hint {
   margin: 0;
-  font-size: 12px;
-  color: #9b93a3;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-violeta-esperanza);
 }
 
 .broadcast-modal__error {
