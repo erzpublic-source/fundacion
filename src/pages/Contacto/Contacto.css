@@ -35,7 +35,7 @@
   margin: 0;
   font-size: 14px;
   line-height: 20px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .contacto-hero__cta {
@@ -81,7 +81,7 @@
   border: 1px solid var(--color-border-input);
   border-radius: var(--radius-full);
   background: #fff;
-  color: #9b93a3;
+  color: #4b5563;
   transition: border-color 0.15s ease;
 }
 
@@ -103,7 +103,7 @@
 .contacto-field__counter {
   align-self: flex-end;
   font-size: 14px;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .contacto-field__control input {
@@ -118,7 +118,7 @@
 }
 
 .contacto-field__control input::placeholder {
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .contacto-field textarea {
@@ -140,7 +140,7 @@
 }
 
 .contacto-field textarea::placeholder {
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .contacto-checkbox {
@@ -160,7 +160,7 @@
 .contacto-checkbox label {
   font-size: 14px;
   line-height: 18px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .contacto-link {
@@ -199,7 +199,7 @@
 .contacto-ubicacion__lead {
   margin: 0;
   max-width: 620px;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 16px;
   line-height: 22px;
 }
@@ -313,7 +313,7 @@
 
 .contacto-horario-card__note {
   font-size: 14px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 /* ---------- Canales + personal de enlace ---------- */
@@ -338,7 +338,7 @@
   margin: -12px 0 20px;
   font-size: 16px;
   line-height: 22px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .contacto-canales__list,
@@ -430,7 +430,7 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .contacto-staff__name {
@@ -442,13 +442,13 @@
 .contacto-staff__text {
   font-size: 15px;
   line-height: 18px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .contacto-canales__footnote {
   margin: 20px 0 0;
   font-size: 14px;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 /* ==================== Desktop ==================== */

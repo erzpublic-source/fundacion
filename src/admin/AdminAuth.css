@@ -48,7 +48,7 @@
 }
 
 .admin-field__control input::placeholder {
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .admin-field__control--textarea {
@@ -74,7 +74,7 @@
 }
 
 .admin-field__control--textarea textarea::placeholder {
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .admin-field__toggle {
@@ -85,7 +85,7 @@
   border: none;
   background: none;
   padding: 0;
-  color: #6b7280;
+  color: #4b5563;
   cursor: pointer;
 }
 
@@ -194,7 +194,7 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .admin-requirement {
@@ -244,7 +244,7 @@
 }
 
 .admin-success__note {
-  color: #9b93a3 !important;
+  color: #4b5563 !important;
   font-size: 12px !important;
 }
 
@@ -268,6 +268,6 @@
 }
 
 .admin-resend:disabled {
-  color: #9b93a3;
+  color: #4b5563;
   cursor: not-allowed;
 }

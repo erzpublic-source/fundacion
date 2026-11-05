@@ -73,7 +73,7 @@
 .voluntariado-hero__lead {
   margin: 0;
   max-width: 620px;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 14px;
   line-height: 20px;
 }
@@ -90,7 +90,7 @@
 .voluntariado-roles__lead {
   margin: 0;
   max-width: 680px;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 16px;
   line-height: 22px;
 }
@@ -134,7 +134,7 @@
   margin: 0;
   font-size: 15px;
   line-height: 20px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 /* ---------- Form section ---------- */
@@ -149,7 +149,7 @@
 .voluntariado-form-section__lead {
   margin: 0;
   max-width: 620px;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 16px;
   line-height: 22px;
 }
@@ -195,7 +195,7 @@
   border: 1px solid var(--color-border-input);
   border-radius: var(--radius-full);
   background: #fff;
-  color: #9b93a3;
+  color: #4b5563;
   transition: border-color 0.15s ease;
 }
 
@@ -219,13 +219,13 @@
 }
 
 .voluntariado-field__control input::placeholder {
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .voluntariado-field__hint {
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .voluntariado-field__error {
@@ -298,7 +298,7 @@
   font-family: inherit;
   font-size: 16px;
   text-align: left;
-  color: #9b93a3;
+  color: #4b5563;
   cursor: pointer;
 }
 
@@ -322,7 +322,7 @@
   border: none;
   border-radius: 50%;
   background: #f5eff7;
-  color: #6b7280;
+  color: #4b5563;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -380,7 +380,7 @@
 .voluntariado-checkbox label {
   font-size: 14px;
   line-height: 18px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .voluntariado-link {
@@ -403,7 +403,7 @@
   margin: 0;
   font-size: 14px;
   line-height: 18px;
-  color: #9b93a3;
+  color: #4b5563;
   text-align: center;
 }
 
@@ -448,7 +448,7 @@
   border: none;
   border-radius: 50%;
   background: #f5eff7;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
@@ -465,7 +465,7 @@
   margin: 0;
   font-size: 16px;
   line-height: 20px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .form-alert__action {

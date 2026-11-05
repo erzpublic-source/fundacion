@@ -193,7 +193,7 @@
   border: none;
   background: none;
   border-radius: var(--radius-full);
-  color: #6b7280;
+  color: #4b5563;
   font-size: 13px;
   font-weight: var(--font-weight-medium);
   font-family: inherit;
@@ -271,7 +271,7 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .mobile-menu-overlay__list {
@@ -296,7 +296,7 @@
 
 .mobile-menu-overlay__item svg {
   flex-shrink: 0;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .mobile-menu-overlay__item-label {

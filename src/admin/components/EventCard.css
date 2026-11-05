@@ -34,7 +34,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9b93a3;
+  color: #4b5563;
   font-size: 12px;
   font-weight: var(--font-weight-semibold);
 }
@@ -74,7 +74,7 @@
   gap: 5px;
   margin: 0;
   font-size: 13px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .event-card__featured-star {
@@ -88,7 +88,7 @@
   align-items: center;
   gap: 6px;
   margin: 0;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 12px;
 }
 
@@ -120,7 +120,7 @@
 .event-card__occupancy-label {
   font-size: 11px;
   font-weight: var(--font-weight-semibold);
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .event-card__occupancy-label--open {

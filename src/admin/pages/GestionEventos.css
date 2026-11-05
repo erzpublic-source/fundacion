@@ -14,7 +14,7 @@
 
 .gestion-eventos__intro p {
   margin: 0;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 14px;
   line-height: 20px;
 }
@@ -42,7 +42,7 @@
   border: 1px solid rgba(203, 196, 208, 0.5);
   border-radius: var(--radius-full);
   background: #fff;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 13px;
   font-weight: var(--font-weight-semibold);
   white-space: nowrap;
@@ -65,7 +65,7 @@
   border: 1px solid var(--color-border-input);
   border-radius: var(--radius-full);
   background: #fff;
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .gestion-eventos__search input {
@@ -80,7 +80,7 @@
 }
 
 .gestion-eventos__search input::placeholder {
-  color: #9b93a3;
+  color: #4b5563;
 }
 
 .gestion-eventos__grid {
