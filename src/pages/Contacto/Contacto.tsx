@@ -157,6 +157,7 @@ type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
 export default function Contacto() {
   const [fields, setFields] = useState<ContactFields>(INITIAL_FIELDS)
   const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false)
+  const [wantsMailingList, setWantsMailingList] = useState(false)
   const [privacyOpen, setPrivacyOpen] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
   const [correoTouched, setCorreoTouched] = useState(false)
@@ -201,6 +202,7 @@ export default function Contacto() {
           correo: fields.correo.trim(),
           asunto: fields.asunto.trim(),
           mensaje: fields.mensaje.trim(),
+          wantsMailingList,
           recaptchaToken: captchaToken,
         },
       })
@@ -220,6 +222,7 @@ export default function Contacto() {
   function resetForm() {
     setFields(INITIAL_FIELDS)
     setAceptaPrivacidad(false)
+    setWantsMailingList(false)
     setSubmitStatus('idle')
     setCorreoTouched(false)
     setCaptchaToken(null)
@@ -353,6 +356,18 @@ export default function Contacto() {
                     Política de Privacidad
                   </button>{' '}
                   y el tratamiento de mis datos personales conforme a la ley.
+                </label>
+              </div>
+
+              <div className="contacto-checkbox">
+                <input
+                  id="wants-mailing-list"
+                  type="checkbox"
+                  checked={wantsMailingList}
+                  onChange={(e) => setWantsMailingList(e.target.checked)}
+                />
+                <label htmlFor="wants-mailing-list">
+                  Quiero recibir información de eventos y novedades de la Fundación.
                 </label>
               </div>
 

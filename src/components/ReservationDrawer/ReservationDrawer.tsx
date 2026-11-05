@@ -730,7 +730,7 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                   checked={wantsMailingList}
                   onChange={(e) => setWantsMailingList(e.target.checked)}
                 />
-                <label htmlFor="wants-mailing-list">Quiero recibir información de futuros eventos de la Fundación.</label>
+                <label htmlFor="wants-mailing-list">Quiero recibir información de eventos y novedades de la Fundación.</label>
               </div>
 
               <div className="reservation-drawer__field">
