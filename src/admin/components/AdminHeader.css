@@ -21,17 +21,18 @@
     top: 50%;
     transform: translate(-50%, -50%);
     margin: 0;
-    font-size: 13px;
-    color: #9b93a3;
+    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-violeta-esperanza);
   }
 
   .admin-header__credit a {
-    color: #9b93a3;
+    color: var(--color-violeta-esperanza);
     text-decoration: underline;
   }
 
   .admin-header__credit a:hover {
-    color: var(--color-violeta-esperanza);
+    color: var(--color-rosa-empatia);
   }
 }
 
