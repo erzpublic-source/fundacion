@@ -141,6 +141,8 @@
   height: 36px;
   padding: 0 16px;
   font-size: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
   background: #fff;
   border: 1.5px solid #e0455a;
   color: #e0455a;
@@ -164,7 +166,7 @@
 
   .contactos-table__head {
     display: grid;
-    grid-template-columns: 1.1fr 1.5fr 1fr 0.8fr 1fr 0.9fr 0.9fr 1fr;
+    grid-template-columns: 1fr 1.3fr 0.9fr 0.7fr 0.8fr 0.8fr 0.8fr 1.3fr;
     gap: 12px;
     padding: 14px 20px;
     background: #fbf8fc;
@@ -177,7 +179,7 @@
 
   .contactos-table__row {
     display: grid;
-    grid-template-columns: 1.1fr 1.5fr 1fr 0.8fr 1fr 0.9fr 0.9fr 1fr;
+    grid-template-columns: 1fr 1.3fr 0.9fr 0.7fr 0.8fr 0.8fr 0.8fr 1.3fr;
     align-items: center;
     gap: 12px;
     padding: 16px 20px;
