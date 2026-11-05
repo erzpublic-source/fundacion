@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import AdminSidebar from './AdminSidebar'
 import AdminHeader from './AdminHeader'
+import { isProductionHost } from '../isProductionHost'
 import './AdminLayout.css'
 
 interface AdminLayoutProps {
@@ -15,11 +16,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="admin-layout">
-      <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="admin-layout__main">
-        <AdminHeader onMenuClick={() => setSidebarOpen(true)} />
-        <div className="admin-layout__body">{children}</div>
+    <div className="admin-layout-shell">
+      {isProductionHost() && <div className="admin-layout__env-banner">PRODUCCIÓN</div>}
+      <div className="admin-layout">
+        <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <div className="admin-layout__main">
+          <AdminHeader onMenuClick={() => setSidebarOpen(true)} />
+          <div className="admin-layout__body">{children}</div>
+        </div>
       </div>
     </div>
   )
