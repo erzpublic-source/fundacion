@@ -716,19 +716,21 @@ export default function ReservationDrawer({ event, onClose }: ReservationDrawerP
                   />
                   {receiptError && <p className="reservation-drawer__discount-error">{receiptError}</p>}
                 </div>
-
-                <div className="reservation-drawer__field">
-                  <label>Verificación anti-spam</label>
-                  <RecaptchaField ref={recaptchaRef} onChange={setCaptchaToken} />
-                </div>
-
-                <p className="reservation-drawer__note">
-                  Una vez envíes tu solicitud, validaremos tu comprobante y recibirás la confirmación con tu código de
-                  reserva en máximo 24 horas, de igual manera puedes escribirnos a nuestro WhatsApp 300 000 0000 en
-                  caso de dudas.
-                </p>
               </div>
             )}
+
+            <div className="reservation-drawer__section">
+              <div className="reservation-drawer__field">
+                <label>Verificación anti-spam</label>
+                <RecaptchaField ref={recaptchaRef} onChange={setCaptchaToken} />
+              </div>
+
+              <p className="reservation-drawer__note">
+                {isFree
+                  ? 'Una vez envíes tu solicitud, recibirás la confirmación con tu código de entrada en máximo 24 horas, de igual manera puedes escribirnos a nuestro WhatsApp 302 587 1770 en caso de dudas.'
+                  : 'Una vez envíes tu solicitud, validaremos tu comprobante y recibirás la confirmación con tu código de reserva en máximo 24 horas, de igual manera puedes escribirnos a nuestro WhatsApp 302 587 1770 en caso de dudas.'}
+              </p>
+            </div>
 
             <div className="reservation-drawer__footer">
               <p className="reservation-drawer__footer-summary">
