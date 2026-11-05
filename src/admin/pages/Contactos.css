@@ -4,6 +4,12 @@
   gap: 24px;
 }
 
+.contactos-page__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .contactos-page__intro h1 {
   margin: 0 0 4px;
   font-size: 24px;
@@ -150,6 +156,14 @@
 
 .contactos-table__action:hover {
   background: #fff0f2;
+}
+
+@media (min-width: 560px) {
+  .contactos-page__intro {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 @media (min-width: 900px) {

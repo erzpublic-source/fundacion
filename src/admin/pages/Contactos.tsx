@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import AdminLayout from '../components/AdminLayout'
 import EmptyState from '../components/EmptyState'
 import ConfirmDialog from '../components/ConfirmDialog'
+import BroadcastModal from '../components/BroadcastModal'
+import Toast from '../components/Toast'
 import { useAdminContacts } from '../AdminContactsContext'
 import type { MailingContact } from '../AdminContactsContext'
 import '../AdminShared.css'
@@ -33,6 +35,8 @@ export default function Contactos() {
   const [tab, setTab] = useState<TabValue>('todos')
   const [search, setSearch] = useState('')
   const [pendingUnsubscribe, setPendingUnsubscribe] = useState<MailingContact | null>(null)
+  const [broadcastOpen, setBroadcastOpen] = useState(false)
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   const counts = useMemo(
     () => ({
@@ -56,6 +60,11 @@ export default function Contactos() {
     setPendingUnsubscribe(null)
   }
 
+  function handleBroadcastSent(sent: number, failed: number) {
+    setBroadcastOpen(false)
+    setToastMessage(failed > 0 ? `Enviada a ${sent} contactos (${failed} fallaron)` : `Enviada a ${sent} contactos`)
+  }
+
   const tabs: { value: TabValue; label: string }[] = [
     { value: 'todos', label: 'Todos' },
     { value: 'activo', label: 'Activos' },
@@ -66,8 +75,18 @@ export default function Contactos() {
     <AdminLayout>
       <div className="contactos-page">
         <div className="contactos-page__intro">
-          <h1>Contactos</h1>
-          <p>Personas que aceptaron recibir información de futuros eventos de la Fundación.</p>
+          <div>
+            <h1>Contactos</h1>
+            <p>Personas que aceptaron recibir información de futuros eventos de la Fundación.</p>
+          </div>
+          <button
+            type="button"
+            className="btn btn--primary"
+            onClick={() => setBroadcastOpen(true)}
+            disabled={counts.activo === 0}
+          >
+            + Nueva invitación
+          </button>
         </div>
 
         <div className="contactos-toolbar">
@@ -168,6 +187,12 @@ export default function Contactos() {
             onClose={() => setPendingUnsubscribe(null)}
           />
         )}
+
+        {broadcastOpen && (
+          <BroadcastModal activeCount={counts.activo} onClose={() => setBroadcastOpen(false)} onSent={handleBroadcastSent} />
+        )}
+
+        {toastMessage && <Toast message={toastMessage} onDismiss={() => setToastMessage(null)} />}
       </div>
     </AdminLayout>
   )
