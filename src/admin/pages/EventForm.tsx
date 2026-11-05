@@ -158,7 +158,7 @@ export default function EventForm() {
 
     if (file.size > MAX_IMAGE_SIZE_BYTES) {
       setImageError(
-        `La imagen supera el máximo de ${MAX_IMAGE_SIZE_LABEL}. Formatos recomendados: JPG, PNG (16:9) — optimiza o comprime la imagen e inténtalo de nuevo.`,
+        `La imagen supera el máximo de ${MAX_IMAGE_SIZE_LABEL}. Resolución recomendada: 1600 × 900 px (16:9) — optimiza o comprime la imagen e inténtalo de nuevo.`,
       )
       if (fileInputRef.current) fileInputRef.current.value = ''
       return
@@ -333,7 +333,10 @@ export default function EventForm() {
                     <span className="event-form__dropzone-content">
                       {uploadingImage ? <span className="event-form__spinner" aria-hidden="true" /> : <UploadIcon />}
                       <strong>{uploadingImage ? 'Subiendo imagen...' : 'Subir imagen principal'}</strong>
-                      <span>Formatos recomendados: JPG, PNG (16:9, máx. {MAX_IMAGE_SIZE_LABEL})</span>
+                      <span className="event-form__dropzone-resolution">
+                        Resolución recomendada: 1600 × 900 px (16:9) · JPG o PNG, máx. {MAX_IMAGE_SIZE_LABEL}
+                      </span>
+                      <span>Esta misma imagen se usa recortada en Destacado, Evento y Próximo — súbela una sola vez.</span>
                     </span>
                   )}
                   {imageUrl && uploadingImage && (

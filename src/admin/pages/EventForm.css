@@ -221,6 +221,12 @@
   font-weight: var(--font-weight-regular);
 }
 
+.event-form__dropzone-content .event-form__dropzone-resolution {
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-violeta-esperanza);
+}
+
 .event-form__dropzone-overlay {
   position: absolute;
   inset: 0;
