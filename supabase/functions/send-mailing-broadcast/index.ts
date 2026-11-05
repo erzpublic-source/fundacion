@@ -76,7 +76,7 @@ function renderEmail(
     </div>
     <div style="padding:16px 24px 22px;border-top:1px solid #e4dfe9;">
       <p style="margin:0 0 4px;font-size:11px;color:#6b7280;">Fundación Un Día Más · fundacionundiamas.org</p>
-      <p style="margin:0;font-size:11px;color:#6b7280;">Recibiste este correo porque aceptaste recibir información de eventos al reservar con nosotros. <a href="${unsubscribeUrl}" style="color:#6b7280;">Darte de baja</a>.</p>
+      <p style="margin:0;font-size:11px;color:#6b7280;">Recibiste este correo porque aceptaste recibir información de eventos y novedades de la Fundación. <a href="${unsubscribeUrl}" style="color:#6b7280;">Darte de baja</a>.</p>
     </div>
   </div>
 </div>`
