@@ -26,10 +26,12 @@ const ESENCIA = [
     title: 'Quiénes somos',
     text: (
       <>
-        En la <strong>Fundación Un Día Más</strong> creemos que la salud mental es un derecho fundamental.
-        Somos un equipo interdisciplinario que trabaja incansablemente para brindar herramientas de sanación
-        y acompañamiento a quienes atraviesan momentos de oscuridad, recordándoles que siempre puede existir
-        un día más para volver a empezar.
+        La <strong>Fundación Un Día Más</strong> es una entidad sin ánimo de lucro constituida en Colombia,
+        que nace para promover la salud mental y el bienestar emocional.
+        <br />
+        <br />
+        La empatía es nuestro principio esencial. La escucha respetuosa y el reconocimiento de la dignidad
+        humana orientan nuestro propósito y compromiso con la sociedad.
       </>
     ),
   },
@@ -46,11 +48,10 @@ const ESENCIA = [
     title: 'Misión',
     text: (
       <>
-        En la <strong>Fundación Un Día Más</strong> transformamos la manera de comprender el bienestar
-        emocional. Nuestra misión es prevenir el aislamiento a través del arte, la música y la escucha
-        activa, construyendo puentes de esperanza que permitan a cada individuo encontrar un camino para
-        vivir un día más. Porque toda persona merece ser escuchada, acompañada y encontrar{' '}
-        <strong>un camino para vivir un día más.</strong>
+        Promover la salud mental y el bienestar emocional mediante iniciativas de prevención, educación y
+        acompañamiento. Nos proponemos fortalecer la educación emocional desde la infancia, impulsar la
+        formación responsable en primeros auxilios psicológicos y construir redes de apoyo, integrando el
+        conocimiento profesional, la participación comunitaria, el arte y la música.
       </>
     ),
   },
@@ -65,11 +66,14 @@ const ESENCIA = [
     title: 'Visión',
     text: (
       <>
-        Para 2035, la <strong>Fundación Un Día Más</strong> será un referente regional en el acompañamiento
-        emocional alternativo, consolidando una red de apoyo donde ninguna persona tenga que enfrentar en
-        silencio una crisis emocional. A través de programas de alto impacto, investigación, tecnología y
-        alianzas estratégicas, reduciremos las brechas de acceso y contribuiremos a construir una sociedad
-        donde pedir ayuda sea un acto de valentía.
+        Para 2035, aspiramos a consolidarnos como un referente en Colombia, con proyección hacia
+        Latinoamérica, por el desarrollo de programas accesibles y sostenibles que amplíen las
+        oportunidades de bienestar y apoyo.
+        <br />
+        <br />
+        Como parte de ese crecimiento, proyectamos crear una IPS propia y especializada en salud mental,
+        sujeta a la viabilidad técnica y financiera y al cumplimiento de los requisitos legales y de
+        habilitación.
       </>
     ),
   },
